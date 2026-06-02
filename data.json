@@ -5,22 +5,22 @@
         {
           "id": 1,
           "label": "Income 1 (Juliana)",
-          "amount": 1555
+          "amount": 1768
         },
         {
           "id": 2,
           "label": "Income 2 (Nicolas)",
-          "amount": 1965
+          "amount": 2160
         },
         {
           "id": 3,
           "label": "Income 3 (Juliana)",
-          "amount": 1555
+          "amount": 1768
         },
         {
           "id": 4,
           "label": "Income 4 (Nicolas)",
-          "amount": 1965
+          "amount": 2160
         }
       ],
       "budget": [
@@ -86,7 +86,7 @@
         },
         {
           "id": 31,
-          "name": "CombustÃ­vel",
+          "name": "Combustivel",
           "type": "needs",
           "budget": 200
         },
