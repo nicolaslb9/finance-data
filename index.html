@@ -590,24 +590,21 @@ select { cursor: pointer; }
 <!-- PROVISIONS -->
 <div id="section-provisions" class="section fade-in">
   <div class="page-header">
-    <div><h2>Sinking Funds</h2><p>$100/mês separados do orçamento — usados quando o gasto aparecer</p></div>
+    <div><h2>Sinking Funds</h2><p>$100/mês do orçamento, distribuídos em categorias</p></div>
   </div>
 
-  <!-- BALANCE CARD -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px" id="sf-metrics"></div>
+  <!-- TOP METRICS -->
+  <div id="sf-metrics" class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px"></div>
 
-  <!-- HOW IT WORKS -->
-  <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#92400e;line-height:1.6">
-    <strong>Como funciona:</strong> Todo mês, $100 do seu orçamento vai para os sinking funds. O saldo acumula mês a mês. Quando o gasto aparecer (troca de óleo, dentista...), clique em <strong>"Usar"</strong> e desconte do saldo. Se não usar, acumula para o próximo mês.
-  </div>
+  <!-- CONTRIBUTE BUTTON (prominent) -->
+  <div id="sf-contribute-bar" style="margin-bottom:16px"></div>
 
-  <!-- CATEGORIES -->
+  <!-- CATEGORY CARDS -->
   <div id="sf-categories"></div>
 
-  <!-- ADD CONTRIBUTION BUTTON -->
-  <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-    <button class="btn btn-primary" onclick="sfAddMonthlyAll()">+ Adicionar $100 do mês</button>
-    <button class="btn" onclick="sfAddCategory()">+ Nova categoria</button>
+  <!-- ADD CATEGORY -->
+  <div style="margin-top:4px">
+    <button class="btn btn-sm" onclick="sfAddCategory()">+ Nova categoria</button>
   </div>
 </div>
 
@@ -1791,7 +1788,9 @@ function resetData() {
 let sinkingFunds = [];
 
 function loadSinkingFunds() {
-  if (savings.sinkingFunds) sinkingFunds = savings.sinkingFunds;
+  if (savings.sinkingFunds && savings.sinkingFunds.length) {
+    sinkingFunds = savings.sinkingFunds;
+  }
   syncProvisionBudget();
 }
 
@@ -1801,158 +1800,216 @@ function saveSinkingFunds() {
 }
 
 function totalSinkingMonthly() {
-  if (!sinkingFunds || !sinkingFunds.length) return 100;
-  return sinkingFunds.reduce((s,f)=>s+(+f.monthlyContribution||0),0);
+  return 100; // fixed $100/month total
 }
 
 function syncProvisionBudget() {
-  const total = 100; // fixed $100/month
-  const provItem = md().budget.find(b=>b.type==='provision');
-  if (provItem) provItem.budget = total;
+  const provItem = md().budget.find(b => b.type === 'provision');
+  if (provItem) provItem.budget = 100;
 }
 
+// ── Called every new month: add contributions ────────────────────────────────
 function sfAddMonthlyAll() {
-  if (!sinkingFunds || !sinkingFunds.length) return;
-  const month = new Date().toISOString().slice(0,7);
+  loadSinkingFunds();
+  const month = new Date().toISOString().slice(0, 7); // e.g. "2026-06"
+
+  // Check if already contributed this month
+  const alreadyDone = sinkingFunds.every(f => f.lastContribution === month);
+  if (alreadyDone) {
+    if (!confirm('Você já adicionou os $100 este mês. Adicionar novamente?')) return;
+  }
+
   sinkingFunds.forEach(f => {
-    f.balance = (+f.balance||0) + (+f.monthlyContribution||0);
+    f.balance = (+f.balance || 0) + (+f.monthlyContribution || 0);
     f.lastContribution = month;
   });
   saveSinkingFunds();
   renderProvisions();
 }
 
+// ── Use money from a category ────────────────────────────────────────────────
 function sfUse(id) {
-  const f = sinkingFunds.find(x=>x.id===id);
+  const f = sinkingFunds.find(x => x.id === id);
   if (!f) return;
-  const amt = parseFloat(prompt('Quanto foi gasto em "'+f.name+'"?'));
+  const bal = +f.balance || 0;
+  if (bal <= 0) { alert('Saldo zerado nesta categoria.'); return; }
+
+  const amtStr = prompt(`Quanto você gastou em "${f.icon} ${f.name}"?\n(Saldo disponível: $${bal.toFixed(0)})`, '');
+  if (!amtStr) return;
+  const amt = parseFloat(amtStr);
   if (isNaN(amt) || amt <= 0) return;
-  const desc = prompt('Descrição (opcional):', '') || '';
-  f.balance = Math.max(0, (+f.balance||0) - amt);
+
+  const desc = prompt('O que foi? (ex: Troca de óleo, Dentista...)', '') || '';
+
+  f.balance = Math.max(0, bal - amt);
   if (!f.history) f.history = [];
-  f.history.unshift({date: new Date().toISOString().slice(0,10), amount: amt, desc});
-  if (f.history.length > 20) f.history = f.history.slice(0,20);
+  f.history.unshift({ date: new Date().toISOString().slice(0, 10), amount: amt, desc });
+  if (f.history.length > 10) f.history.length = 10;
+
   saveSinkingFunds();
   renderProvisions();
 }
 
-function sfAddCategory() {
-  const name = prompt('Nome da categoria:');
-  if (!name) return;
-  const contrib = parseFloat(prompt('Contribuição mensal ($):', '10')) || 10;
-  sinkingFunds.push({
-    id: Date.now(),
-    name,
-    balance: 0,
-    monthlyContribution: contrib,
-    note: '',
-    subItems: [],
-    history: []
-  });
-  saveSinkingFunds();
-  renderProvisions();
-}
-
-function sfDeleteCategory(id) {
-  const f = sinkingFunds.find(x=>x.id===id);
-  if (!f || !confirm('Excluir "'+f.name+'"?')) return;
-  sinkingFunds = sinkingFunds.filter(x=>x.id!==id);
-  saveSinkingFunds();
-  renderProvisions();
-}
-
-function renderProvisions() {
-  const el = document.getElementById('sf-categories');
-  const metricsEl = document.getElementById('sf-metrics');
-  if (!el) return;
-  loadSinkingFunds();
-  if (!sinkingFunds || !sinkingFunds.length) {
-    el.innerHTML = '<div class="empty">Nenhuma categoria ainda. Clique em "+ Nova categoria".</div>';
-    return;
-  }
-
-  const totalBalance = sinkingFunds.reduce((s,f)=>s+(+f.balance||0),0);
-  const totalMonthly = sinkingFunds.reduce((s,f)=>s+(+f.monthlyContribution||0),0);
-  const lastContrib = sinkingFunds.find(f=>f.lastContribution);
-
-  if (metricsEl) metricsEl.innerHTML = `
-    <div class="metric"><div class="lbl">Saldo total</div><div class="val" style="color:var(--green)">${fmt(totalBalance)}</div><div class="sub">acumulado</div></div>
-    <div class="metric"><div class="lbl">Contribuição/mês</div><div class="val" style="color:#f59e0b">$100</div><div class="sub">${totalMonthly===100?'✓ alocado':'distribuído: '+fmt(totalMonthly)}</div></div>
-    <div class="metric"><div class="lbl">Categorias</div><div class="val">${sinkingFunds.length}</div><div class="sub">última contrib: ${lastContrib&&lastContrib.lastContribution?lastContrib.lastContribution:'—'}</div></div>
-  `;
-
-  const CAT_COLORS = ['#ef4444','#3b82f6','#22c55e','#a855f7','#f59e0b','#06b6d4','#ec4899','#84cc16'];
-  let h = '';
-  sinkingFunds.forEach((f, idx) => {
-    const color = CAT_COLORS[idx % CAT_COLORS.length];
-    const bal = +f.balance||0;
-    const contrib = +f.monthlyContribution||0;
-    const monthsAccum = contrib > 0 ? (bal/contrib).toFixed(1) : '—';
-    const history = f.history||[];
-
-    h += `<div class="card" style="margin-bottom:12px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="width:12px;height:12px;border-radius:50%;background:${color};flex-shrink:0"></span>
-          <div>
-            <div style="font-size:15px;font-weight:600">${esc(f.name)}</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(f.note||'')}</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="text-align:right">
-            <div style="font-size:22px;font-weight:700;font-family:'Geist Mono',monospace;color:${color}">${fmt(bal)}</div>
-            <div style="font-size:11px;color:var(--text3)">${contrib > 0 ? '+'+fmt(contrib)+'/mês · '+monthsAccum+' meses acum.' : ''}</div>
-          </div>
-          <button class="del-btn" onclick="sfDeleteCategory(${f.id})" title="Excluir">✕</button>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-        <button class="btn btn-primary btn-sm" onclick="sfUse(${f.id})">Usar saldo</button>
-        <button class="btn btn-sm" onclick="sfSingleContrib(${f.id})">+ ${fmt(contrib)} do mês</button>
-        <button class="btn btn-sm" style="font-size:11px;color:var(--text3)" onclick="sfEditContrib(${f.id})">Editar $${contrib}/mês</button>
-      </div>
-
-      ${f.subItems&&f.subItems.length ? `
-      <div style="margin-bottom:12px">
-        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px">Gastos previstos</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px">
-          ${f.subItems.map(s=>`<span style="font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px 8px;color:var(--text2)">${esc(s.name)} · ${fmt(s.estimatedCost)} · <span style="color:var(--text3)">${esc(s.frequency)}</span></span>`).join('')}
-        </div>
-      </div>` : ''}
-
-      ${history.length ? `
-      <div>
-        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px">Últimos gastos</div>
-        ${history.slice(0,3).map(h=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);color:var(--text2)">
-          <span>${h.date} ${h.desc?'· '+esc(h.desc):''}</span>
-          <span style="color:var(--red);font-family:'Geist Mono',monospace;font-weight:500">-${fmt(h.amount)}</span>
-        </div>`).join('')}
-      </div>` : ''}
-    </div>`;
-  });
-  el.innerHTML = h;
-}
-
-function sfSingleContrib(id) {
-  const f = sinkingFunds.find(x=>x.id===id);
-  if (!f) return;
-  f.balance = (+f.balance||0) + (+f.monthlyContribution||0);
-  f.lastContribution = new Date().toISOString().slice(0,7);
-  saveSinkingFunds();
-  renderProvisions();
-}
-
+// ── Edit monthly contribution ────────────────────────────────────────────────
 function sfEditContrib(id) {
-  const f = sinkingFunds.find(x=>x.id===id);
+  const f = sinkingFunds.find(x => x.id === id);
   if (!f) return;
-  const val = parseFloat(prompt('Nova contribuição mensal ($):', f.monthlyContribution));
+  const total = sinkingFunds.reduce((s, x) => s + (+x.monthlyContribution || 0), 0);
+  const others = total - (+f.monthlyContribution || 0);
+  const val = parseFloat(prompt(
+    `Contribuição mensal para "${f.name}":\n(Restante alocado nas outras categorias: $${others}. Total deve ser $100)`,
+    f.monthlyContribution
+  ));
   if (!isNaN(val) && val >= 0) {
+    const newTotal = others + val;
+    if (newTotal > 100) {
+      alert(`Isso deixaria o total em $${newTotal}. Ajuste outras categorias primeiro.`);
+      return;
+    }
     f.monthlyContribution = val;
     saveSinkingFunds();
     renderProvisions();
   }
+}
+
+// ── Delete category ──────────────────────────────────────────────────────────
+function sfDeleteCategory(id) {
+  const f = sinkingFunds.find(x => x.id === id);
+  if (!f || !confirm(`Excluir "${f.icon} ${f.name}"? O saldo de ${fmt(f.balance||0)} será perdido.`)) return;
+  sinkingFunds = sinkingFunds.filter(x => x.id !== id);
+  saveSinkingFunds();
+  renderProvisions();
+}
+
+// ── Add new category ─────────────────────────────────────────────────────────
+function sfAddCategory() {
+  const name = prompt('Nome da categoria:');
+  if (!name || !name.trim()) return;
+  const contrib = parseFloat(prompt('Contribuição mensal ($):', '0')) || 0;
+  sinkingFunds.push({
+    id: Date.now(), name: name.trim(), icon: '📦',
+    balance: 0, monthlyContribution: contrib,
+    note: '', history: []
+  });
+  saveSinkingFunds();
+  renderProvisions();
+}
+
+// ── Main render ──────────────────────────────────────────────────────────────
+function renderProvisions() {
+  const catsEl  = document.getElementById('sf-categories');
+  const metEl   = document.getElementById('sf-metrics');
+  const barEl   = document.getElementById('sf-contribute-bar');
+  if (!catsEl) return;
+
+  loadSinkingFunds();
+
+  if (!sinkingFunds || !sinkingFunds.length) {
+    catsEl.innerHTML = '<div class="empty">Nenhuma categoria. Clique em "+ Nova categoria".</div>';
+    return;
+  }
+
+  const totalBal    = sinkingFunds.reduce((s, f) => s + (+f.balance || 0), 0);
+  const totalAlloc  = sinkingFunds.reduce((s, f) => s + (+f.monthlyContribution || 0), 0);
+  const unalloc     = 100 - totalAlloc;
+  const curMonth    = new Date().toISOString().slice(0, 7);
+  const contributed = sinkingFunds.every(f => f.lastContribution === curMonth);
+
+  // ── Metrics ──
+  if (metEl) metEl.innerHTML = `
+    <div class="metric">
+      <div class="lbl">Saldo acumulado</div>
+      <div class="val" style="color:var(--green)">${fmt(totalBal)}</div>
+      <div class="sub">disponível para usar</div>
+    </div>
+    <div class="metric">
+      <div class="lbl">Alocado/mês</div>
+      <div class="val" style="color:#f59e0b">$${totalAlloc}</div>
+      <div class="sub">${unalloc > 0 ? '$'+unalloc+' não distribuído' : '✓ $100 distribuídos'}</div>
+    </div>
+    <div class="metric">
+      <div class="lbl">Este mês</div>
+      <div class="val" style="font-size:18px">${contributed ? '✅' : '⏳'}</div>
+      <div class="sub">${contributed ? 'contribuição feita' : 'pendente'}</div>
+    </div>
+  `;
+
+  // ── Contribute bar ──
+  if (barEl) {
+    if (contributed) {
+      barEl.innerHTML = `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;font-size:13px;color:#15803d">
+        <span style="font-size:18px">✅</span>
+        <span><strong>$100 adicionados</strong> este mês (${curMonth}). O saldo de cada categoria já foi atualizado.</span>
+      </div>`;
+    } else {
+      barEl.innerHTML = `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="font-size:13px;color:#92400e">
+          <strong>Novo mês, nova contribuição.</strong> Clique para adicionar $${totalAlloc} distribuídos entre as categorias.
+        </div>
+        <button class="btn btn-primary" onclick="sfAddMonthlyAll()" style="white-space:nowrap">+ Adicionar $100 do mês</button>
+      </div>`;
+    }
+  }
+
+  // ── Category cards ──
+  const COLORS = ['#ef4444','#3b82f6','#22c55e','#a855f7'];
+  let h = '';
+
+  sinkingFunds.forEach((f, i) => {
+    const color   = COLORS[i % COLORS.length];
+    const bal     = +f.balance || 0;
+    const contrib = +f.monthlyContribution || 0;
+    const hist    = f.history || [];
+    const pct     = contrib > 0 ? Math.min(100, bal / (contrib * 3) * 100) : 0; // fill bar vs 3-month target
+
+    h += `
+    <div class="card" style="margin-bottom:10px">
+
+      <!-- Header row: icon + name + balance + delete -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:22px;line-height:1">${f.icon || '📦'}</span>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:600;color:var(--text)">${esc(f.name)}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(f.note || '')}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:20px;font-weight:700;font-family:'Geist Mono',monospace;color:${color}">${fmt(bal)}</div>
+          <div style="font-size:11px;color:var(--text3)">+${fmt(contrib)}/mês</div>
+        </div>
+        <button class="del-btn" onclick="sfDeleteCategory(${f.id})">✕</button>
+      </div>
+
+      <!-- Progress bar (vs 3-month accumulation target) -->
+      <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:12px">
+        <div style="height:100%;width:${pct.toFixed(0)}%;background:${color};border-radius:3px;transition:width .4s"></div>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-primary" onclick="sfUse(${f.id})" ${bal <= 0 ? 'disabled style="opacity:.5"' : ''}>
+          Registrar gasto
+        </button>
+        <button class="btn btn-sm" onclick="sfEditContrib(${f.id})" style="color:var(--text3)">
+          Editar $${contrib}/mês
+        </button>
+      </div>
+
+      <!-- History -->
+      ${hist.length ? `
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px">Histórico</div>
+        ${hist.slice(0, 5).map(h => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bg4);font-size:12px">
+            <span style="color:var(--text2)">${h.date}${h.desc ? ' · ' + esc(h.desc) : ''}</span>
+            <span style="color:var(--red);font-family:'Geist Mono',monospace;font-weight:600">−${fmt(h.amount)}</span>
+          </div>
+        `).join('')}
+      </div>` : ''}
+
+    </div>`;
+  });
+
+  catsEl.innerHTML = h;
 }
 
 function addSinkingFund() { sfAddCategory(); }
