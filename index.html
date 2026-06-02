@@ -212,6 +212,10 @@ select { cursor: pointer; }
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8c0-2.76 2.24-5 5-5s5 2.24 5 5-2.24 5-5 5"/><path d="M8 6v2.5l1.5 1"/><path d="M1 13l3-3"/></svg>
       Savings
     </div>
+    <div class="nav-item" onclick="showTab('provisions')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v4l2.5 2.5"/><circle cx="8" cy="9" r="6"/></svg>
+      Provisões
+    </div>
     <div class="nav-item" onclick="showTab('settings')">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
       Configurações
@@ -382,6 +386,35 @@ select { cursor: pointer; }
   </div>
 </div>
 
+<!-- PROVISIONS -->
+<div id="section-provisions" class="section fade-in">
+  <div class="page-header">
+    <div><h2>Provisões</h2><p>Gastos irregulares — guarde um pouco todo mês para não ser pego de surpresa</p></div>
+  </div>
+  <div class="metrics" id="prov-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><h3>Provisão mensal por categoria</h3></div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-prov-cat"></canvas></div>
+    </div>
+    <div class="card" style="background:#fffbeb;border-color:#fde68a">
+      <div class="card-header"><h3 style="color:#92400e">💡 O que são provisões?</h3></div>
+      <div style="font-size:13px;color:#78350f;line-height:1.7">
+        <p style="margin-bottom:10px">Provisões (ou <em>sinking funds</em>) são pequenas quantias guardadas todo mês para cobrir gastos <strong>previsíveis mas irregulares</strong> — como troca de óleo, roupas de inverno ou dentista.</p>
+        <p style="margin-bottom:10px">Em vez de o gasto de $140 de troca de óleo "destruir" o mês, você guardou $23/mês por 6 meses e já tinha o dinheiro esperando.</p>
+        <div style="background:#fef3c7;border-radius:8px;padding:10px;font-size:12px">
+          <strong>Como usar:</strong> todo mês, transfira o valor de provisão para uma conta separada (Wealthsimple Cash é ideal). Quando o gasto chegar, use o saldo acumulado.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="prov-groups"></div>
+  <div style="display:flex;gap:8px;margin-top:4px">
+    <button class="btn btn-primary btn-sm" onclick="addSinkingFund()">+ Nova provisão</button>
+    <button class="btn btn-sm" onclick="markAllProvisionsPaid()">✓ Registrar contribuição mensal</button>
+  </div>
+</div>
+
 <!-- SETTINGS -->
 <div id="section-settings" class="section fade-in">
   <div class="page-header"><div><h2>Configurações</h2><p>Sync com GitHub</p></div></div>
@@ -493,6 +526,7 @@ function init() {
   const sc = localStorage.getItem('finance_cfg');
   if (sc) { try { cfg = JSON.parse(sc); loadCfgUI(); } catch(e){} }
   if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
+  loadSinkingFunds();
   render();
 }
 
@@ -1077,9 +1111,11 @@ function addGoal() { savings.goals.push({id:nextId++,name:'Nova meta',target:100
 function showTab(name) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const tabs = ['overview','budget','transactions','savings','settings'];
+  const tabs = ['overview','budget','transactions','savings','provisions','settings'];
   document.getElementById('section-'+name).classList.add('active');
   document.querySelectorAll('.nav-item')[tabs.indexOf(name)].classList.add('active');
+  if (name==='provisions') { loadSinkingFunds(); renderProvisions(); }
+  if (name==='savings') { renderRecommendations(); renderPhasesPlan(); renderRetirementProjection(); }
 }
 
 function loadCfgUI() {
@@ -1119,6 +1155,7 @@ async function loadFromGithub() {
     const json = JSON.parse(atob(file.content.replace(/\n/g,'')));
     if (json.data) data = json.data;
     if (json.savings) savings = json.savings;
+    if (json.savings && json.savings.sinkingFunds) sinkingFunds = json.savings.sinkingFunds; else if (json.sinkingFunds) sinkingFunds = json.sinkingFunds;
     localStorage.setItem('finance_data',JSON.stringify(data));
     localStorage.setItem('finance_savings',JSON.stringify(savings));
     render();
@@ -1186,6 +1223,170 @@ function resetData() {
   localStorage.removeItem('finance_data'); localStorage.removeItem('finance_savings');
   render();
 }
+// ============ SINKING FUNDS / PROVISIONS ============
+
+let sinkingFunds = [];
+
+function loadSinkingFunds() {
+  if (savings.sinkingFunds) sinkingFunds = savings.sinkingFunds;
+  else if (window._sinkingFunds) sinkingFunds = window._sinkingFunds;
+}
+
+function saveSinkingFunds() {
+  savings.sinkingFunds = sinkingFunds;
+  autoSave();
+}
+
+const PROV_CATS = {
+  carro:'🚗 Carro', saude:'🦷 Saúde', casa:'🏠 Casa',
+  roupas:'👗 Roupas', beleza:'💅 Beleza', social:'🎁 Social',
+  tech:'📱 Tech', transporte:'🚌 Transporte'
+};
+const PROV_COLORS = {
+  carro:'#ef4444',saude:'#3b82f6',casa:'#22c55e',
+  roupas:'#ec4899',beleza:'#a855f7',social:'#f59e0b',
+  tech:'#06b6d4',transporte:'#8b5cf6'
+};
+
+function renderProvisions() {
+  if (!document.getElementById('prov-metrics')) return;
+  loadSinkingFunds();
+  if (!sinkingFunds || sinkingFunds.length===0) {
+    document.getElementById('prov-groups').innerHTML = '<div class="empty">Nenhuma provisão configurada ainda.</div>';
+    return;
+  }
+
+  const totalMonthly = sinkingFunds.reduce((s,f)=>s+(+f.monthlyProvision||0),0);
+  const totalBalance = sinkingFunds.reduce((s,f)=>s+(+f.balance||0),0);
+  const upcoming = sinkingFunds.filter(f=>f.nextDue).sort((a,b)=>a.nextDue.localeCompare(b.nextDue)).slice(0,1)[0];
+  const cats = [...new Set(sinkingFunds.map(f=>f.category))].length;
+
+  document.getElementById('prov-metrics').innerHTML = `
+    <div class="metric"><div class="lbl">Provisão total/mês</div><div class="val" style="color:#d97706">${fmt(totalMonthly)}</div><div class="sub">${sinkingFunds.length} itens</div></div>
+    <div class="metric"><div class="lbl">Saldo acumulado</div><div class="val" style="color:#22c55e">${fmt(totalBalance)}</div><div class="sub">nas caixinhas</div></div>
+    <div class="metric"><div class="lbl">Próximo gasto</div><div class="val" style="font-size:14px">${upcoming?upcoming.name.slice(0,16)+'…':'Nenhum'}</div><div class="sub">${upcoming&&upcoming.nextDue?upcoming.nextDue:''}</div></div>
+    <div class="metric"><div class="lbl">Categorias</div><div class="val">${cats}</div><div class="sub">tipos de gasto</div></div>
+  `;
+
+  renderProvCatChart();
+
+  const groups = {};
+  sinkingFunds.forEach(f => {
+    if (!groups[f.category]) groups[f.category] = [];
+    groups[f.category].push(f);
+  });
+
+  let h = '';
+  Object.entries(groups).forEach(([cat, funds]) => {
+    const catTotal = funds.reduce((s,f)=>s+(+f.monthlyProvision||0),0);
+    const catBalance = funds.reduce((s,f)=>s+(+f.balance||0),0);
+    const color = PROV_COLORS[cat]||'#8b5cf6';
+    const label = PROV_CATS[cat]||cat;
+    h += `<div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <h3 style="display:flex;align-items:center;gap:8px">
+          <span style="width:10px;height:10px;background:${color};border-radius:50%;display:inline-block"></span>
+          ${label}
+        </h3>
+        <span class="sub">${fmt(catTotal)}/mês · saldo ${fmt(catBalance)}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
+        ${funds.map(f => {
+          const months = f.monthlyProvision > 0 ? Math.ceil((f.estimatedCost - f.balance) / f.monthlyProvision) : '∞';
+          const pct = f.estimatedCost > 0 ? Math.min(100, Math.round(f.balance/f.estimatedCost*100)) : 0;
+          const dueLabel = f.nextDue ? (() => {
+            const d = new Date(f.nextDue+'-01'), now = new Date();
+            const diff = Math.round((d-now)/(1000*60*60*24*30));
+            if (diff <= 1) return `<span style="background:#fef2f2;color:#dc2626;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600">Em ${diff<=0?'breve':diff+'m'}</span>`;
+            if (diff <= 3) return `<span style="background:#fffbeb;color:#d97706;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600">${diff}m</span>`;
+            return `<span style="color:var(--text3);font-size:10px">${diff}m</span>`;
+          })() : '';
+          return `<div style="background:var(--bg3);border-radius:8px;padding:12px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500;color:var(--text)">${esc(f.name)}</div>
+                <div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(f.note||'')}</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0;margin-left:8px">
+                <div style="font-size:13px;font-weight:600;color:${color};font-family:'Geist Mono',monospace">${fmt(f.monthlyProvision)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mês</span></div>
+                <div style="font-size:10px;color:var(--text3)">${f.frequency}</div>
+              </div>
+            </div>
+            <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:6px">
+              <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;transition:width .4s"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+              <div style="display:flex;gap:8px;align-items:center">
+                <span style="font-size:11px;color:var(--text3)">Saldo: <input type="number" value="${f.balance||0}" min="0" style="width:70px;font-size:11px;padding:2px 4px;background:var(--bg2)" onchange="updateSFBalance(${f.id},+this.value)"></span>
+                <span style="font-size:11px;color:var(--text3)">/ ${fmt(f.estimatedCost)}</span>
+                ${dueLabel}
+              </div>
+              <div style="display:flex;gap:4px">
+                <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;color:${color};border-color:${color}20" onclick="contributeMonth(${f.id})">+${fmt(f.monthlyProvision)}</button>
+                <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;color:var(--red);border-color:#fecaca" onclick="useFund(${f.id})">Usar</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('prov-groups').innerHTML = h;
+}
+
+function renderProvCatChart() {
+  destroyChart('prov-cat');
+  const cats = {};
+  sinkingFunds.forEach(f => { cats[f.category] = (cats[f.category]||0) + (+f.monthlyProvision||0); });
+  const labels = Object.keys(cats).map(c=>PROV_CATS[c]||c);
+  const vals = Object.values(cats);
+  const colors = Object.keys(cats).map(c=>PROV_COLORS[c]||'#888');
+  const ctx = document.getElementById('chart-prov-cat');
+  if (!ctx) return;
+  charts['prov-cat'] = new Chart(ctx.getContext('2d'), {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: vals, backgroundColor: colors, borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '55%',
+      plugins: { legend: { position: 'right', labels: { font: { family: 'Geist', size: 11 }, boxWidth: 10, padding: 8, color: '#6b6b66' } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}/mês` } } } }
+  });
+}
+
+function updateSFBalance(id, val) {
+  const f = sinkingFunds.find(x=>x.id===id);
+  if (f) { f.balance = val; saveSinkingFunds(); renderProvisions(); }
+}
+
+function contributeMonth(id) {
+  const f = sinkingFunds.find(x=>x.id===id);
+  if (f) { f.balance = (+f.balance||0) + (+f.monthlyProvision||0); saveSinkingFunds(); renderProvisions(); }
+}
+
+function useFund(id) {
+  const f = sinkingFunds.find(x=>x.id===id);
+  if (!f) return;
+  const amt = parseFloat(prompt(`Quanto foi gasto em "${f.name}"?`, f.estimatedCost));
+  if (!isNaN(amt) && amt > 0) {
+    f.balance = Math.max(0, (+f.balance||0) - amt);
+    f.lastUsed = new Date().toISOString().slice(0,7);
+    saveSinkingFunds();
+    renderProvisions();
+  }
+}
+
+function markAllProvisionsPaid() {
+  if (!confirm('Adicionar a contribuição mensal em TODAS as provisões?')) return;
+  sinkingFunds.forEach(f => { f.balance = (+f.balance||0) + (+f.monthlyProvision||0); });
+  saveSinkingFunds();
+  renderProvisions();
+}
+
+function addSinkingFund() {
+  sinkingFunds.push({id:nextId++,name:'Nova provisão',category:'casa',frequency:'mensal',estimatedCost:100,monthlyProvision:20,balance:0,lastUsed:null,nextDue:null,note:''});
+  saveSinkingFunds();
+  renderProvisions();
+}
+
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 async function tryAutoLoad() { if(cfg.user&&cfg.token){try{await loadFromGithub();}catch(e){}} }
