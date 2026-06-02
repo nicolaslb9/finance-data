@@ -182,18 +182,133 @@ select { cursor: pointer; }
 
 /* MOBILE */
 @media (max-width: 720px) {
-  .sidebar { width: 100%; height: auto; position: relative; flex-direction: row; padding: 0; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); }
+  /* ── Layout: sidebar becomes bottom tab bar ── */
+  .app { flex-direction: column-reverse; min-height: 100dvh; }
+  .sidebar {
+    width: 100%; height: 64px; position: fixed; bottom: 0; left: 0; top: auto;
+    flex-direction: row; padding: 0; border-right: none; border-top: 1px solid var(--border);
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px); z-index: 100;
+    box-shadow: 0 -1px 12px rgba(0,0,0,0.06);
+  }
   .logo { display: none; }
-  .nav { display: flex; flex-direction: row; padding: 8px; overflow-x: auto; flex: 1; }
-  .nav-item { padding: 8px 12px; border-radius: var(--radius-sm); white-space: nowrap; margin-bottom: 0; }
+  .nav {
+    display: flex; flex-direction: row; padding: 0;
+    flex: 1; overflow-x: auto; scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-item {
+    flex: 1; min-width: 56px; flex-direction: column; gap: 3px;
+    padding: 8px 4px 10px; border-left: none; border-bottom: none;
+    border-radius: 0; margin-bottom: 0; justify-content: center;
+    align-items: center; font-size: 10px; font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    letter-spacing: 0;
+  }
+  .nav-item.active { background: transparent; color: var(--accent); }
+  .nav-item.active .nav-icon { opacity: 1; }
+  .nav-item .nav-icon { width: 20px; height: 20px; flex-shrink: 0; }
   .sidebar-bottom { display: none; }
-  .app { flex-direction: column; }
-  .main { margin-left: 0; padding: 16px; }
-  .metrics { grid-template-columns: repeat(2, 1fr); }
-  .grid2, .grid3 { grid-template-columns: 1fr; }
-  .budget-tbl .tbl-header, .budget-tbl .tbl-row { grid-template-columns: minmax(0,2fr) 80px 80px 28px; }
-  .tx-tbl .tbl-header, .tx-tbl .tbl-row { grid-template-columns: 85px minmax(0,1fr) 80px 28px; }
-  .tx-desc-col, .tx-type-col, .budget-spent-col, .budget-bal-col { display: none; }
+
+  /* ── Main content area ── */
+  .main {
+    margin-left: 0;
+    padding: 12px 14px;
+    padding-bottom: calc(64px + env(safe-area-inset-bottom) + 12px);
+    max-width: 100%;
+  }
+
+  /* ── Page header ── */
+  .page-header { margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .page-header h2 { font-size: 17px; }
+  .page-header p { font-size: 12px; }
+
+  /* ── Metric cards: 2 cols, tighter ── */
+  .metrics { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+  .metric { padding: 12px 12px; }
+  .metric .val { font-size: 18px; }
+  .metric .lbl { font-size: 10px; margin-bottom: 6px; }
+  .metric .sub { font-size: 10px; }
+
+  /* ── Cards ── */
+  .card { padding: 14px; margin-bottom: 10px; }
+  .card-header { margin-bottom: 12px; }
+  .card-header h3 { font-size: 12px; }
+
+  /* ── Grids always stack ── */
+  .grid2, .grid3 { grid-template-columns: 1fr; gap: 10px; }
+
+  /* ── Charts shorter on mobile ── */
+  .chart-wrap { height: 160px !important; }
+
+  /* ── Budget table: hide less important cols, readable ── */
+  .budget-tbl .tbl-header,
+  .budget-tbl .tbl-row { grid-template-columns: 1fr 70px 28px; }
+  .budget-spent-col, .budget-bal-col, .budget-type-col { display: none; }
+  .budget-tbl select { display: none; }
+
+  /* ── Transactions table ── */
+  .tx-tbl .tbl-header,
+  .tx-tbl .tbl-row { grid-template-columns: 80px 1fr 72px 28px; }
+  .tx-desc-col, .tx-type-col { display: none; }
+
+  /* ── Buttons: larger tap targets ── */
+  .btn { padding: 9px 14px; font-size: 13px; min-height: 40px; }
+  .btn-sm { padding: 7px 11px; font-size: 12px; min-height: 36px; }
+  .del-btn { padding: 6px 8px; font-size: 18px; min-height: 36px; min-width: 36px; }
+
+  /* ── Month select in header ── */
+  .month-bar { margin-bottom: 14px; gap: 8px; }
+  .month-bar select { font-size: 13px; }
+
+  /* ── Waterfall bar labels shorter ── */
+  .bar-row { grid-template-columns: 95px 1fr 72px; gap: 6px; }
+  .bar-lbl { font-size: 11px; }
+  .bar-amt { font-size: 10px; }
+
+  /* ── Savings goals readable ── */
+  .prog-meta { gap: 10px; flex-wrap: wrap; }
+  .prog-meta input { width: 60px; }
+  .prog-name { font-size: 13px; }
+
+  /* ── Wallet rows ── */
+  .wallet-row { padding: 10px 0; }
+  .wallet-amt { width: 90px; font-size: 13px; }
+
+  /* ── Toast bottom position adjusted for nav bar ── */
+  .mobile-toast { bottom: calc(72px + env(safe-area-inset-bottom)) !important; }
+
+  /* ── Budget overview banner ── */
+  #budget-overview-banner > div {
+    flex-direction: column; gap: 8px; padding: 12px 14px;
+  }
+  #budget-overview-banner > div > div:last-child {
+    text-align: left;
+  }
+
+  /* ── Sinking fund cards ── */
+  #sf-categories .card > div:first-child { flex-direction: column; align-items: flex-start; }
+
+  /* ── Car debt recs grid ── */
+  #car-recommendations > div:first-child { grid-template-columns: 1fr; }
+
+  /* ── Car lump sim ── */
+  #car-lump-result > div { grid-template-columns: 1fr 1fr; }
+
+  /* ── Provisions: sf-metrics 2 cols ── */
+  #sf-metrics { grid-template-columns: repeat(2,1fr) !important; }
+
+  /* ── Phases plan always stack ── */
+  #phases-plan > div { grid-template-columns: 1fr !important; }
+
+  /* ── Remove some padding-heavy inline styles on mobile ── */
+  [style*="grid-template-columns:repeat(3"] { grid-template-columns: repeat(2,1fr) !important; }
+  [style*="grid-template-columns:repeat(4"] { grid-template-columns: repeat(2,1fr) !important; }
+}
+
+/* ── Safe area for phones with notch (top) ── */
+@media (max-width: 720px) {
+  .main { padding-top: max(12px, env(safe-area-inset-top)); }
 }
 
 .fade-in { animation: fadeIn 0.18s ease; }
@@ -1999,8 +2114,10 @@ function showAutoConnectToast() {
   if (window._toastShown) return;
   window._toastShown = true;
   const toast = document.createElement('div');
+  const isMobile = window.innerWidth <= 720;
+  toast.className = isMobile ? 'mobile-toast' : '';
   toast.style.cssText = [
-    'position:fixed','bottom:24px','right:24px','z-index:9999',
+    'position:fixed',isMobile?'bottom:calc(72px + env(safe-area-inset-bottom))':'bottom:24px','right:24px','z-index:9999',
     'background:#1a1a18','color:#f0f0f2','border-radius:10px',
     'padding:12px 18px','font-size:13px','font-family:Geist,sans-serif',
     'display:flex','align-items:center','gap:10px',
@@ -2031,6 +2148,31 @@ async function tryAutoLoad() {
 
 init();
 tryAutoLoad();
+</script>
+<!-- Mobile FAB -->
+<button id="mobile-fab" onclick="addTx()" style="
+  display:none;position:fixed;bottom:calc(72px + env(safe-area-inset-bottom) + 12px);right:16px;
+  width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;
+  border:none;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,0.4);
+  font-size:24px;line-height:1;z-index:99;transition:transform .15s;
+  display:flex;align-items:center;justify-content:center;
+" aria-label="Adicionar gasto">
+  <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 2v12M2 8h12"/></svg>
+</button>
+<script>
+// Show FAB only on mobile and only on transactions tab
+function updateFab(tabName) {
+  const fab = document.getElementById('mobile-fab');
+  if (!fab) return;
+  const isMobile = window.innerWidth <= 720;
+  fab.style.display = (isMobile && tabName === 'transactions') ? 'flex' : 'none';
+}
+const _origShowTabFab = showTab;
+showTab = function(name) { _origShowTabFab(name); updateFab(name); };
+window.addEventListener('resize', () => {
+  const active = document.querySelector('.nav-item.active');
+  if (active) updateFab(active.getAttribute('onclick')?.match(/'(\w+)'/)?.[1] || '');
+});
 </script>
 <script>
 if ('serviceWorker' in navigator) {
