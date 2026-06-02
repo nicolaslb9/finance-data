@@ -167,12 +167,6 @@
           "name": "🎄 Christmas Fund",
           "type": "savings",
           "budget": 0
-        },
-        {
-          "id": 1010,
-          "name": "Nova categoria",
-          "type": "needs",
-          "budget": 0
         }
       ],
       "transactions": []
@@ -187,7 +181,7 @@
       },
       {
         "id": 2,
-        "name": "Travel / Viagens",
+        "name": "🇯🇵 Japan Trip",
         "amount": 300
       },
       {
