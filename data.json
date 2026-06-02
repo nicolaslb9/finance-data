@@ -161,6 +161,18 @@
           "name": "🎓 College Nicolas",
           "type": "savings",
           "budget": 0
+        },
+        {
+          "id": 1009,
+          "name": "🎄 Christmas Fund",
+          "type": "savings",
+          "budget": 0
+        },
+        {
+          "id": 1010,
+          "name": "Nova categoria",
+          "type": "needs",
+          "budget": 0
         }
       ],
       "transactions": []
