@@ -58,7 +58,7 @@
           "id": 15,
           "name": "Koodo Plans",
           "type": "fixed",
-          "budget": 97
+          "budget": 110
         },
         {
           "id": 20,
@@ -76,25 +76,13 @@
           "id": 30,
           "name": "Mercado / Groceries",
           "type": "needs",
-          "budget": 680
+          "budget": 800
         },
         {
           "id": 31,
           "name": "Combustivel",
           "type": "needs",
           "budget": 200
-        },
-        {
-          "id": 32,
-          "name": "Saude / Health",
-          "type": "needs",
-          "budget": 100
-        },
-        {
-          "id": 33,
-          "name": "Casa / Household",
-          "type": "needs",
-          "budget": 100
         },
         {
           "id": 40,
@@ -106,13 +94,13 @@
           "id": 41,
           "name": "Beauty",
           "type": "wants",
-          "budget": 150
+          "budget": 200
         },
         {
           "id": 42,
           "name": "Assinaturas",
           "type": "wants",
-          "budget": 55
+          "budget": 108
         },
         {
           "id": 43,
@@ -124,25 +112,19 @@
           "id": 44,
           "name": "Allowance Juliana",
           "type": "wants",
-          "budget": 200
-        },
-        {
-          "id": 45,
-          "name": "Roupas / Clothing",
-          "type": "wants",
-          "budget": 0
+          "budget": 300
         },
         {
           "id": 50,
           "name": "Emergency Savings",
           "type": "savings",
-          "budget": 600
+          "budget": 300
         },
         {
           "id": 51,
           "name": "Travel Funds",
           "type": "savings",
-          "budget": 500
+          "budget": 1000
         },
         {
           "id": 52,
@@ -155,6 +137,12 @@
           "name": "Provisões (Sinking Funds)",
           "type": "provision",
           "budget": 20
+        },
+        {
+          "id": 1000,
+          "name": "Terapia",
+          "type": "fixed",
+          "budget": 400
         }
       ],
       "transactions": [
