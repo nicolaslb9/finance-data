@@ -317,6 +317,7 @@ select { cursor: pointer; }
 }
 
 .fade-in { animation: fadeIn 0.18s ease; }
+@keyframes spin { to { transform:rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 </style>
@@ -408,6 +409,29 @@ select { cursor: pointer; }
     <div class="card">
       <div class="card-header"><h3>Alertas</h3></div>
       <div id="alerts"></div>
+    </div>
+  </div>
+
+  <!-- WEEKLY REPORT -->
+  <div class="card" id="weekly-report-card" style="margin-top:4px">
+    <div class="card-header">
+      <h3>📋 Relatório Semanal</h3>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span id="report-date-label" style="font-size:11px;color:var(--text3)"></span>
+        <button class="btn btn-sm" onclick="generateWeeklyReport()" id="report-gen-btn">Gerar agora</button>
+        <button class="btn btn-sm" onclick="requestNotificationPermission()" title="Ativar notificação semanal" style="font-size:12px;padding:5px 8px">🔔</button>
+      </div>
+    </div>
+    <div id="weekly-report-content">
+      <div style="padding:24px 0;text-align:center;color:var(--text3);font-size:13px">
+        Nenhum relatório ainda. Clique em "Gerar agora" para criar o primeiro.
+      </div>
+    </div>
+    <div id="report-loading" style="display:none;padding:20px 0;text-align:center">
+      <div style="display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--text3)">
+        <div style="width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite"></div>
+        Analisando seus dados com IA…
+      </div>
     </div>
   </div>
 </div>
@@ -731,6 +755,7 @@ function init() {
   if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
   loadSinkingFunds();
   render();
+  loadWeeklyReport();
 }
 
 function md() { return data[currentMonth]; }
@@ -2131,6 +2156,257 @@ function renderCarLumpSim() {
       <div style="font-size:10px;color:var(--text3)">sobre o aporte</div>
     </div>
   </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// WEEKLY REPORT
+// ═══════════════════════════════════════════════════════════
+
+function getWeekLabel() {
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('pt-BR', {day:'2-digit',month:'2-digit'});
+  return `Semana ${fmt(monday)} – ${fmt(sunday)}`;
+}
+
+function buildReportPrompt() {
+  const m = md();
+  const inc = totalIncome();
+  const budgetLines = m.budget.map(b => {
+    const sp = spentForCat(b.id);
+    return `${b.name} (${typeLabel(b.type)}): orçado $${b.budget}, gasto $${sp.toFixed(0)}`;
+  }).join('\n');
+
+  const txLines = [...m.transactions]
+    .sort((a,b) => b.date.localeCompare(a.date))
+    .slice(0, 30)
+    .map(t => {
+      const cat = m.budget.find(b=>b.id===t.cat);
+      return `${t.date} | ${cat?.name||'?'} | ${t.desc||''} | $${t.amount}`;
+    }).join('\n');
+
+  const sfBalance = (savings.sinkingFunds||[]).reduce((s,f)=>s+(+f.balance||0),0);
+  const totalSaved = savings.wallets.reduce((s,w)=>s+(+w.amount||0),0);
+  const totalSpent = m.budget.reduce((s,b)=>s+spentForCat(b.id),0);
+  const unalloc = inc - m.budget.reduce((s,b)=>s+(+b.budget||0),0);
+
+  const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                  'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+  return `Você é um assistente financeiro pessoal para um casal jovem (Nicolas, 27, e Juliana, 30) morando em Vancouver, BC, Canadá. Analise os dados financeiros abaixo e gere um relatório semanal em português brasileiro.
+
+MÊS ATUAL: ${MONTHS[currentMonth]} 2026
+RENDA MENSAL LÍQUIDA: $${inc.toLocaleString('en-CA')} CAD
+
+ORÇAMENTO VS GASTOS:
+${budgetLines}
+
+TRANSAÇÕES RECENTES (últimas 30):
+${txLines || 'Nenhuma transação registrada ainda.'}
+
+RESUMO:
+- Total gasto no mês: $${totalSpent.toFixed(0)}
+- Não alocado no orçamento: $${unalloc.toFixed(0)}
+- Saldo sinking funds: $${sfBalance.toFixed(0)}
+- Patrimônio total guardado: $${totalSaved.toLocaleString('en-CA')}
+
+METAS ATIVAS: Japan Trip, Emergency Fund ($33k), TFSA, Baby Fund 2029, Brasil 2027
+
+Gere um relatório semanal com EXATAMENTE esta estrutura HTML (sem markdown, sem blocos de código, apenas HTML inline):
+
+<div style="display:flex;flex-direction:column;gap:16px">
+
+<div style="background:#f0fdf4;border-radius:10px;padding:14px 16px;border-left:3px solid #22c55e">
+<div style="font-size:12px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">✅ Pontos positivos</div>
+<ul style="font-size:13px;color:#166534;line-height:1.9;padding-left:16px;margin:0">
+[3 pontos positivos específicos baseados nos dados]
+</ul>
+</div>
+
+<div style="background:#fef2f2;border-radius:10px;padding:14px 16px;border-left:3px solid #ef4444">
+<div style="font-size:12px;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">⚠️ Atenção necessária</div>
+<ul style="font-size:13px;color:#991b1b;line-height:1.9;padding-left:16px;margin:0">
+[2-3 alertas específicos com valores reais dos dados]
+</ul>
+</div>
+
+<div style="background:#eff6ff;border-radius:10px;padding:14px 16px;border-left:3px solid #3b82f6">
+<div style="font-size:12px;font-weight:700;color:#1e40af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">💡 Recomendações da semana</div>
+<ul style="font-size:13px;color:#1e40af;line-height:1.9;padding-left:16px;margin:0">
+[2-3 ações concretas e específicas para esta semana]
+</ul>
+</div>
+
+<div style="background:#fafafa;border-radius:10px;padding:12px 16px;border:1px solid #e5e7eb">
+<div style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">📊 Número da semana</div>
+<div style="font-size:28px;font-weight:700;font-family:monospace;color:#111827">[número mais relevante]</div>
+<div style="font-size:12px;color:#6b7280;margin-top:4px">[explicação do número em 1 linha]</div>
+</div>
+
+</div>
+
+Seja direto, use valores reais dos dados, e foque em ações práticas. Não invente dados que não estão nos dados fornecidos.`;
+}
+
+async function generateWeeklyReport(silent) {
+  const contentEl = document.getElementById('weekly-report-content');
+  const loadingEl = document.getElementById('report-loading');
+  const btnEl = document.getElementById('report-gen-btn');
+  const dateLbl = document.getElementById('report-date-label');
+
+  if (!contentEl) return;
+
+  if (!silent) {
+    contentEl.style.display = 'none';
+    loadingEl.style.display = 'block';
+    if (btnEl) btnEl.disabled = true;
+  }
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: buildReportPrompt() }]
+      })
+    });
+
+    const data = await response.json();
+    const reportHtml = data.content?.[0]?.text || 'Erro ao gerar relatório.';
+
+    // Strip any markdown code fences just in case
+    const clean = reportHtml.replace(/```html?|```/g, '').trim();
+
+    // Save to localStorage + GitHub
+    const reportObj = {
+      html: clean,
+      week: getWeekLabel(),
+      generatedAt: new Date().toISOString(),
+      month: currentMonth
+    };
+    localStorage.setItem('finance_weekly_report', JSON.stringify(reportObj));
+    saveReportToGithub(reportObj);
+
+    renderWeeklyReport(reportObj);
+    if (!silent) scheduleWeeklyNotification();
+
+  } catch(err) {
+    contentEl.style.display = 'block';
+    contentEl.innerHTML = `<div style="padding:12px;color:var(--red);font-size:13px">Erro ao gerar: ${err.message}</div>`;
+  } finally {
+    loadingEl.style.display = 'none';
+    if (btnEl) btnEl.disabled = false;
+  }
+}
+
+function renderWeeklyReport(reportObj) {
+  const contentEl = document.getElementById('weekly-report-content');
+  const loadingEl = document.getElementById('report-loading');
+  const dateLbl = document.getElementById('report-date-label');
+  if (!contentEl) return;
+
+  if (loadingEl) loadingEl.style.display = 'none';
+  contentEl.style.display = 'block';
+  contentEl.innerHTML = reportObj.html;
+  if (dateLbl) dateLbl.textContent = reportObj.week || '';
+}
+
+async function saveReportToGithub(reportObj) {
+  if (!cfg.user || !cfg.token) return;
+  try {
+    let sha;
+    try {
+      const ex = await githubRequest('GET', 'weekly-report.json');
+      sha = ex.sha;
+    } catch(e) {}
+    const body = { message: 'update weekly report', content: btoa(unescape(encodeURIComponent(JSON.stringify(reportObj, null, 2)))) };
+    if (sha) body.sha = sha;
+    await githubRequest('PUT', 'weekly-report.json', body);
+  } catch(e) { console.log('Report save error:', e.message); }
+}
+
+async function loadReportFromGithub() {
+  if (!cfg.user || !cfg.token) return null;
+  try {
+    const file = await githubRequest('GET', 'weekly-report.json');
+    return JSON.parse(atob(file.content.replace(/\n/g,'')));
+  } catch(e) { return null; }
+}
+
+function loadWeeklyReport() {
+  // Try localStorage first (instant), then check if we should auto-generate
+  const cached = localStorage.getItem('finance_weekly_report');
+  if (cached) {
+    try {
+      const r = JSON.parse(cached);
+      renderWeeklyReport(r);
+      // Check if report is older than 7 days — auto-regenerate silently
+      const age = (Date.now() - new Date(r.generatedAt).getTime()) / (1000*60*60*24);
+      if (age > 7) {
+        console.log('Report is', Math.round(age), 'days old — auto-regenerating');
+        setTimeout(() => generateWeeklyReport(true), 3000); // silent, after 3s
+      }
+      return;
+    } catch(e) {}
+  }
+  // No cached report — try loading from GitHub
+  loadReportFromGithub().then(r => {
+    if (r) {
+      localStorage.setItem('finance_weekly_report', JSON.stringify(r));
+      renderWeeklyReport(r);
+    }
+  });
+}
+
+// ── Local push notification scheduling ─────────────────────────────────────
+function scheduleWeeklyNotification() {
+  if (!('Notification' in window)) return;
+
+  Notification.requestPermission().then(perm => {
+    if (perm !== 'granted') return;
+
+    // Calculate next Monday 9am
+    const now = new Date();
+    const nextMonday = new Date(now);
+    nextMonday.setDate(now.getDate() + ((8 - now.getDay()) % 7 || 7));
+    nextMonday.setHours(9, 0, 0, 0);
+    const delay = nextMonday.getTime() - now.getTime();
+
+    // Save scheduled time to localStorage so SW can pick it up
+    localStorage.setItem('report_notify_at', nextMonday.toISOString());
+    console.log('Notification scheduled for', nextMonday.toLocaleString('pt-BR'));
+
+    // Schedule via setTimeout (works when app is open)
+    setTimeout(() => {
+      new Notification('Finance Dashboard 📊', {
+        body: 'Seu relatório semanal está pronto. Toque para abrir.',
+        icon: '/finance-data/icon-192.png',
+        badge: '/finance-data/icon-192.png',
+        tag: 'weekly-report'
+      });
+      generateWeeklyReport(true);
+    }, delay);
+  });
+}
+
+function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    alert('Notificações não suportadas neste browser.');
+    return;
+  }
+  Notification.requestPermission().then(perm => {
+    if (perm === 'granted') {
+      scheduleWeeklyNotification();
+      alert('✅ Notificações ativadas! Você receberá o relatório toda segunda-feira às 9h.');
+    } else {
+      alert('Permissão negada. Ative nas configurações do seu dispositivo.');
+    }
+  });
 }
 
 function showAutoConnectToast() {
