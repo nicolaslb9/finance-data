@@ -306,6 +306,9 @@ select { cursor: pointer; }
     <div id="budget-waterfall"></div>
   </div>
 
+  <!-- SINKING FUNDS LINK CARD -->
+  <div id="budget-sinking-card" style="margin-bottom:16px"></div>
+
   <!-- INCOME + CATEGORIES -->
   <div class="grid2">
     <div class="card">
@@ -426,6 +429,9 @@ select { cursor: pointer; }
   <div class="page-header">
     <div><h2>Provisões</h2><p>Gastos irregulares — guarde um pouco todo mês para não ser pego de surpresa</p></div>
   </div>
+  <!-- BUDGET LINK BANNER -->
+  <div id="prov-budget-banner" style="margin-bottom:16px"></div>
+
   <div class="metrics" id="prov-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
   <div class="grid2" style="margin-bottom:16px">
     <div class="card">
@@ -529,6 +535,7 @@ function defaultMonthData() {
       {id:50,name:'Emergency Savings',type:'savings',budget:600},
       {id:51,name:'Travel Funds',type:'savings',budget:500},
       {id:52,name:'TFSA Retirement',type:'savings',budget:300},
+      {id:60,name:'Provisões (Sinking Funds)',type:'provision',budget:683},
     ],
     transactions: [],
   };
@@ -581,9 +588,9 @@ function spentByType(type) { return md().budget.filter(b=>b.type===type).reduce(
 function fmt(n) { return '$'+Math.abs(Math.round(n)).toLocaleString('en-CA'); }
 function fmtSigned(n) { return (n<0?'-':'')+fmt(n); }
 function clamp(v,a,b) { return Math.max(a,Math.min(b,v)); }
-function typeLabel(t) { return {fixed:'Fixo',debt:'Dívida',needs:'Necessidade',wants:'Desejo',savings:'Savings'}[t]||t; }
-function typeColor(t) { return {fixed:'#94a3b8',debt:'#ef4444',needs:'#22c55e',wants:'#3b82f6',savings:'#8b5cf6'}[t]||'#94a3b8'; }
-function typeLightColor(t) { return {fixed:'#f8fafc',debt:'#fef2f2',needs:'#f0fdf4',wants:'#eff6ff',savings:'#f5f3ff'}[t]||'#f8fafc'; }
+function typeLabel(t) { return {fixed:'Fixo',debt:'Dívida',needs:'Necessidade',wants:'Desejo',savings:'Savings',provision:'Provisões'}[t]||t; }
+function typeColor(t) { return {fixed:'#94a3b8',debt:'#ef4444',needs:'#22c55e',wants:'#3b82f6',savings:'#8b5cf6',provision:'#f59e0b'}[t]||'#94a3b8'; }
+function typeLightColor(t) { return {fixed:'#f8fafc',debt:'#fef2f2',needs:'#f0fdf4',wants:'#eff6ff',savings:'#f5f3ff',provision:'#fffbeb'}[t]||'#f8fafc'; }
 
 function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
 
@@ -594,6 +601,7 @@ function render() {
   renderCatChart();
   renderAlerts();
   renderIncomeList();
+  syncProvisionBudget();
   renderBudgetList();
   renderBudgetOverview();
   renderTxTimeline();
@@ -750,7 +758,7 @@ function addIncome() { md().income.push({id:nextId++,label:'Nova renda',amount:0
 
 function renderBudgetSummaryChart() {
   destroyChart('budget-summary');
-  const types = ['fixed','debt','needs','wants','savings'];
+  const types = ['fixed','debt','needs','wants','savings','provision'];
   const ctx = document.getElementById('chart-budget-summary');
   if (!ctx) return;
   charts['budget-summary'] = new Chart(ctx.getContext('2d'), {
@@ -777,7 +785,7 @@ function renderBudgetPieChart() {
   destroyChart('budget-pie');
   const ctx = document.getElementById('chart-budget-pie');
   if (!ctx) return;
-  const types = ['fixed','debt','needs','wants','savings'];
+  const types = ['fixed','debt','needs','wants','savings','provision'];
   const inc = totalIncome();
   const budgeted = types.map(t => totalByType(t));
   const totalBud = budgeted.reduce((a,b)=>a+b,0);
@@ -893,11 +901,12 @@ function renderBudgetWaterfall() {
   if (inc === 0) { el.innerHTML = '<div class="empty">Configure a renda primeiro</div>'; return; }
 
   const types = [
-    { key: 'fixed',   label: '🏠 Despesas fixas',   color: '#94a3b8' },
-    { key: 'debt',    label: '💳 Dívidas',            color: '#ef4444' },
-    { key: 'savings', label: '💰 Savings',             color: '#8b5cf6' },
-    { key: 'needs',   label: '🛒 Necessidades',        color: '#22c55e' },
-    { key: 'wants',   label: '🎯 Desejos',             color: '#3b82f6' },
+    { key: 'fixed',     label: '🏠 Despesas fixas',   color: '#94a3b8' },
+    { key: 'debt',      label: '💳 Dívidas',            color: '#ef4444' },
+    { key: 'savings',   label: '💰 Savings',             color: '#8b5cf6' },
+    { key: 'needs',     label: '🛒 Necessidades',        color: '#22c55e' },
+    { key: 'wants',     label: '🎯 Desejos',             color: '#3b82f6' },
+    { key: 'provision', label: '🔧 Provisões',           color: '#f59e0b' },
   ];
 
   let remaining = inc;
@@ -950,7 +959,7 @@ function renderBudgetTypeSummary() {
   const unallocEl = document.getElementById('budget-unalloc-label');
   if (!el) return;
   const inc = totalIncome();
-  const types = ['fixed','debt','needs','wants','savings'];
+  const types = ['fixed','debt','needs','wants','savings','provision'];
   let h = '';
   let totalBud = 0;
   types.forEach(t => {
@@ -985,7 +994,80 @@ function renderBudgetTypeSummary() {
   if (unallocEl) unallocEl.textContent = unalloc <= 0 ? '✓ 100% alocado' : fmt(unalloc) + ' livre';
 }
 
+function totalSinkingMonthly() {
+  if (!sinkingFunds || sinkingFunds.length === 0) return 0;
+  return sinkingFunds.reduce((s,f) => s + (+f.monthlyProvision||0), 0);
+}
+
+function syncProvisionBudget() {
+  // Keep the 'provision' budget item in sync with sum of sinking funds
+  const total = totalSinkingMonthly();
+  const provItem = md().budget.find(b => b.type === 'provision');
+  if (provItem) {
+    provItem.budget = total;
+  } else if (total > 0) {
+    md().budget.push({id:60, name:'Provisões (Sinking Funds)', type:'provision', budget: total});
+  }
+}
+
+function renderBudgetSinkingCard() {
+  const el = document.getElementById('budget-sinking-card');
+  if (!el) return;
+  loadSinkingFunds();
+  syncProvisionBudget();
+
+  const total = totalSinkingMonthly();
+  const balance = sinkingFunds.reduce((s,f) => s + (+f.balance||0), 0);
+  const inc = totalIncome();
+  const pct = inc > 0 ? Math.round(total/inc*100) : 0;
+  const cats = [...new Set(sinkingFunds.map(f=>f.category))];
+  const PROV_COLORS_LOCAL = {carro:'#ef4444',saude:'#3b82f6',casa:'#22c55e',roupas:'#ec4899',beleza:'#a855f7',social:'#f59e0b',tech:'#06b6d4',transporte:'#8b5cf6'};
+
+  // Group totals by category for mini bars
+  const bycat = {};
+  sinkingFunds.forEach(f => { bycat[f.category] = (bycat[f.category]||0) + (+f.monthlyProvision||0); });
+
+  const miniItems = Object.entries(bycat).map(([cat, amt]) => {
+    const pctBar = total > 0 ? Math.round(amt/total*100) : 0;
+    const color = PROV_COLORS_LOCAL[cat]||'#888';
+    const LABELS = {carro:'🚗',saude:'🦷',casa:'🏠',roupas:'👗',beleza:'💅',social:'🎁',tech:'📱',transporte:'🚌'};
+    return `<div style="display:flex;align-items:center;gap:6px">
+      <span style="font-size:12px">${LABELS[cat]||'•'}</span>
+      <div style="flex:1;height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:${pctBar}%;background:${color};border-radius:2px"></div>
+      </div>
+      <span style="font-size:11px;font-family:'Geist Mono',monospace;color:#6b7280;white-space:nowrap">${fmt(amt)}</span>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+  <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px 20px">
+    <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="width:10px;height:10px;background:#f59e0b;border-radius:50%;display:inline-block"></span>
+          <span style="font-size:13px;font-weight:600;color:#92400e">🔧 Provisões (Sinking Funds)</span>
+          <span style="font-size:10px;background:#fef3c7;color:#b45309;padding:2px 7px;border-radius:20px;font-weight:600">${pct}% do income</span>
+          <button onclick="showTab('provisions')" style="margin-left:auto;font-size:11px;padding:3px 10px;border-radius:6px;border:1px solid #f59e0b;background:transparent;color:#b45309;cursor:pointer;font-family:'Geist',sans-serif;font-weight:500">
+            Ver detalhes →
+          </button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          ${miniItems}
+        </div>
+      </div>
+      <div style="text-align:right;border-left:1px solid #fde68a;padding-left:20px;min-width:120px">
+        <div style="font-size:11px;color:#b45309;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:4px">Provisão/mês</div>
+        <div style="font-size:26px;font-weight:700;font-family:'Geist Mono',monospace;color:#92400e;line-height:1">${fmt(total)}</div>
+        <div style="font-size:11px;color:#b45309;margin-top:6px">${sinkingFunds.length} categorias</div>
+        <div style="font-size:11px;color:#b45309;margin-top:2px">saldo: <span style="font-weight:600">${fmt(balance)}</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function renderBudgetOverview() {
+  renderBudgetSinkingCard();
   renderBudgetOverviewBanner();
   renderBudgetMetrics();
   renderBudgetPieChart();
@@ -1381,7 +1463,7 @@ function showTab(name) {
   document.getElementById('section-'+name).classList.add('active');
   document.querySelectorAll('.nav-item')[tabs.indexOf(name)].classList.add('active');
   if (name==='budget') { renderBudgetOverview(); }
-  if (name==='provisions') { loadSinkingFunds(); renderProvisions(); }
+  if (name==='provisions') { loadSinkingFunds(); syncProvisionBudget(); renderProvBudgetBanner(); renderProvisions(); }
   if (name==='savings') { renderRecommendations(); renderPhasesPlan(); renderRetirementProjection(); }
 }
 
@@ -1497,6 +1579,7 @@ let sinkingFunds = [];
 function loadSinkingFunds() {
   if (savings.sinkingFunds) sinkingFunds = savings.sinkingFunds;
   else if (window._sinkingFunds) sinkingFunds = window._sinkingFunds;
+  syncProvisionBudget();
 }
 
 function saveSinkingFunds() {
@@ -1514,6 +1597,52 @@ const PROV_COLORS = {
   roupas:'#ec4899',beleza:'#a855f7',social:'#f59e0b',
   tech:'#06b6d4',transporte:'#8b5cf6'
 };
+
+function renderProvBudgetBanner() {
+  const el = document.getElementById('prov-budget-banner');
+  if (!el) return;
+  const total = totalSinkingMonthly();
+  const inc = totalIncome();
+  const pct = inc > 0 ? Math.round(total/inc*100) : 0;
+  const provItem = md().budget.find(b => b.type === 'provision');
+  const budgeted = provItem ? +provItem.budget : 0;
+  const diff = budgeted - total;
+  const inSync = Math.abs(diff) < 1;
+
+  el.innerHTML = `<div style="background:#fff;border:1px solid #e4e4e0;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div style="flex:1;min-width:180px">
+      <div style="font-size:11px;color:#a8a8a2;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:4px">Alocado no orçamento</div>
+      <div style="font-size:22px;font-weight:700;font-family:'Geist Mono',monospace;color:${inSync?'#22c55e':'#d97706'}">${fmt(budgeted)}<span style="font-size:12px;font-weight:400;color:#a8a8a2">/mês</span></div>
+      <div style="font-size:11px;color:#a8a8a2;margin-top:2px">${pct}% do income · linha "Provisões" no orçamento</div>
+    </div>
+    <div style="width:1px;height:40px;background:#e4e4e0;flex-shrink:0"></div>
+    <div style="flex:1;min-width:180px">
+      <div style="font-size:11px;color:#a8a8a2;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:4px">Total distribuído aqui</div>
+      <div style="font-size:22px;font-weight:700;font-family:'Geist Mono',monospace;color:#f59e0b">${fmt(total)}<span style="font-size:12px;font-weight:400;color:#a8a8a2">/mês</span></div>
+      <div style="font-size:11px;color:#a8a8a2;margin-top:2px">${(sinkingFunds||[]).length} categorias · soma de todas as provisões</div>
+    </div>
+    <div style="width:1px;height:40px;background:#e4e4e0;flex-shrink:0"></div>
+    <div style="flex:1;min-width:140px;text-align:center">
+      ${inSync
+        ? `<div style="font-size:13px;font-weight:600;color:#16a34a">✅ Sincronizado</div><div style="font-size:11px;color:#86efac;margin-top:2px">orçamento = provisões</div>`
+        : `<div style="font-size:13px;font-weight:600;color:#d97706">⚠️ Diferença: ${diff>0?'+':''}${fmt(Math.abs(diff))}</div>
+           <div style="font-size:11px;color:#fde68a;margin-top:4px">
+             <button onclick="syncAndSaveProvisionBudget()" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #f59e0b;background:#f59e0b;color:#fff;cursor:pointer;font-family:'Geist',sans-serif;font-weight:600">Sincronizar agora</button>
+           </div>`
+      }
+    </div>
+    <button onclick="showTab('budget')" style="font-size:11px;padding:6px 12px;border-radius:6px;border:1px solid #e4e4e0;background:transparent;color:#6b6b66;cursor:pointer;font-family:'Geist',sans-serif;font-weight:500;white-space:nowrap">
+      ← Ver no orçamento
+    </button>
+  </div>`;
+}
+
+function syncAndSaveProvisionBudget() {
+  syncProvisionBudget();
+  autoSave();
+  renderProvBudgetBanner();
+  renderBudgetOverview();
+}
 
 function renderProvisions() {
   if (!document.getElementById('prov-metrics')) return;
@@ -1626,7 +1755,7 @@ function updateSFBalance(id, val) {
 
 function contributeMonth(id) {
   const f = sinkingFunds.find(x=>x.id===id);
-  if (f) { f.balance = (+f.balance||0) + (+f.monthlyProvision||0); saveSinkingFunds(); renderProvisions(); }
+  if (f) { f.balance = (+f.balance||0) + (+f.monthlyProvision||0); saveSinkingFunds(); renderProvBudgetBanner(); renderProvisions(); }
 }
 
 function useFund(id) {
@@ -1637,6 +1766,7 @@ function useFund(id) {
     f.balance = Math.max(0, (+f.balance||0) - amt);
     f.lastUsed = new Date().toISOString().slice(0,7);
     saveSinkingFunds();
+    renderProvBudgetBanner();
     renderProvisions();
   }
 }
@@ -1645,12 +1775,16 @@ function markAllProvisionsPaid() {
   if (!confirm('Adicionar a contribuição mensal em TODAS as provisões?')) return;
   sinkingFunds.forEach(f => { f.balance = (+f.balance||0) + (+f.monthlyProvision||0); });
   saveSinkingFunds();
+  renderProvBudgetBanner();
   renderProvisions();
 }
 
 function addSinkingFund() {
   sinkingFunds.push({id:nextId++,name:'Nova provisão',category:'casa',frequency:'mensal',estimatedCost:100,monthlyProvision:20,balance:0,lastUsed:null,nextDue:null,note:''});
   saveSinkingFunds();
+  syncProvisionBudget();
+  renderProvBudgetBanner();
+  renderBudgetSinkingCard();
   renderProvisions();
 }
 
