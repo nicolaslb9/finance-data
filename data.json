@@ -157,15 +157,7 @@
           "budget": 300
         }
       ],
-      "transactions": [
-        {
-          "id": 1000,
-          "date": "2026-06-02",
-          "cat": 10,
-          "desc": "",
-          "amount": 2260
-        }
-      ]
+      "transactions": []
     }
   },
   "savings": {
