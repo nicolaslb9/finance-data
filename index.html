@@ -230,6 +230,10 @@ select { cursor: pointer; }
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v4l2.5 2.5"/><circle cx="8" cy="9" r="6"/></svg>
       Provisões
     </div>
+    <div class="nav-item" onclick="showTab('cardebt')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="4" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><path d="M1 9l2-5h10l2 5"/><path d="M1 9h14"/></svg>
+      Dívida Carro
+    </div>
     <div class="nav-item" onclick="showTab('settings')">
       <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
       Configurações
@@ -441,32 +445,55 @@ select { cursor: pointer; }
 <!-- PROVISIONS -->
 <div id="section-provisions" class="section fade-in">
   <div class="page-header">
-    <div><h2>Provisões</h2><p>Gastos irregulares — guarde um pouco todo mês para não ser pego de surpresa</p></div>
+    <div><h2>Sinking Funds</h2><p>$100/mês separados do orçamento — usados quando o gasto aparecer</p></div>
   </div>
-  <!-- BUDGET LINK BANNER -->
-  <div id="prov-budget-banner" style="margin-bottom:16px"></div>
 
-  <div class="metrics" id="prov-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
+  <!-- BALANCE CARD -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px" id="sf-metrics"></div>
+
+  <!-- HOW IT WORKS -->
+  <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#92400e;line-height:1.6">
+    <strong>Como funciona:</strong> Todo mês, $100 do seu orçamento vai para os sinking funds. O saldo acumula mês a mês. Quando o gasto aparecer (troca de óleo, dentista...), clique em <strong>"Usar"</strong> e desconte do saldo. Se não usar, acumula para o próximo mês.
+  </div>
+
+  <!-- CATEGORIES -->
+  <div id="sf-categories"></div>
+
+  <!-- ADD CONTRIBUTION BUTTON -->
+  <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="sfAddMonthlyAll()">+ Adicionar $100 do mês</button>
+    <button class="btn" onclick="sfAddCategory()">+ Nova categoria</button>
+  </div>
+</div>
+
+<!-- CAR DEBT -->
+<div id="section-cardebt" class="section fade-in">
+  <div class="page-header">
+    <div><h2>Dívida do Carro</h2><p>Financiamento · 9.49% a.a. · Vence Nov 2028</p></div>
+  </div>
+  <div class="metrics" id="car-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
   <div class="grid2" style="margin-bottom:16px">
     <div class="card">
-      <div class="card-header"><h3>Provisão mensal por categoria</h3></div>
-      <div class="chart-wrap" style="height:220px"><canvas id="chart-prov-cat"></canvas></div>
+      <div class="card-header"><h3>Amortização mensal</h3></div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-car-amort"></canvas></div>
     </div>
-    <div class="card" style="background:#fffbeb;border-color:#fde68a">
-      <div class="card-header"><h3 style="color:#92400e">💡 O que são provisões?</h3></div>
-      <div style="font-size:13px;color:#78350f;line-height:1.7">
-        <p style="margin-bottom:10px">Provisões (ou <em>sinking funds</em>) são pequenas quantias guardadas todo mês para cobrir gastos <strong>previsíveis mas irregulares</strong> — como troca de óleo, roupas de inverno ou dentista.</p>
-        <p style="margin-bottom:10px">Em vez de o gasto de $140 de troca de óleo "destruir" o mês, você guardou $23/mês por 6 meses e já tinha o dinheiro esperando.</p>
-        <div style="background:#fef3c7;border-radius:8px;padding:10px;font-size:12px">
-          <strong>Como usar:</strong> todo mês, transfira o valor de provisão para uma conta separada (Wealthsimple Cash é ideal). Quando o gasto chegar, use o saldo acumulado.
-        </div>
-      </div>
+    <div class="card">
+      <div class="card-header"><h3>Saldo devedor ao longo do tempo</h3></div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-car-balance"></canvas></div>
     </div>
   </div>
-  <div id="prov-groups"></div>
-  <div style="display:flex;gap:8px;margin-top:4px">
-    <button class="btn btn-primary btn-sm" onclick="addSinkingFund()">+ Nova provisão</button>
-    <button class="btn btn-sm" onclick="markAllProvisionsPaid()">✓ Registrar contribuição mensal</button>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>💡 Qual é a melhor estratégia?</h3></div>
+    <div id="car-recommendations"></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Simulador de aporte</h3><span class="sub">veja quanto economiza dando um valor extra agora</span></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <label style="font-size:13px;color:var(--text2)">Aporte extra:</label>
+      <input type="number" id="car-lump-input" value="1000" min="0" step="500" style="width:130px" oninput="renderCarLumpSim()">
+      <span style="font-size:13px;color:var(--text3)">CAD</span>
+    </div>
+    <div id="car-lump-result"></div>
   </div>
 </div>
 
@@ -519,37 +546,36 @@ let saveTimer = null;
 let charts = {};
 
 function defaultMonthData() {
+  // Mirror of June 2026 — edit per month as needed
   return {
     income: [
-      {id:1,label:'Income 1 (Juliana)',amount:1555},
-      {id:2,label:'Income 2 (Nicolas)',amount:1965},
-      {id:3,label:'Income 3 (Juliana)',amount:1555},
-      {id:4,label:'Income 4 (Nicolas)',amount:1965},
+      {id:1,label:'Income 1 (Juliana)',amount:1768},
+      {id:2,label:'Income 2 (Nicolas)',amount:2160},
+      {id:3,label:'Income 3 (Juliana)',amount:1768},
+      {id:4,label:'Income 4 (Nicolas)',amount:2160},
     ],
     budget: [
-      {id:10,name:'Aluguel',type:'fixed',budget:2210},
-      {id:11,name:'Hydro BC',type:'fixed',budget:45},
-      {id:12,name:'Telus',type:'fixed',budget:75},
-      {id:13,name:'Car Insurance',type:'fixed',budget:290},
-      {id:14,name:'Home Insurance',type:'fixed',budget:32},
-      {id:15,name:'Koodo Plans',type:'fixed',budget:100},
-      {id:16,name:'Gym',type:'fixed',budget:76},
-      {id:20,name:'Car Financing',type:'debt',budget:300},
-      {id:21,name:'iPhone Financing',type:'debt',budget:120},
-      {id:30,name:'Mercado / Groceries',type:'needs',budget:680},
-      {id:31,name:'Combustível',type:'needs',budget:200},
-      {id:32,name:'Saúde / Health',type:'needs',budget:100},
-      {id:33,name:'Casa / Household',type:'needs',budget:100},
-      {id:40,name:'Restaurante / Fun',type:'wants',budget:300},
-      {id:41,name:'Beauty',type:'wants',budget:150},
-      {id:42,name:'Assinaturas',type:'wants',budget:55},
-      {id:43,name:'Allowance Nicolas',type:'wants',budget:200},
-      {id:44,name:'Allowance Juliana',type:'wants',budget:200},
-      {id:45,name:'Roupas / Clothing',type:'wants',budget:0},
-      {id:50,name:'Emergency Savings',type:'savings',budget:600},
-      {id:51,name:'Travel Funds',type:'savings',budget:500},
-      {id:52,name:'TFSA Retirement',type:'savings',budget:300},
-      {id:60,name:'Provisões (Sinking Funds)',type:'provision',budget:683},
+      {id:20,name:'🚙 Car Financing',type:'debt',budget:592},
+      {id:21,name:'🍎 iPhone Financing',type:'debt',budget:120},
+      {id:10,name:'🏡 Aluguel',type:'fixed',budget:2310},
+      {id:11,name:'⚡ BC Hydro',type:'fixed',budget:45},
+      {id:12,name:'📶 Telus',type:'fixed',budget:80},
+      {id:13,name:'🛡️ Car Insurance',type:'fixed',budget:327},
+      {id:14,name:'🛡️ Home Insurance',type:'fixed',budget:32},
+      {id:15,name:'📲 Koodo Phone Plans',type:'fixed',budget:110},
+      {id:1000,name:'🧠 Terapia',type:'fixed',budget:400},
+      {id:30,name:'🛒 Groceries',type:'needs',budget:800},
+      {id:31,name:'⛽ Gas',type:'needs',budget:200},
+      {id:50,name:'🎯 Emergency Savings',type:'savings',budget:300},
+      {id:51,name:'🇯🇵 Japan Trip',type:'savings',budget:1000},
+      {id:52,name:'📈 TFSA',type:'savings',budget:300},
+      {id:1002,name:'👶 Baby Fund',type:'savings',budget:30},
+      {id:1006,name:'🇧🇷 Brasil 2027',type:'savings',budget:100},
+      {id:60,name:'🔧 Sinking Funds',type:'provision',budget:100},
+      {id:40,name:'🍸 Restaurante & Fun',type:'wants',budget:300},
+      {id:42,name:'🔁 Subscriptions',type:'wants',budget:108},
+      {id:43,name:'🎁 Allowance Nicolas',type:'wants',budget:300},
+      {id:44,name:'🎁 Allowance Juliana',type:'wants',budget:300},
     ],
     transactions: [],
   };
@@ -1475,11 +1501,12 @@ function addGoal() { savings.goals.push({id:nextId++,name:'Nova meta',target:100
 function showTab(name) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const tabs = ['overview','budget','transactions','savings','provisions','settings'];
+  const tabs = ['overview','budget','transactions','savings','provisions','cardebt','settings'];
   document.getElementById('section-'+name).classList.add('active');
   document.querySelectorAll('.nav-item')[tabs.indexOf(name)].classList.add('active');
   if (name==='budget') { renderBudgetOverview(); }
-  if (name==='provisions') { loadSinkingFunds(); syncProvisionBudget(); renderProvBudgetBanner(); renderProvisions(); }
+  if (name==='provisions') { loadSinkingFunds(); renderProvisions(); }
+  if (name==='cardebt') { renderCarDebt(); }
   if (name==='savings') { renderRecommendations(); renderPhasesPlan(); renderRetirementProjection(); }
   if (name==='settings') { loadCfgUI(); }
 }
@@ -1601,7 +1628,6 @@ let sinkingFunds = [];
 
 function loadSinkingFunds() {
   if (savings.sinkingFunds) sinkingFunds = savings.sinkingFunds;
-  else if (window._sinkingFunds) sinkingFunds = window._sinkingFunds;
   syncProvisionBudget();
 }
 
@@ -1610,218 +1636,362 @@ function saveSinkingFunds() {
   autoSave();
 }
 
-const PROV_CATS = {
-  carro:'🚗 Carro', saude:'🦷 Saúde', casa:'🏠 Casa',
-  roupas:'👗 Roupas', beleza:'💅 Beleza', social:'🎁 Social',
-  tech:'📱 Tech', transporte:'🚌 Transporte'
-};
-const PROV_COLORS = {
-  carro:'#ef4444',saude:'#3b82f6',casa:'#22c55e',
-  roupas:'#ec4899',beleza:'#a855f7',social:'#f59e0b',
-  tech:'#06b6d4',transporte:'#8b5cf6'
-};
-
-function renderProvBudgetBanner() {
-  const el = document.getElementById('prov-budget-banner');
-  if (!el) return;
-  const total = totalSinkingMonthly();
-  const inc = totalIncome();
-  const pct = inc > 0 ? Math.round(total/inc*100) : 0;
-  const provItem = md().budget.find(b => b.type === 'provision');
-  const budgeted = provItem ? +provItem.budget : 0;
-  const diff = budgeted - total;
-  const inSync = Math.abs(diff) < 1;
-
-  el.innerHTML = `<div style="background:#fff;border:1px solid #e4e4e0;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:180px">
-      <div style="font-size:11px;color:#a8a8a2;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:4px">Alocado no orçamento</div>
-      <div style="font-size:22px;font-weight:700;font-family:'Geist Mono',monospace;color:${inSync?'#22c55e':'#d97706'}">${fmt(budgeted)}<span style="font-size:12px;font-weight:400;color:#a8a8a2">/mês</span></div>
-      <div style="font-size:11px;color:#a8a8a2;margin-top:2px">${pct}% do income · linha "Provisões" no orçamento</div>
-    </div>
-    <div style="width:1px;height:40px;background:#e4e4e0;flex-shrink:0"></div>
-    <div style="flex:1;min-width:180px">
-      <div style="font-size:11px;color:#a8a8a2;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:4px">Total distribuído aqui</div>
-      <div style="font-size:22px;font-weight:700;font-family:'Geist Mono',monospace;color:#f59e0b">${fmt(total)}<span style="font-size:12px;font-weight:400;color:#a8a8a2">/mês</span></div>
-      <div style="font-size:11px;color:#a8a8a2;margin-top:2px">${(sinkingFunds||[]).length} categorias · soma de todas as provisões</div>
-    </div>
-    <div style="width:1px;height:40px;background:#e4e4e0;flex-shrink:0"></div>
-    <div style="flex:1;min-width:140px;text-align:center">
-      ${inSync
-        ? `<div style="font-size:13px;font-weight:600;color:#16a34a">✅ Sincronizado</div><div style="font-size:11px;color:#86efac;margin-top:2px">orçamento = provisões</div>`
-        : `<div style="font-size:13px;font-weight:600;color:#d97706">⚠️ Diferença: ${diff>0?'+':''}${fmt(Math.abs(diff))}</div>
-           <div style="font-size:11px;color:#fde68a;margin-top:4px">
-             <button onclick="syncAndSaveProvisionBudget()" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #f59e0b;background:#f59e0b;color:#fff;cursor:pointer;font-family:'Geist',sans-serif;font-weight:600">Sincronizar agora</button>
-           </div>`
-      }
-    </div>
-    <button onclick="showTab('budget')" style="font-size:11px;padding:6px 12px;border-radius:6px;border:1px solid #e4e4e0;background:transparent;color:#6b6b66;cursor:pointer;font-family:'Geist',sans-serif;font-weight:500;white-space:nowrap">
-      ← Ver no orçamento
-    </button>
-  </div>`;
+function totalSinkingMonthly() {
+  if (!sinkingFunds || !sinkingFunds.length) return 100;
+  return sinkingFunds.reduce((s,f)=>s+(+f.monthlyContribution||0),0);
 }
 
-function syncAndSaveProvisionBudget() {
-  syncProvisionBudget();
-  autoSave();
-  renderProvBudgetBanner();
-  renderBudgetOverview();
+function syncProvisionBudget() {
+  const total = 100; // fixed $100/month
+  const provItem = md().budget.find(b=>b.type==='provision');
+  if (provItem) provItem.budget = total;
+}
+
+function sfAddMonthlyAll() {
+  if (!sinkingFunds || !sinkingFunds.length) return;
+  const month = new Date().toISOString().slice(0,7);
+  sinkingFunds.forEach(f => {
+    f.balance = (+f.balance||0) + (+f.monthlyContribution||0);
+    f.lastContribution = month;
+  });
+  saveSinkingFunds();
+  renderProvisions();
+}
+
+function sfUse(id) {
+  const f = sinkingFunds.find(x=>x.id===id);
+  if (!f) return;
+  const amt = parseFloat(prompt('Quanto foi gasto em "'+f.name+'"?'));
+  if (isNaN(amt) || amt <= 0) return;
+  const desc = prompt('Descrição (opcional):', '') || '';
+  f.balance = Math.max(0, (+f.balance||0) - amt);
+  if (!f.history) f.history = [];
+  f.history.unshift({date: new Date().toISOString().slice(0,10), amount: amt, desc});
+  if (f.history.length > 20) f.history = f.history.slice(0,20);
+  saveSinkingFunds();
+  renderProvisions();
+}
+
+function sfAddCategory() {
+  const name = prompt('Nome da categoria:');
+  if (!name) return;
+  const contrib = parseFloat(prompt('Contribuição mensal ($):', '10')) || 10;
+  sinkingFunds.push({
+    id: Date.now(),
+    name,
+    balance: 0,
+    monthlyContribution: contrib,
+    note: '',
+    subItems: [],
+    history: []
+  });
+  saveSinkingFunds();
+  renderProvisions();
+}
+
+function sfDeleteCategory(id) {
+  const f = sinkingFunds.find(x=>x.id===id);
+  if (!f || !confirm('Excluir "'+f.name+'"?')) return;
+  sinkingFunds = sinkingFunds.filter(x=>x.id!==id);
+  saveSinkingFunds();
+  renderProvisions();
 }
 
 function renderProvisions() {
-  if (!document.getElementById('prov-metrics')) return;
+  const el = document.getElementById('sf-categories');
+  const metricsEl = document.getElementById('sf-metrics');
+  if (!el) return;
   loadSinkingFunds();
-  if (!sinkingFunds || sinkingFunds.length===0) {
-    document.getElementById('prov-groups').innerHTML = '<div class="empty">Nenhuma provisão configurada ainda.</div>';
+  if (!sinkingFunds || !sinkingFunds.length) {
+    el.innerHTML = '<div class="empty">Nenhuma categoria ainda. Clique em "+ Nova categoria".</div>';
     return;
   }
 
-  const totalMonthly = sinkingFunds.reduce((s,f)=>s+(+f.monthlyProvision||0),0);
   const totalBalance = sinkingFunds.reduce((s,f)=>s+(+f.balance||0),0);
-  const upcoming = sinkingFunds.filter(f=>f.nextDue).sort((a,b)=>a.nextDue.localeCompare(b.nextDue)).slice(0,1)[0];
-  const cats = [...new Set(sinkingFunds.map(f=>f.category))].length;
+  const totalMonthly = sinkingFunds.reduce((s,f)=>s+(+f.monthlyContribution||0),0);
+  const lastContrib = sinkingFunds.find(f=>f.lastContribution);
 
-  document.getElementById('prov-metrics').innerHTML = `
-    <div class="metric"><div class="lbl">Provisão total/mês</div><div class="val" style="color:#d97706">${fmt(totalMonthly)}</div><div class="sub">${sinkingFunds.length} itens</div></div>
-    <div class="metric"><div class="lbl">Saldo acumulado</div><div class="val" style="color:#22c55e">${fmt(totalBalance)}</div><div class="sub">nas caixinhas</div></div>
-    <div class="metric"><div class="lbl">Próximo gasto</div><div class="val" style="font-size:14px">${upcoming?upcoming.name.slice(0,16)+'…':'Nenhum'}</div><div class="sub">${upcoming&&upcoming.nextDue?upcoming.nextDue:''}</div></div>
-    <div class="metric"><div class="lbl">Categorias</div><div class="val">${cats}</div><div class="sub">tipos de gasto</div></div>
+  if (metricsEl) metricsEl.innerHTML = `
+    <div class="metric"><div class="lbl">Saldo total</div><div class="val" style="color:var(--green)">${fmt(totalBalance)}</div><div class="sub">acumulado</div></div>
+    <div class="metric"><div class="lbl">Contribuição/mês</div><div class="val" style="color:#f59e0b">$100</div><div class="sub">${totalMonthly===100?'✓ alocado':'distribuído: '+fmt(totalMonthly)}</div></div>
+    <div class="metric"><div class="lbl">Categorias</div><div class="val">${sinkingFunds.length}</div><div class="sub">última contrib: ${lastContrib&&lastContrib.lastContribution?lastContrib.lastContribution:'—'}</div></div>
   `;
 
-  renderProvCatChart();
-
-  const groups = {};
-  sinkingFunds.forEach(f => {
-    if (!groups[f.category]) groups[f.category] = [];
-    groups[f.category].push(f);
-  });
-
+  const CAT_COLORS = ['#ef4444','#3b82f6','#22c55e','#a855f7','#f59e0b','#06b6d4','#ec4899','#84cc16'];
   let h = '';
-  Object.entries(groups).forEach(([cat, funds]) => {
-    const catTotal = funds.reduce((s,f)=>s+(+f.monthlyProvision||0),0);
-    const catBalance = funds.reduce((s,f)=>s+(+f.balance||0),0);
-    const color = PROV_COLORS[cat]||'#8b5cf6';
-    const label = PROV_CATS[cat]||cat;
+  sinkingFunds.forEach((f, idx) => {
+    const color = CAT_COLORS[idx % CAT_COLORS.length];
+    const bal = +f.balance||0;
+    const contrib = +f.monthlyContribution||0;
+    const monthsAccum = contrib > 0 ? (bal/contrib).toFixed(1) : '—';
+    const history = f.history||[];
+
     h += `<div class="card" style="margin-bottom:12px">
-      <div class="card-header">
-        <h3 style="display:flex;align-items:center;gap:8px">
-          <span style="width:10px;height:10px;background:${color};border-radius:50%;display:inline-block"></span>
-          ${label}
-        </h3>
-        <span class="sub">${fmt(catTotal)}/mês · saldo ${fmt(catBalance)}</span>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="width:12px;height:12px;border-radius:50%;background:${color};flex-shrink:0"></span>
+          <div>
+            <div style="font-size:15px;font-weight:600">${esc(f.name)}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(f.note||'')}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="text-align:right">
+            <div style="font-size:22px;font-weight:700;font-family:'Geist Mono',monospace;color:${color}">${fmt(bal)}</div>
+            <div style="font-size:11px;color:var(--text3)">${contrib > 0 ? '+'+fmt(contrib)+'/mês · '+monthsAccum+' meses acum.' : ''}</div>
+          </div>
+          <button class="del-btn" onclick="sfDeleteCategory(${f.id})" title="Excluir">✕</button>
+        </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
-        ${funds.map(f => {
-          const months = f.monthlyProvision > 0 ? Math.ceil((f.estimatedCost - f.balance) / f.monthlyProvision) : '∞';
-          const pct = f.estimatedCost > 0 ? Math.min(100, Math.round(f.balance/f.estimatedCost*100)) : 0;
-          const dueLabel = f.nextDue ? (() => {
-            const d = new Date(f.nextDue+'-01'), now = new Date();
-            const diff = Math.round((d-now)/(1000*60*60*24*30));
-            if (diff <= 1) return `<span style="background:#fef2f2;color:#dc2626;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600">Em ${diff<=0?'breve':diff+'m'}</span>`;
-            if (diff <= 3) return `<span style="background:#fffbeb;color:#d97706;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600">${diff}m</span>`;
-            return `<span style="color:var(--text3);font-size:10px">${diff}m</span>`;
-          })() : '';
-          return `<div style="background:var(--bg3);border-radius:8px;padding:12px">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-              <div style="flex:1">
-                <div style="font-size:13px;font-weight:500;color:var(--text)">${esc(f.name)}</div>
-                <div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(f.note||'')}</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0;margin-left:8px">
-                <div style="font-size:13px;font-weight:600;color:${color};font-family:'Geist Mono',monospace">${fmt(f.monthlyProvision)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mês</span></div>
-                <div style="font-size:10px;color:var(--text3)">${f.frequency}</div>
-              </div>
-            </div>
-            <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:6px">
-              <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;transition:width .4s"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-              <div style="display:flex;gap:8px;align-items:center">
-                <span style="font-size:11px;color:var(--text3)">Saldo: <input type="number" value="${f.balance||0}" min="0" style="width:70px;font-size:11px;padding:2px 4px;background:var(--bg2)" onchange="updateSFBalance(${f.id},+this.value)"></span>
-                <span style="font-size:11px;color:var(--text3)">/ ${fmt(f.estimatedCost)}</span>
-                ${dueLabel}
-              </div>
-              <div style="display:flex;gap:4px">
-                <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;color:${color};border-color:${color}20" onclick="contributeMonth(${f.id})">+${fmt(f.monthlyProvision)}</button>
-                <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;color:var(--red);border-color:#fecaca" onclick="useFund(${f.id})">Usar</button>
-                <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;color:var(--text3);border-color:var(--border)" onclick="deleteSinkingFund(${f.id})" title="Excluir provisão">✕</button>
-              </div>
-            </div>
-          </div>`;
-        }).join('')}
+
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="sfUse(${f.id})">Usar saldo</button>
+        <button class="btn btn-sm" onclick="sfSingleContrib(${f.id})">+ ${fmt(contrib)} do mês</button>
+        <button class="btn btn-sm" style="font-size:11px;color:var(--text3)" onclick="sfEditContrib(${f.id})">Editar $${contrib}/mês</button>
       </div>
+
+      ${f.subItems&&f.subItems.length ? `
+      <div style="margin-bottom:12px">
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px">Gastos previstos</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${f.subItems.map(s=>`<span style="font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px 8px;color:var(--text2)">${esc(s.name)} · ${fmt(s.estimatedCost)} · <span style="color:var(--text3)">${esc(s.frequency)}</span></span>`).join('')}
+        </div>
+      </div>` : ''}
+
+      ${history.length ? `
+      <div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px">Últimos gastos</div>
+        ${history.slice(0,3).map(h=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);color:var(--text2)">
+          <span>${h.date} ${h.desc?'· '+esc(h.desc):''}</span>
+          <span style="color:var(--red);font-family:'Geist Mono',monospace;font-weight:500">-${fmt(h.amount)}</span>
+        </div>`).join('')}
+      </div>` : ''}
     </div>`;
   });
-  document.getElementById('prov-groups').innerHTML = h;
+  el.innerHTML = h;
 }
 
-function renderProvCatChart() {
-  destroyChart('prov-cat');
-  const cats = {};
-  sinkingFunds.forEach(f => { cats[f.category] = (cats[f.category]||0) + (+f.monthlyProvision||0); });
-  const labels = Object.keys(cats).map(c=>PROV_CATS[c]||c);
-  const vals = Object.values(cats);
-  const colors = Object.keys(cats).map(c=>PROV_COLORS[c]||'#888');
-  const ctx = document.getElementById('chart-prov-cat');
-  if (!ctx) return;
-  charts['prov-cat'] = new Chart(ctx.getContext('2d'), {
-    type: 'doughnut',
-    data: { labels, datasets: [{ data: vals, backgroundColor: colors, borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }] },
-    options: { responsive: true, maintainAspectRatio: false, cutout: '55%',
-      plugins: { legend: { position: 'right', labels: { font: { family: 'Geist', size: 11 }, boxWidth: 10, padding: 8, color: '#6b6b66' } },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}/mês` } } } }
-  });
-}
-
-function updateSFBalance(id, val) {
-  const f = sinkingFunds.find(x=>x.id===id);
-  if (f) { f.balance = val; saveSinkingFunds(); renderProvisions(); }
-}
-
-function contributeMonth(id) {
-  const f = sinkingFunds.find(x=>x.id===id);
-  if (f) { f.balance = (+f.balance||0) + (+f.monthlyProvision||0); saveSinkingFunds(); renderProvBudgetBanner(); renderProvisions(); }
-}
-
-function useFund(id) {
+function sfSingleContrib(id) {
   const f = sinkingFunds.find(x=>x.id===id);
   if (!f) return;
-  const amt = parseFloat(prompt(`Quanto foi gasto em "${f.name}"?`, f.estimatedCost));
-  if (!isNaN(amt) && amt > 0) {
-    f.balance = Math.max(0, (+f.balance||0) - amt);
-    f.lastUsed = new Date().toISOString().slice(0,7);
+  f.balance = (+f.balance||0) + (+f.monthlyContribution||0);
+  f.lastContribution = new Date().toISOString().slice(0,7);
+  saveSinkingFunds();
+  renderProvisions();
+}
+
+function sfEditContrib(id) {
+  const f = sinkingFunds.find(x=>x.id===id);
+  if (!f) return;
+  const val = parseFloat(prompt('Nova contribuição mensal ($):', f.monthlyContribution));
+  if (!isNaN(val) && val >= 0) {
+    f.monthlyContribution = val;
     saveSinkingFunds();
-    renderProvBudgetBanner();
     renderProvisions();
   }
 }
 
-function markAllProvisionsPaid() {
-  if (!confirm('Adicionar a contribuição mensal em TODAS as provisões?')) return;
-  sinkingFunds.forEach(f => { f.balance = (+f.balance||0) + (+f.monthlyProvision||0); });
-  saveSinkingFunds();
-  renderProvBudgetBanner();
-  renderProvisions();
+function addSinkingFund() { sfAddCategory(); }
+
+// ═══════════════════════════════════════════════════════
+// CAR DEBT
+// ═══════════════════════════════════════════════════════
+function getCarLoan() {
+  return {
+    balance: 16533.66,
+    annualRate: 0.0949,
+    biweeklyPayment: 294.24,
+    remainingPayments: 63,
+    maturityDate: 'Nov 2028'
+  };
 }
 
-function deleteSinkingFund(id) {
-  const f = sinkingFunds.find(x => x.id === id);
-  if (!f) return;
-  if (!confirm('Excluir "' + f.name + '"?')) return;
-  sinkingFunds = sinkingFunds.filter(x => x.id !== id);
-  saveSinkingFunds();
-  syncProvisionBudget();
-  renderProvBudgetBanner();
-  renderBudgetSinkingCard();
-  renderProvisions();
+function carAmortSchedule(balance, annualRate, pmt, payments) {
+  const r = annualRate / 26;
+  const schedule = [];
+  let bal = balance;
+  for (let i = 0; i < payments && bal > 0; i++) {
+    const interest = bal * r;
+    const principal = Math.min(pmt - interest, bal);
+    bal = Math.max(0, bal - principal);
+    schedule.push({payment: i+1, interest: +interest.toFixed(2), principal: +principal.toFixed(2), balance: +bal.toFixed(2)});
+  }
+  return schedule;
 }
 
-function addSinkingFund() {
-  sinkingFunds.push({id:nextId++,name:'Nova provisão',category:'casa',frequency:'mensal',estimatedCost:100,monthlyProvision:20,balance:0,lastUsed:null,nextDue:null,note:''});
-  saveSinkingFunds();
-  syncProvisionBudget();
-  renderProvBudgetBanner();
-  renderBudgetSinkingCard();
-  renderProvisions();
+function renderCarDebt() {
+  if (!document.getElementById('car-metrics')) return;
+  const loan = getCarLoan();
+  const schedule = carAmortSchedule(loan.balance, loan.annualRate, loan.biweeklyPayment, loan.remainingPayments);
+  const totalInterest = schedule.reduce((s,p)=>s+p.interest,0);
+  const totalPaid = schedule.reduce((s,p)=>s+p.interest+p.principal,0);
+  const monthlyEq = loan.biweeklyPayment * 26 / 12;
+
+  // Metrics
+  document.getElementById('car-metrics').innerHTML = `
+    <div class="metric"><div class="lbl">Saldo devedor</div><div class="val" style="color:var(--red)">$${loan.balance.toLocaleString('en-CA',{minimumFractionDigits:2})}</div><div class="sub">Jun 2026</div></div>
+    <div class="metric"><div class="lbl">Pagamento quinzenal</div><div class="val">$${loan.biweeklyPayment}</div><div class="sub">~${fmt(monthlyEq)}/mês</div></div>
+    <div class="metric"><div class="lbl">Juros restantes</div><div class="val" style="color:var(--amber)">$${totalInterest.toFixed(0)}</div><div class="sub">se pagar normalmente</div></div>
+    <div class="metric"><div class="lbl">Quitação</div><div class="val" style="font-size:18px">Nov 2028</div><div class="sub">${loan.remainingPayments} pagamentos</div></div>
+  `;
+
+  // Amortization chart — monthly grouped
+  const monthly = [];
+  let acc = {interest:0, principal:0};
+  schedule.forEach((p,i) => {
+    acc.interest += p.interest;
+    acc.principal += p.principal;
+    if ((i+1) % 2 === 0 || i === schedule.length-1) {
+      monthly.push({...acc});
+      acc = {interest:0, principal:0};
+    }
+  });
+
+  destroyChart('car-amort');
+  const ctx1 = document.getElementById('chart-car-amort');
+  if (ctx1) {
+    charts['car-amort'] = new Chart(ctx1.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: monthly.map((_,i)=>{
+          const d = new Date(2026,5,1); d.setMonth(d.getMonth()+i);
+          return d.toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});
+        }),
+        datasets: [
+          {label:'Principal', data: monthly.map(m=>+m.principal.toFixed(2)), backgroundColor:'#3b82f6', borderRadius:3, stack:'a'},
+          {label:'Juros',     data: monthly.map(m=>+m.interest.toFixed(2)),  backgroundColor:'#fca5a5', borderRadius:3, stack:'a'}
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{labels:{font:{family:'Geist',size:11},boxWidth:10,color:'#6b6b66'}},
+          tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`}}},
+        scales:{
+          x:{grid:{display:false},ticks:{font:{family:'Geist',size:10},color:'#a8a8a2',maxTicksLimit:10}},
+          y:{grid:{color:'#f0f0ee'},ticks:{font:{family:'Geist Mono',size:10},color:'#a8a8a2',callback:v=>'$'+v},stacked:true}
+        }
+      }
+    });
+  }
+
+  // Balance over time
+  const balPoints = schedule.filter((_,i)=>i%2===0).map((p,i)=>({x:i, y:p.balance}));
+  destroyChart('car-balance');
+  const ctx2 = document.getElementById('chart-car-balance');
+  if (ctx2) {
+    charts['car-balance'] = new Chart(ctx2.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: balPoints.map((_,i)=>{
+          const d = new Date(2026,5,1); d.setMonth(d.getMonth()+i);
+          return d.toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});
+        }),
+        datasets:[{
+          label:'Saldo devedor', data:balPoints.map(p=>p.y),
+          borderColor:'#ef4444', backgroundColor:'rgba(239,68,68,0.07)',
+          borderWidth:2, fill:true, tension:0.3, pointRadius:0
+        }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>` Saldo: ${fmt(ctx.parsed.y)}`}}},
+        scales:{
+          x:{grid:{display:false},ticks:{font:{family:'Geist',size:10},color:'#a8a8a2',maxTicksLimit:8}},
+          y:{grid:{color:'#f0f0ee'},ticks:{font:{family:'Geist Mono',size:10},color:'#a8a8a2',callback:v=>'$'+Math.round(v/1000)+'k'}}
+        }
+      }
+    });
+  }
+
+  // Recommendations
+  const recEl = document.getElementById('car-recommendations');
+  if (recEl) {
+    const rate = loan.annualRate * 100;
+    const tfsa_return = 6.0;
+    const better_invest = tfsa_return > loan.annualRate * 100;
+    recEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="background:var(--bg3);border-radius:10px;padding:14px">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">📊 Contexto da dívida</div>
+        <div style="font-size:13px;line-height:1.8;color:var(--text2)">
+          Taxa: <strong style="color:var(--red)">${rate}% a.a.</strong><br>
+          Juros totais restantes: <strong>${fmt(totalInterest)}</strong><br>
+          Você paga <strong>${fmt(monthlyEq)}/mês</strong> (~${Math.round(schedule[0]?.interest/schedule[0]?.principal*100||0)}% em juros agora)<br>
+          A parcela de juros <em>diminui</em> a cada pagamento
+        </div>
+      </div>
+      <div style="background:var(--bg3);border-radius:10px;padding:14px">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">🧠 Recomendação</div>
+        <div style="font-size:13px;line-height:1.8;color:var(--text2)">
+          ${rate > 6 ? `
+            <strong style="color:var(--amber)">Pagar mais rápido vale a pena.</strong><br>
+            9.49% a.a. é mais caro que o retorno esperado do TFSA (~6%). Cada $1 pago agora
+            economiza $0.095 por ano — garantido. Aportes extras têm retorno garantido de 9.49%.
+          ` : `
+            Seria melhor investir no TFSA e pagar o mínimo no carro.
+          `}
+        </div>
+      </div>
+    </div>
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px">
+      <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:10px">📋 Opções em ordem de prioridade</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px">
+          <span style="background:#3b82f6;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">1</span>
+          <div><strong>Pagar normalmente + emergency fund primeiro</strong> — garanta os $33k de reserva antes de acelerar a dívida do carro.</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px">
+          <span style="background:#3b82f6;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">2</span>
+          <div><strong>Aportes eventuais de $500–$1,000</strong> — quando sobrar dinheiro (bônus, mês de 3 pagamentos). Cada $1,000 economiza ~${fmt(Math.round(totalInterest/loan.balance*1000))} em juros.</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px">
+          <span style="background:#94a3b8;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">3</span>
+          <div><strong>Não sacrificar TFSA pelo carro</strong> — manter contribuição no TFSA mesmo enquanto paga o carro. Dívida quitada em Nov/28 de qualquer jeito.</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  renderCarLumpSim();
+}
+
+function renderCarLumpSim() {
+  const el = document.getElementById('car-lump-result');
+  if (!el) return;
+  const loan = getCarLoan();
+  const lump = parseFloat(document.getElementById('car-lump-input')?.value) || 0;
+  if (lump <= 0) { el.innerHTML = '<p style="color:var(--text3);font-size:13px">Digite um valor acima de $0.</p>'; return; }
+  if (lump >= loan.balance) {
+    const schedule = carAmortSchedule(loan.balance, loan.annualRate, loan.biweeklyPayment, loan.remainingPayments);
+    const totalInt = schedule.reduce((s,p)=>s+p.interest,0);
+    el.innerHTML = `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px;font-size:13px;color:#15803d">
+      <strong>Quita o carro hoje!</strong> Você economiza ${fmt(totalInt)} em juros e elimina o pagamento de ${fmt(loan.biweeklyPayment * 26/12)}/mês.
+    </div>`;
+    return;
+  }
+  const newBalance = loan.balance - lump;
+  const origSchedule = carAmortSchedule(loan.balance, loan.annualRate, loan.biweeklyPayment, loan.remainingPayments);
+  const newSchedule  = carAmortSchedule(newBalance, loan.annualRate, loan.biweeklyPayment, loan.remainingPayments);
+  const origInt = origSchedule.reduce((s,p)=>s+p.interest,0);
+  const newInt  = newSchedule.reduce((s,p)=>s+p.interest,0);
+  const saved = origInt - newInt;
+  const newPmt = loan.biweeklyPayment * (newBalance / loan.balance);
+  el.innerHTML = `
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    <div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Novo saldo</div>
+      <div style="font-size:18px;font-weight:700;font-family:'Geist Mono',monospace;color:var(--red)">${fmt(newBalance)}</div>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px;text-align:center">
+      <div style="font-size:11px;color:#166534;margin-bottom:4px">Juros economizados</div>
+      <div style="font-size:18px;font-weight:700;font-family:'Geist Mono',monospace;color:var(--green)">${fmt(saved)}</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Retorno efetivo</div>
+      <div style="font-size:18px;font-weight:700;font-family:'Geist Mono',monospace;color:var(--accent)">${(saved/lump*100).toFixed(1)}%</div>
+      <div style="font-size:10px;color:var(--text3)">sobre o aporte</div>
+    </div>
+  </div>`;
 }
 
 function showAutoConnectToast() {
