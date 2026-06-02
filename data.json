@@ -86,13 +86,13 @@
         },
         {
           "id": 31,
-          "name": "CombustÃ­vel",
+          "name": "Combust\u00c3\u00advel",
           "type": "needs",
           "budget": 200
         },
         {
           "id": 32,
-          "name": "SaÃºde / Health",
+          "name": "Sa\u00c3\u00bade / Health",
           "type": "needs",
           "budget": 100
         },
@@ -157,7 +157,15 @@
           "budget": 300
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 9001,
+          "date": "2026-06-01",
+          "cat": 10,
+          "desc": "Aluguel Junho 2026",
+          "amount": 2260
+        }
+      ]
     }
   },
   "savings": {
@@ -191,7 +199,7 @@
     "goals": [
       {
         "id": 1,
-        "name": "Emergency Savings ($500/mÃªs)",
+        "name": "Emergency Savings ($500/m\u00c3\u00aas)",
         "target": 10500,
         "saved": 7919,
         "monthly": 500
