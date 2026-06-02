@@ -1,0 +1,229 @@
+{
+  "data": {
+    "5": {
+      "income": [
+        {
+          "id": 1,
+          "label": "Income 1 (Juliana)",
+          "amount": 1555
+        },
+        {
+          "id": 2,
+          "label": "Income 2 (Nicolas)",
+          "amount": 1965
+        },
+        {
+          "id": 3,
+          "label": "Income 3 (Juliana)",
+          "amount": 1555
+        },
+        {
+          "id": 4,
+          "label": "Income 4 (Nicolas)",
+          "amount": 1965
+        }
+      ],
+      "budget": [
+        {
+          "id": 10,
+          "name": "Aluguel",
+          "type": "fixed",
+          "budget": 2210
+        },
+        {
+          "id": 11,
+          "name": "Hydro BC",
+          "type": "fixed",
+          "budget": 45
+        },
+        {
+          "id": 12,
+          "name": "Telus",
+          "type": "fixed",
+          "budget": 75
+        },
+        {
+          "id": 13,
+          "name": "Car Insurance",
+          "type": "fixed",
+          "budget": 290
+        },
+        {
+          "id": 14,
+          "name": "Home Insurance",
+          "type": "fixed",
+          "budget": 32
+        },
+        {
+          "id": 15,
+          "name": "Koodo Plans",
+          "type": "fixed",
+          "budget": 100
+        },
+        {
+          "id": 16,
+          "name": "Gym",
+          "type": "fixed",
+          "budget": 76
+        },
+        {
+          "id": 20,
+          "name": "Car Financing",
+          "type": "debt",
+          "budget": 300
+        },
+        {
+          "id": 21,
+          "name": "iPhone Financing",
+          "type": "debt",
+          "budget": 120
+        },
+        {
+          "id": 30,
+          "name": "Mercado / Groceries",
+          "type": "needs",
+          "budget": 680
+        },
+        {
+          "id": 31,
+          "name": "Combustível",
+          "type": "needs",
+          "budget": 200
+        },
+        {
+          "id": 32,
+          "name": "Saúde / Health",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 33,
+          "name": "Casa / Household",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 40,
+          "name": "Restaurante / Fun",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 41,
+          "name": "Beauty",
+          "type": "wants",
+          "budget": 150
+        },
+        {
+          "id": 42,
+          "name": "Assinaturas",
+          "type": "wants",
+          "budget": 55
+        },
+        {
+          "id": 43,
+          "name": "Allowance Nicolas",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 44,
+          "name": "Allowance Juliana",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 45,
+          "name": "Roupas / Clothing",
+          "type": "wants",
+          "budget": 0
+        },
+        {
+          "id": 50,
+          "name": "Emergency Savings",
+          "type": "savings",
+          "budget": 600
+        },
+        {
+          "id": 51,
+          "name": "Travel Funds",
+          "type": "savings",
+          "budget": 500
+        },
+        {
+          "id": 52,
+          "name": "TFSA Retirement",
+          "type": "savings",
+          "budget": 300
+        }
+      ],
+      "transactions": []
+    }
+  },
+  "savings": {
+    "wallets": [
+      {
+        "id": 1,
+        "name": "Emergency Savings (Wealthsimple)",
+        "amount": 7920
+      },
+      {
+        "id": 2,
+        "name": "Travel / Viagens",
+        "amount": 0
+      },
+      {
+        "id": 3,
+        "name": "TFSA",
+        "amount": 3904
+      },
+      {
+        "id": 4,
+        "name": "Retirement Fund (Canada Life)",
+        "amount": 5012
+      },
+      {
+        "id": 5,
+        "name": "College / Future Big Purchases",
+        "amount": 700
+      }
+    ],
+    "goals": [
+      {
+        "id": 1,
+        "name": "Emergency Savings ($500/mês)",
+        "target": 10500,
+        "saved": 7919,
+        "monthly": 500
+      },
+      {
+        "id": 2,
+        "name": "TFSA Retirement",
+        "target": 12000,
+        "saved": 3904,
+        "monthly": 300
+      },
+      {
+        "id": 3,
+        "name": "Brazil Fund",
+        "target": 2600,
+        "saved": 0,
+        "monthly": 200
+      },
+      {
+        "id": 4,
+        "name": "Travel / Viagens",
+        "target": 3000,
+        "saved": 0,
+        "monthly": 500
+      },
+      {
+        "id": 5,
+        "name": "Immigration",
+        "target": 2000,
+        "saved": 0,
+        "monthly": 200
+      }
+    ]
+  }
+}
