@@ -267,16 +267,6 @@
         "note": "Costco membership, utensílios, manutenção do apt",
         "history": [],
         "lastContribution": "2026-06"
-      },
-      {
-        "id": 4,
-        "name": "Beleza & Pessoal",
-        "icon": "💅",
-        "balance": 10,
-        "monthlyContribution": 10,
-        "note": "Sephora, skincare, produtos pessoais fora do allowance",
-        "history": [],
-        "lastContribution": "2026-06"
       }
     ]
   }
