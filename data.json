@@ -155,6 +155,12 @@
           "name": "TFSA Retirement",
           "type": "savings",
           "budget": 300
+        },
+        {
+          "id": 60,
+          "name": "Provisões (Sinking Funds)",
+          "type": "provision",
+          "budget": 20
         }
       ],
       "transactions": [
@@ -247,7 +253,7 @@
         "estimatedCost": 100,
         "monthlyProvision": 20,
         "balance": 0,
-        "lastUsed": null,
+        "lastUsed": "2026-06",
         "nextDue": null,
         "note": ""
       }
