@@ -28,7 +28,7 @@
           "id": 10,
           "name": "Aluguel",
           "type": "fixed",
-          "budget": 2210
+          "budget": 2310
         },
         {
           "id": 11,
@@ -46,7 +46,7 @@
           "id": 13,
           "name": "Car Insurance",
           "type": "fixed",
-          "budget": 290
+          "budget": 327
         },
         {
           "id": 14,
@@ -58,19 +58,13 @@
           "id": 15,
           "name": "Koodo Plans",
           "type": "fixed",
-          "budget": 100
-        },
-        {
-          "id": 16,
-          "name": "Gym",
-          "type": "fixed",
-          "budget": 76
+          "budget": 97
         },
         {
           "id": 20,
           "name": "Car Financing",
           "type": "debt",
-          "budget": 300
+          "budget": 592
         },
         {
           "id": 21,
@@ -158,9 +152,9 @@
         },
         {
           "id": 60,
-          "name": "Provis\u00f5es (Sinking Funds)",
+          "name": "Provisões (Sinking Funds)",
           "type": "provision",
-          "budget": 683
+          "budget": 20
         }
       ],
       "transactions": [
@@ -210,7 +204,7 @@
     "goals": [
       {
         "id": 1,
-        "name": "Emergency Savings ($500/m\u00c3\u00aas)",
+        "name": "Emergency Savings ($500/mÃªs)",
         "target": 10500,
         "saved": 7919,
         "monthly": 500
@@ -246,268 +240,16 @@
     ],
     "sinkingFunds": [
       {
-        "id": 101,
-        "name": "\ud83d\udd27 Troca de \u00f3leo",
-        "category": "carro",
-        "frequency": "6 meses",
-        "estimatedCost": 140,
-        "monthlyProvision": 23,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": "2026-12",
-        "note": "A cada 6 meses (~$140). Guardar $23/m\u00eas"
-      },
-      {
-        "id": 102,
-        "name": "\ud83d\udede Pneus",
-        "category": "carro",
-        "frequency": "2-3 anos",
-        "estimatedCost": 700,
-        "monthlyProvision": 25,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": "2028-06",
-        "note": "Set completo ~$700. Pneu individual: ~$87"
-      },
-      {
-        "id": 103,
-        "name": "\ud83d\udebf Car wash",
-        "category": "carro",
-        "frequency": "mensal",
-        "estimatedCost": 20,
-        "monthlyProvision": 20,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": "2026-07",
-        "note": "~$15-25 por lavagem"
-      },
-      {
-        "id": 104,
-        "name": "\ud83d\udd29 Manuten\u00e7\u00e3o geral carro",
-        "category": "carro",
-        "frequency": "eventual",
-        "estimatedCost": 150,
-        "monthlyProvision": 12,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Misc: ICBC, revis\u00f5es, pe\u00e7as"
-      },
-      {
-        "id": 201,
-        "name": "\ud83e\uddb7 Dentista",
-        "category": "saude",
-        "frequency": "6 meses",
-        "estimatedCost": 150,
-        "monthlyProvision": 25,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": "2026-12",
-        "note": "Checkup + limpeza. Sun Life cobre parcialmente. ~$150 out-of-pocket"
-      },
-      {
-        "id": 202,
-        "name": "\ud83d\udc53 \u00d3culos / lentes",
-        "category": "saude",
-        "frequency": "anual",
-        "estimatedCost": 300,
-        "monthlyProvision": 25,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": "2027-01",
-        "note": "Sun Life cobre ~$200-300/ano. Guardar diferen\u00e7a"
-      },
-      {
-        "id": 203,
-        "name": "\ud83d\udc8a Farm\u00e1cia / medicamentos",
-        "category": "saude",
-        "frequency": "vari\u00e1vel",
-        "estimatedCost": 30,
-        "monthlyProvision": 30,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Melatonina, vitaminas, medicamentos eventuais"
-      },
-      {
-        "id": 204,
-        "name": "\ud83e\uddd8 Fisio / massagem / terapia",
-        "category": "saude",
-        "frequency": "eventual",
-        "estimatedCost": 100,
-        "monthlyProvision": 40,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Sun Life geralmente cobre parcialmente"
-      },
-      {
-        "id": 301,
-        "name": "\ud83c\udfea Costco membership",
-        "category": "casa",
-        "frequency": "anual",
-        "estimatedCost": 68,
-        "monthlyProvision": 6,
-        "balance": 0,
-        "lastUsed": "2025-10",
-        "nextDue": "2026-10",
-        "note": "Renova\u00e7\u00e3o anual ~$68"
-      },
-      {
-        "id": 302,
-        "name": "\ud83d\udecb\ufe0f Utens\u00edlios dom\u00e9sticos",
+        "id": 1000,
+        "name": "Nova provisão",
         "category": "casa",
         "frequency": "mensal",
-        "estimatedCost": 50,
-        "monthlyProvision": 40,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Dollarama, Canadian Tire, Amazon misc \u2014 aparece todo m\u00eas"
-      },
-      {
-        "id": 303,
-        "name": "\ud83d\udd28 Manuten\u00e7\u00e3o apartamento",
-        "category": "casa",
-        "frequency": "eventual",
         "estimatedCost": 100,
         "monthlyProvision": 20,
         "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Sempre aparece algo: espelhos, acess\u00f3rios, reparos"
-      },
-      {
-        "id": 401,
-        "name": "\ud83d\udc57 Roupas sazonais",
-        "category": "roupas",
-        "frequency": "6 meses",
-        "estimatedCost": 450,
-        "monthlyProvision": 75,
-        "balance": 0,
-        "lastUsed": "2025-12",
-        "nextDue": "2026-06",
-        "note": "Inverno/ver\u00e3o ~$400-600 por temporada"
-      },
-      {
-        "id": 402,
-        "name": "\ud83d\udc87 Cabelo Juliana",
-        "category": "beleza",
-        "frequency": "2 meses",
-        "estimatedCost": 85,
-        "monthlyProvision": 42,
-        "balance": 0,
         "lastUsed": "2026-06",
-        "nextDue": "2026-08",
-        "note": "~$80-120 a cada 2 meses"
-      },
-      {
-        "id": 403,
-        "name": "\u2702\ufe0f Cabelo Nicolas",
-        "category": "beleza",
-        "frequency": "mensal",
-        "estimatedCost": 50,
-        "monthlyProvision": 30,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": "2026-07",
-        "note": "~$40-60 por corte"
-      },
-      {
-        "id": 404,
-        "name": "\ud83e\uddf4 Sephora / skincare",
-        "category": "beleza",
-        "frequency": "trimestral",
-        "estimatedCost": 120,
-        "monthlyProvision": 40,
-        "balance": 0,
-        "lastUsed": "2025-10",
-        "nextDue": "2026-09",
-        "note": "Reposi\u00e7\u00e3o produtos a cada 3 meses"
-      },
-      {
-        "id": 501,
-        "name": "\ud83c\udf81 Anivers\u00e1rios / presentes",
-        "category": "social",
-        "frequency": "vari\u00e1vel",
-        "estimatedCost": 60,
-        "monthlyProvision": 50,
-        "balance": 0,
-        "lastUsed": null,
         "nextDue": null,
-        "note": "Aparece todo m\u00eas no hist\u00f3rico. M\u00e9dia $50-80"
-      },
-      {
-        "id": 502,
-        "name": "\ud83c\udf7d\ufe0f Jantar especial",
-        "category": "social",
-        "frequency": "mensal",
-        "estimatedCost": 80,
-        "monthlyProvision": 60,
-        "balance": 0,
-        "lastUsed": "2026-06",
-        "nextDue": "2026-07",
-        "note": "1 jantar especial/m\u00eas"
-      },
-      {
-        "id": 503,
-        "name": "\ud83c\udf7a \u00c1lcool / social drinks",
-        "category": "social",
-        "frequency": "mensal",
-        "estimatedCost": 25,
-        "monthlyProvision": 25,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "BC Liquor, cervejas sociais. ~$20-30/m\u00eas"
-      },
-      {
-        "id": 601,
-        "name": "\ud83c\udfae Xbox / gaming",
-        "category": "tech",
-        "frequency": "mensal",
-        "estimatedCost": 25,
-        "monthlyProvision": 25,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Xbox Game Pass + jogos eventuais para Nicolas"
-      },
-      {
-        "id": 602,
-        "name": "\ud83d\udcf1 Acess\u00f3rios tech",
-        "category": "tech",
-        "frequency": "eventual",
-        "estimatedCost": 80,
-        "monthlyProvision": 20,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Mouse, cabos, acess\u00f3rios. Aparece a cada 2-3 meses"
-      },
-      {
-        "id": 701,
-        "name": "\ud83d\ude8c Transporte p\u00fablico / Uber",
-        "category": "transporte",
-        "frequency": "mensal",
-        "estimatedCost": 30,
-        "monthlyProvision": 30,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Bus, Uber, Skytrain"
-      },
-      {
-        "id": 702,
-        "name": "\ud83c\udd7f\ufe0f Parking",
-        "category": "transporte",
-        "frequency": "mensal",
-        "estimatedCost": 20,
-        "monthlyProvision": 20,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": "Estacionamentos eventuais"
+        "note": ""
       }
     ]
   }
