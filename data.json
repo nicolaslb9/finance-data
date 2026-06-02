@@ -40,7 +40,7 @@
           "id": 12,
           "name": "📶  Telus",
           "type": "fixed",
-          "budget": 75
+          "budget": 80
         },
         {
           "id": 13,
@@ -112,7 +112,7 @@
           "id": 50,
           "name": "🎯 Emergency Savings",
           "type": "savings",
-          "budget": 200
+          "budget": 300
         },
         {
           "id": 51,
@@ -124,7 +124,7 @@
           "id": 52,
           "name": "📈 TFSA",
           "type": "savings",
-          "budget": 200
+          "budget": 300
         },
         {
           "id": 60,
@@ -148,18 +148,16 @@
           "id": 1006,
           "name": "🇧🇷 Brasil 2027",
           "type": "savings",
-          "budget": 50
+          "budget": 100
+        },
+        {
+          "id": 1007,
+          "name": "💆 Earlobe + Dental",
+          "type": "savings",
+          "budget": 0
         }
       ],
-      "transactions": [
-        {
-          "id": 9001,
-          "date": "2026-06-01",
-          "cat": 10,
-          "desc": "",
-          "amount": 2310
-        }
-      ]
+      "transactions": []
     }
   },
   "savings": {
