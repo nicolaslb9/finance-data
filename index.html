@@ -1475,6 +1475,7 @@ function showTab(name) {
   if (name==='budget') { renderBudgetOverview(); }
   if (name==='provisions') { loadSinkingFunds(); syncProvisionBudget(); renderProvBudgetBanner(); renderProvisions(); }
   if (name==='savings') { renderRecommendations(); renderPhasesPlan(); renderRetirementProjection(); }
+  if (name==='settings') { loadCfgUI(); }
 }
 
 function loadCfgUI() {
@@ -1850,14 +1851,6 @@ async function tryAutoLoad() {
   } catch(e) {
     setSyncStatus('erro ao conectar', 'error');
   }
-}
-
-// ── Pre-fill cfg fields as soon as the settings tab opens ───────────────────
-// (already done by loadCfgUI inside init, but re-ensure on tab switch)
-const _origShowTab = showTab;
-function showTab(name) {
-  _origShowTab(name);
-  if (name === 'settings') loadCfgUI();
 }
 
 init();
