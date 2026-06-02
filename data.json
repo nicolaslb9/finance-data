@@ -136,7 +136,7 @@
           "id": 60,
           "name": "Provisões (Sinking Funds)",
           "type": "provision",
-          "budget": 40
+          "budget": 0
         },
         {
           "id": 1000,
@@ -226,31 +226,6 @@
         "monthly": 200
       }
     ],
-    "sinkingFunds": [
-      {
-        "id": 1001,
-        "name": "Nova provisão",
-        "category": "casa",
-        "frequency": "mensal",
-        "estimatedCost": 100,
-        "monthlyProvision": 20,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": ""
-      },
-      {
-        "id": 1002,
-        "name": "Nova provisão",
-        "category": "casa",
-        "frequency": "mensal",
-        "estimatedCost": 100,
-        "monthlyProvision": 20,
-        "balance": 0,
-        "lastUsed": null,
-        "nextDue": null,
-        "note": ""
-      }
-    ]
+    "sinkingFunds": []
   }
 }
