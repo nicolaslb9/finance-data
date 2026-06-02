@@ -750,7 +750,10 @@ function init() {
   const sc = localStorage.getItem('finance_cfg');
   if (sc) { try { cfg = JSON.parse(sc); loadCfgUI(); } catch(e){} }
   if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
-  loadSinkingFunds();
+  // Always sync sinkingFunds from savings object (handles stale localStorage)
+  if (savings.sinkingFunds && savings.sinkingFunds.length) {
+    sinkingFunds = savings.sinkingFunds;
+  }
   render();
   loadWeeklyReport();
 }
@@ -1713,7 +1716,8 @@ async function loadFromGithub() {
     const json = JSON.parse(atob(file.content.replace(/\n/g,'')));
     if (json.data) data = json.data;
     if (json.savings) savings = json.savings;
-    if (json.savings && json.savings.sinkingFunds) sinkingFunds = json.savings.sinkingFunds; else if (json.sinkingFunds) sinkingFunds = json.sinkingFunds;
+    // Always pull sinkingFunds from the savings object
+    if (savings.sinkingFunds && savings.sinkingFunds.length) sinkingFunds = savings.sinkingFunds;
     localStorage.setItem('finance_data',JSON.stringify(data));
     localStorage.setItem('finance_savings',JSON.stringify(savings));
     render();
