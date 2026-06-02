@@ -181,6 +181,11 @@ select { cursor: pointer; }
 .empty svg { width: 32px; height: 32px; opacity: 0.3; margin: 0 auto 8px; display: block; }
 
 /* MOBILE */
+/* Sync badge: hide text on tiny screens, keep emoji */
+@media (max-width: 380px) {
+  .badge-label { display: none; }
+}
+
 @media (max-width: 720px) {
   /* ── Layout: sidebar becomes bottom tab bar ── */
   .app { flex-direction: column-reverse; min-height: 100dvh; }
@@ -369,6 +374,7 @@ select { cursor: pointer; }
       <p>Resumo financeiro do mês</p>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
+      <div id="mobile-sync-badge" title="Status GitHub" style="cursor:pointer" onclick="showTab('settings')"></div>
       <select id="month-sel" onchange="changeMonth()">
         <option value="0">Jan 2026</option><option value="1">Fev 2026</option>
         <option value="2">Mar 2026</option><option value="3">Abr 2026</option>
@@ -1642,6 +1648,24 @@ function setSyncStatus(msg, cls) {
   const el = document.getElementById('sync-status');
   el.innerHTML = `<span class="sync-dot"></span>${msg}`;
   el.className = 'sync-pill ' + (cls||'');
+
+  // Mobile badge in overview header
+  const badge = document.getElementById('mobile-sync-badge');
+  if (!badge) return;
+  const states = {
+    saved:   { emoji: '🟢', label: 'Sincronizado',   bg: '#f0fdf4', color: '#16a34a', border: '#bbf7d0' },
+    saving:  { emoji: '🔄', label: 'Salvando…',       bg: '#fffbeb', color: '#d97706', border: '#fde68a' },
+    error:   { emoji: '🔴', label: 'Erro no sync',    bg: '#fef2f2', color: '#dc2626', border: '#fecaca' },
+    default: { emoji: '⚪', label: 'Sem conexão',      bg: '#f8fafc', color: '#94a3b8', border: '#e2e8f0' },
+  };
+  const s = states[cls] || states.default;
+  badge.innerHTML = `<span style="
+    display:inline-flex;align-items:center;gap:5px;
+    background:${s.bg};border:1px solid ${s.border};
+    border-radius:20px;padding:4px 10px;
+    font-size:12px;font-weight:500;color:${s.color};
+    font-family:'Geist',sans-serif;
+  ">${s.emoji} <span class="badge-label">${s.label}</span></span>`;
 }
 
 async function githubRequest(method, path, body) {
