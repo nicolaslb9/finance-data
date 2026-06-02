@@ -1085,8 +1085,10 @@ function syncBudgetMonthSelect() {
 }
 
 function renderBudgetList() {
+  const TYPE_ORDER = {debt:0, fixed:1, needs:2, savings:3, provision:4, wants:5};
+  const sorted = [...md().budget].sort((a,b) => (TYPE_ORDER[a.type]??9) - (TYPE_ORDER[b.type]??9));
   let h = '';
-  md().budget.forEach(b => {
+  sorted.forEach(b => {
     const sp = spentForCat(b.id);
     const bal = (+b.budget||0) - sp;
     const over = bal < 0;
@@ -1720,6 +1722,7 @@ function renderProvisions() {
               <div style="display:flex;gap:4px">
                 <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;color:${color};border-color:${color}20" onclick="contributeMonth(${f.id})">+${fmt(f.monthlyProvision)}</button>
                 <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;color:var(--red);border-color:#fecaca" onclick="useFund(${f.id})">Usar</button>
+                <button class="btn btn-sm" style="padding:3px 8px;font-size:11px;color:var(--text3);border-color:var(--border)" onclick="deleteSinkingFund(${f.id})" title="Excluir provisão">✕</button>
               </div>
             </div>
           </div>`;
@@ -1776,6 +1779,18 @@ function markAllProvisionsPaid() {
   sinkingFunds.forEach(f => { f.balance = (+f.balance||0) + (+f.monthlyProvision||0); });
   saveSinkingFunds();
   renderProvBudgetBanner();
+  renderProvisions();
+}
+
+function deleteSinkingFund(id) {
+  const f = sinkingFunds.find(x => x.id === id);
+  if (!f) return;
+  if (!confirm('Excluir "' + f.name + '"?')) return;
+  sinkingFunds = sinkingFunds.filter(x => x.id !== id);
+  saveSinkingFunds();
+  syncProvisionBudget();
+  renderProvBudgetBanner();
+  renderBudgetSinkingCard();
   renderProvisions();
 }
 
