@@ -155,6 +155,12 @@
           "name": "💆 Earlobe + Dental",
           "type": "savings",
           "budget": 0
+        },
+        {
+          "id": 1008,
+          "name": "🎓 College Nicolas",
+          "type": "savings",
+          "budget": 0
         }
       ],
       "transactions": []
