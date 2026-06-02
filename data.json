@@ -4,23 +4,13 @@
       "income": [
         {
           "id": 1,
-          "label": "Income 1 (Juliana)",
-          "amount": 1555
+          "label": "Nicolas (quinzenal x2)",
+          "amount": 4680
         },
         {
           "id": 2,
-          "label": "Income 2 (Nicolas)",
-          "amount": 1965
-        },
-        {
-          "id": 3,
-          "label": "Income 3 (Juliana)",
-          "amount": 1555
-        },
-        {
-          "id": 4,
-          "label": "Income 4 (Nicolas)",
-          "amount": 1965
+          "label": "Juliana (quinzenal x2)",
+          "amount": 3831
         }
       ],
       "budget": [
@@ -166,71 +156,1081 @@
           "amount": 2260
         }
       ]
+    },
+    "6": {
+      "income": [
+        {
+          "id": 1,
+          "label": "Nicolas (quinzenal x2)",
+          "amount": 4680
+        },
+        {
+          "id": 2,
+          "label": "Juliana (quinzenal x2)",
+          "amount": 3831
+        }
+      ],
+      "budget": [
+        {
+          "id": 10,
+          "name": "Aluguel",
+          "type": "fixed",
+          "budget": 2210
+        },
+        {
+          "id": 11,
+          "name": "Hydro BC",
+          "type": "fixed",
+          "budget": 45
+        },
+        {
+          "id": 12,
+          "name": "Telus",
+          "type": "fixed",
+          "budget": 75
+        },
+        {
+          "id": 13,
+          "name": "Car Insurance",
+          "type": "fixed",
+          "budget": 290
+        },
+        {
+          "id": 14,
+          "name": "Home Insurance",
+          "type": "fixed",
+          "budget": 32
+        },
+        {
+          "id": 15,
+          "name": "Koodo Plans",
+          "type": "fixed",
+          "budget": 100
+        },
+        {
+          "id": 16,
+          "name": "Gym",
+          "type": "fixed",
+          "budget": 76
+        },
+        {
+          "id": 20,
+          "name": "Car Financing",
+          "type": "debt",
+          "budget": 300
+        },
+        {
+          "id": 21,
+          "name": "iPhone Financing",
+          "type": "debt",
+          "budget": 120
+        },
+        {
+          "id": 30,
+          "name": "Mercado / Groceries",
+          "type": "needs",
+          "budget": 680
+        },
+        {
+          "id": 31,
+          "name": "Combust\u00c3\u00advel",
+          "type": "needs",
+          "budget": 200
+        },
+        {
+          "id": 32,
+          "name": "Sa\u00c3\u00bade / Health",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 33,
+          "name": "Casa / Household",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 40,
+          "name": "Restaurante / Fun",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 41,
+          "name": "Beauty",
+          "type": "wants",
+          "budget": 150
+        },
+        {
+          "id": 42,
+          "name": "Assinaturas",
+          "type": "wants",
+          "budget": 55
+        },
+        {
+          "id": 43,
+          "name": "Allowance Nicolas",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 44,
+          "name": "Allowance Juliana",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 45,
+          "name": "Roupas / Clothing",
+          "type": "wants",
+          "budget": 0
+        },
+        {
+          "id": 50,
+          "name": "Emergency Savings",
+          "type": "savings",
+          "budget": 600
+        },
+        {
+          "id": 51,
+          "name": "Travel Funds",
+          "type": "savings",
+          "budget": 500
+        },
+        {
+          "id": 52,
+          "name": "TFSA Retirement",
+          "type": "savings",
+          "budget": 300
+        }
+      ],
+      "transactions": []
+    },
+    "7": {
+      "income": [
+        {
+          "id": 1,
+          "label": "Nicolas (quinzenal x2)",
+          "amount": 4680
+        },
+        {
+          "id": 2,
+          "label": "Juliana (quinzenal x2)",
+          "amount": 3831
+        }
+      ],
+      "budget": [
+        {
+          "id": 10,
+          "name": "Aluguel",
+          "type": "fixed",
+          "budget": 2210
+        },
+        {
+          "id": 11,
+          "name": "Hydro BC",
+          "type": "fixed",
+          "budget": 45
+        },
+        {
+          "id": 12,
+          "name": "Telus",
+          "type": "fixed",
+          "budget": 75
+        },
+        {
+          "id": 13,
+          "name": "Car Insurance",
+          "type": "fixed",
+          "budget": 290
+        },
+        {
+          "id": 14,
+          "name": "Home Insurance",
+          "type": "fixed",
+          "budget": 32
+        },
+        {
+          "id": 15,
+          "name": "Koodo Plans",
+          "type": "fixed",
+          "budget": 100
+        },
+        {
+          "id": 16,
+          "name": "Gym",
+          "type": "fixed",
+          "budget": 76
+        },
+        {
+          "id": 20,
+          "name": "Car Financing",
+          "type": "debt",
+          "budget": 300
+        },
+        {
+          "id": 21,
+          "name": "iPhone Financing",
+          "type": "debt",
+          "budget": 120
+        },
+        {
+          "id": 30,
+          "name": "Mercado / Groceries",
+          "type": "needs",
+          "budget": 680
+        },
+        {
+          "id": 31,
+          "name": "Combust\u00c3\u00advel",
+          "type": "needs",
+          "budget": 200
+        },
+        {
+          "id": 32,
+          "name": "Sa\u00c3\u00bade / Health",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 33,
+          "name": "Casa / Household",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 40,
+          "name": "Restaurante / Fun",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 41,
+          "name": "Beauty",
+          "type": "wants",
+          "budget": 150
+        },
+        {
+          "id": 42,
+          "name": "Assinaturas",
+          "type": "wants",
+          "budget": 55
+        },
+        {
+          "id": 43,
+          "name": "Allowance Nicolas",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 44,
+          "name": "Allowance Juliana",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 45,
+          "name": "Roupas / Clothing",
+          "type": "wants",
+          "budget": 0
+        },
+        {
+          "id": 50,
+          "name": "Emergency Savings",
+          "type": "savings",
+          "budget": 600
+        },
+        {
+          "id": 51,
+          "name": "Travel Funds",
+          "type": "savings",
+          "budget": 500
+        },
+        {
+          "id": 52,
+          "name": "TFSA Retirement",
+          "type": "savings",
+          "budget": 300
+        }
+      ],
+      "transactions": []
+    },
+    "8": {
+      "income": [
+        {
+          "id": 1,
+          "label": "Nicolas (quinzenal x2)",
+          "amount": 4680
+        },
+        {
+          "id": 2,
+          "label": "Juliana (quinzenal x2)",
+          "amount": 3831
+        }
+      ],
+      "budget": [
+        {
+          "id": 10,
+          "name": "Aluguel",
+          "type": "fixed",
+          "budget": 2210
+        },
+        {
+          "id": 11,
+          "name": "Hydro BC",
+          "type": "fixed",
+          "budget": 45
+        },
+        {
+          "id": 12,
+          "name": "Telus",
+          "type": "fixed",
+          "budget": 75
+        },
+        {
+          "id": 13,
+          "name": "Car Insurance",
+          "type": "fixed",
+          "budget": 290
+        },
+        {
+          "id": 14,
+          "name": "Home Insurance",
+          "type": "fixed",
+          "budget": 32
+        },
+        {
+          "id": 15,
+          "name": "Koodo Plans",
+          "type": "fixed",
+          "budget": 100
+        },
+        {
+          "id": 16,
+          "name": "Gym",
+          "type": "fixed",
+          "budget": 76
+        },
+        {
+          "id": 20,
+          "name": "Car Financing",
+          "type": "debt",
+          "budget": 300
+        },
+        {
+          "id": 21,
+          "name": "iPhone Financing",
+          "type": "debt",
+          "budget": 120
+        },
+        {
+          "id": 30,
+          "name": "Mercado / Groceries",
+          "type": "needs",
+          "budget": 680
+        },
+        {
+          "id": 31,
+          "name": "Combust\u00c3\u00advel",
+          "type": "needs",
+          "budget": 200
+        },
+        {
+          "id": 32,
+          "name": "Sa\u00c3\u00bade / Health",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 33,
+          "name": "Casa / Household",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 40,
+          "name": "Restaurante / Fun",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 41,
+          "name": "Beauty",
+          "type": "wants",
+          "budget": 150
+        },
+        {
+          "id": 42,
+          "name": "Assinaturas",
+          "type": "wants",
+          "budget": 55
+        },
+        {
+          "id": 43,
+          "name": "Allowance Nicolas",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 44,
+          "name": "Allowance Juliana",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 45,
+          "name": "Roupas / Clothing",
+          "type": "wants",
+          "budget": 0
+        },
+        {
+          "id": 50,
+          "name": "Emergency Savings",
+          "type": "savings",
+          "budget": 600
+        },
+        {
+          "id": 51,
+          "name": "Travel Funds",
+          "type": "savings",
+          "budget": 500
+        },
+        {
+          "id": 52,
+          "name": "TFSA Retirement",
+          "type": "savings",
+          "budget": 300
+        }
+      ],
+      "transactions": []
+    },
+    "9": {
+      "income": [
+        {
+          "id": 1,
+          "label": "Nicolas (quinzenal x2)",
+          "amount": 4680
+        },
+        {
+          "id": 2,
+          "label": "Juliana (quinzenal x2)",
+          "amount": 3831
+        }
+      ],
+      "budget": [
+        {
+          "id": 10,
+          "name": "Aluguel",
+          "type": "fixed",
+          "budget": 2210
+        },
+        {
+          "id": 11,
+          "name": "Hydro BC",
+          "type": "fixed",
+          "budget": 45
+        },
+        {
+          "id": 12,
+          "name": "Telus",
+          "type": "fixed",
+          "budget": 75
+        },
+        {
+          "id": 13,
+          "name": "Car Insurance",
+          "type": "fixed",
+          "budget": 290
+        },
+        {
+          "id": 14,
+          "name": "Home Insurance",
+          "type": "fixed",
+          "budget": 32
+        },
+        {
+          "id": 15,
+          "name": "Koodo Plans",
+          "type": "fixed",
+          "budget": 100
+        },
+        {
+          "id": 16,
+          "name": "Gym",
+          "type": "fixed",
+          "budget": 76
+        },
+        {
+          "id": 20,
+          "name": "Car Financing",
+          "type": "debt",
+          "budget": 300
+        },
+        {
+          "id": 21,
+          "name": "iPhone Financing",
+          "type": "debt",
+          "budget": 120
+        },
+        {
+          "id": 30,
+          "name": "Mercado / Groceries",
+          "type": "needs",
+          "budget": 680
+        },
+        {
+          "id": 31,
+          "name": "Combust\u00c3\u00advel",
+          "type": "needs",
+          "budget": 200
+        },
+        {
+          "id": 32,
+          "name": "Sa\u00c3\u00bade / Health",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 33,
+          "name": "Casa / Household",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 40,
+          "name": "Restaurante / Fun",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 41,
+          "name": "Beauty",
+          "type": "wants",
+          "budget": 150
+        },
+        {
+          "id": 42,
+          "name": "Assinaturas",
+          "type": "wants",
+          "budget": 55
+        },
+        {
+          "id": 43,
+          "name": "Allowance Nicolas",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 44,
+          "name": "Allowance Juliana",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 45,
+          "name": "Roupas / Clothing",
+          "type": "wants",
+          "budget": 0
+        },
+        {
+          "id": 50,
+          "name": "Emergency Savings",
+          "type": "savings",
+          "budget": 600
+        },
+        {
+          "id": 51,
+          "name": "Travel Funds",
+          "type": "savings",
+          "budget": 500
+        },
+        {
+          "id": 52,
+          "name": "TFSA Retirement",
+          "type": "savings",
+          "budget": 300
+        }
+      ],
+      "transactions": []
+    },
+    "10": {
+      "income": [
+        {
+          "id": 1,
+          "label": "Nicolas (quinzenal x2)",
+          "amount": 4680
+        },
+        {
+          "id": 2,
+          "label": "Juliana (quinzenal x2)",
+          "amount": 3831
+        }
+      ],
+      "budget": [
+        {
+          "id": 10,
+          "name": "Aluguel",
+          "type": "fixed",
+          "budget": 2210
+        },
+        {
+          "id": 11,
+          "name": "Hydro BC",
+          "type": "fixed",
+          "budget": 45
+        },
+        {
+          "id": 12,
+          "name": "Telus",
+          "type": "fixed",
+          "budget": 75
+        },
+        {
+          "id": 13,
+          "name": "Car Insurance",
+          "type": "fixed",
+          "budget": 290
+        },
+        {
+          "id": 14,
+          "name": "Home Insurance",
+          "type": "fixed",
+          "budget": 32
+        },
+        {
+          "id": 15,
+          "name": "Koodo Plans",
+          "type": "fixed",
+          "budget": 100
+        },
+        {
+          "id": 16,
+          "name": "Gym",
+          "type": "fixed",
+          "budget": 76
+        },
+        {
+          "id": 20,
+          "name": "Car Financing",
+          "type": "debt",
+          "budget": 300
+        },
+        {
+          "id": 21,
+          "name": "iPhone Financing",
+          "type": "debt",
+          "budget": 120
+        },
+        {
+          "id": 30,
+          "name": "Mercado / Groceries",
+          "type": "needs",
+          "budget": 680
+        },
+        {
+          "id": 31,
+          "name": "Combust\u00c3\u00advel",
+          "type": "needs",
+          "budget": 200
+        },
+        {
+          "id": 32,
+          "name": "Sa\u00c3\u00bade / Health",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 33,
+          "name": "Casa / Household",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 40,
+          "name": "Restaurante / Fun",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 41,
+          "name": "Beauty",
+          "type": "wants",
+          "budget": 150
+        },
+        {
+          "id": 42,
+          "name": "Assinaturas",
+          "type": "wants",
+          "budget": 55
+        },
+        {
+          "id": 43,
+          "name": "Allowance Nicolas",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 44,
+          "name": "Allowance Juliana",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 45,
+          "name": "Roupas / Clothing",
+          "type": "wants",
+          "budget": 0
+        },
+        {
+          "id": 50,
+          "name": "Emergency Savings",
+          "type": "savings",
+          "budget": 600
+        },
+        {
+          "id": 51,
+          "name": "Travel Funds",
+          "type": "savings",
+          "budget": 500
+        },
+        {
+          "id": 52,
+          "name": "TFSA Retirement",
+          "type": "savings",
+          "budget": 300
+        }
+      ],
+      "transactions": []
+    },
+    "11": {
+      "income": [
+        {
+          "id": 1,
+          "label": "Nicolas (quinzenal x2)",
+          "amount": 4680
+        },
+        {
+          "id": 2,
+          "label": "Juliana (quinzenal x2)",
+          "amount": 3831
+        }
+      ],
+      "budget": [
+        {
+          "id": 10,
+          "name": "Aluguel",
+          "type": "fixed",
+          "budget": 2210
+        },
+        {
+          "id": 11,
+          "name": "Hydro BC",
+          "type": "fixed",
+          "budget": 45
+        },
+        {
+          "id": 12,
+          "name": "Telus",
+          "type": "fixed",
+          "budget": 75
+        },
+        {
+          "id": 13,
+          "name": "Car Insurance",
+          "type": "fixed",
+          "budget": 290
+        },
+        {
+          "id": 14,
+          "name": "Home Insurance",
+          "type": "fixed",
+          "budget": 32
+        },
+        {
+          "id": 15,
+          "name": "Koodo Plans",
+          "type": "fixed",
+          "budget": 100
+        },
+        {
+          "id": 16,
+          "name": "Gym",
+          "type": "fixed",
+          "budget": 76
+        },
+        {
+          "id": 20,
+          "name": "Car Financing",
+          "type": "debt",
+          "budget": 300
+        },
+        {
+          "id": 21,
+          "name": "iPhone Financing",
+          "type": "debt",
+          "budget": 120
+        },
+        {
+          "id": 30,
+          "name": "Mercado / Groceries",
+          "type": "needs",
+          "budget": 680
+        },
+        {
+          "id": 31,
+          "name": "Combust\u00c3\u00advel",
+          "type": "needs",
+          "budget": 200
+        },
+        {
+          "id": 32,
+          "name": "Sa\u00c3\u00bade / Health",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 33,
+          "name": "Casa / Household",
+          "type": "needs",
+          "budget": 100
+        },
+        {
+          "id": 40,
+          "name": "Restaurante / Fun",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 41,
+          "name": "Beauty",
+          "type": "wants",
+          "budget": 150
+        },
+        {
+          "id": 42,
+          "name": "Assinaturas",
+          "type": "wants",
+          "budget": 55
+        },
+        {
+          "id": 43,
+          "name": "Allowance Nicolas",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 44,
+          "name": "Allowance Juliana",
+          "type": "wants",
+          "budget": 200
+        },
+        {
+          "id": 45,
+          "name": "Roupas / Clothing",
+          "type": "wants",
+          "budget": 0
+        },
+        {
+          "id": 50,
+          "name": "Emergency Savings",
+          "type": "savings",
+          "budget": 600
+        },
+        {
+          "id": 51,
+          "name": "Travel Funds",
+          "type": "savings",
+          "budget": 500
+        },
+        {
+          "id": 52,
+          "name": "TFSA Retirement",
+          "type": "savings",
+          "budget": 300
+        }
+      ],
+      "transactions": []
     }
   },
   "savings": {
     "wallets": [
       {
         "id": 1,
-        "name": "Emergency Savings (Wealthsimple)",
+        "name": "Emergency Fund (Wealthsimple)",
         "amount": 7919
       },
       {
         "id": 2,
-        "name": "Travel / Viagens",
-        "amount": 0
-      },
-      {
-        "id": 3,
-        "name": "TFSA",
+        "name": "TFSA - VGRO (Wealthsimple)",
         "amount": 3904
       },
       {
-        "id": 4,
-        "name": "Retirement Fund (Canada Life)",
+        "id": 3,
+        "name": "Canada Life RRP (Juliana)",
         "amount": 5012
       },
       {
+        "id": 4,
+        "name": "Japan Trip \ud83c\uddef\ud83c\uddf5",
+        "amount": 300
+      },
+      {
         "id": 5,
-        "name": "College / Future Big Purchases",
-        "amount": 700
+        "name": "Brazil Trip 2027 \ud83c\udde7\ud83c\uddf7",
+        "amount": 0
+      },
+      {
+        "id": 6,
+        "name": "Christmas Fund \ud83c\udf84",
+        "amount": 0
+      },
+      {
+        "id": 7,
+        "name": "Baby Fund \ud83d\udc76",
+        "amount": 0
+      },
+      {
+        "id": 8,
+        "name": "Earlobe Repair - Juliana",
+        "amount": 0
+      },
+      {
+        "id": 9,
+        "name": "Dental Whitening - Nicolas",
+        "amount": 0
+      },
+      {
+        "id": 10,
+        "name": "Nicolas College Fund",
+        "amount": 0
+      },
+      {
+        "id": 11,
+        "name": "Extra Retirement (RRSP/Invest)",
+        "amount": 0
       }
     ],
     "goals": [
       {
         "id": 1,
-        "name": "Emergency Savings ($500/m\u00c3\u00aas)",
-        "target": 10500,
+        "name": "\ud83d\udee1\ufe0f Emergency Fund (6 meses de despesas)",
+        "target": 33000,
         "saved": 7919,
-        "monthly": 500
+        "monthly": 500,
+        "deadline": "2028-06",
+        "phase": "always",
+        "priority": 1,
+        "note": "Meta: 6x despesas mensais (~$5,500). Atualmente $7,919. Gap: $25,081."
       },
       {
         "id": 2,
-        "name": "TFSA Retirement",
-        "target": 12000,
-        "saved": 3904,
-        "monthly": 300
+        "name": "\ud83c\uddef\ud83c\uddf5 Japan Trip - Set 2026",
+        "target": 3500,
+        "saved": 300,
+        "monthly": 1067,
+        "deadline": "2026-09-04",
+        "phase": "phase1",
+        "priority": 1,
+        "note": "Voo e estadia j\u00e1 pagos. Faltam $3,200 para gastos. Prazo: 3 meses."
       },
       {
         "id": 3,
-        "name": "Brazil Fund",
-        "target": 2600,
+        "name": "\ud83c\udf84 Christmas Fund 2026",
+        "target": 800,
         "saved": 0,
-        "monthly": 200
+        "monthly": 133,
+        "deadline": "2026-12-01",
+        "phase": "phase1",
+        "priority": 2,
+        "note": "Se n\u00e3o usar no Natal, vai para a viagem do Brasil. Prazo: 6 meses."
       },
       {
         "id": 4,
-        "name": "Travel / Viagens",
-        "target": 3000,
-        "saved": 0,
-        "monthly": 500
+        "name": "\ud83d\udcc8 TFSA Retirement (VGRO)",
+        "target": 1800000,
+        "saved": 3904,
+        "monthly": 500,
+        "deadline": "2054-01",
+        "phase": "always",
+        "priority": 1,
+        "note": "Limite anual TFSA: $7,000 (2026). VGRO = portf\u00f3lio diversificado 80% a\u00e7\u00f5es/20% renda fixa. Aumentar para $600/m\u00eas em Oct 2026."
       },
       {
         "id": 5,
-        "name": "Immigration",
+        "name": "\ud83c\udfe6 Canada Life RRP (Juliana)",
+        "target": 1800000,
+        "saved": 5012,
+        "monthly": 517,
+        "deadline": "2051-01",
+        "phase": "always",
+        "priority": 1,
+        "note": "Auto-descontado do sal\u00e1rio da Juliana (5% = $258/m\u00eas). Empresa dobra: $517/m\u00eas total. J\u00e1 projetado: ~$449k em 28 anos."
+      },
+      {
+        "id": 6,
+        "name": "\ud83d\udcbc Aposentadoria Extra (RRSP/Invest)",
+        "target": 1303280,
+        "saved": 0,
+        "monthly": 300,
+        "deadline": "2054-01",
+        "phase": "phase3",
+        "priority": 2,
+        "note": "Gap para atingir $1.8M (regra dos 4%, $6k/m\u00eas). Canada Life + TFSA projetam $497k. Faltam $1.3M. Come\u00e7ar com $300/m\u00eas, aumentar para $800/m\u00eas ap\u00f3s viagens."
+      },
+      {
+        "id": 7,
+        "name": "\ud83c\udde7\ud83c\uddf7 Brazil Trip - Mar 2027",
+        "target": 4000,
+        "saved": 0,
+        "monthly": 200,
+        "deadline": "2027-03-01",
+        "phase": "phase1_small",
+        "priority": 2,
+        "note": "Come\u00e7ar com $100-200/m\u00eas agora. Ap\u00f3s Jap\u00e3o (Out 2026) aumentar para $667/m\u00eas para bater $4,000."
+      },
+      {
+        "id": 8,
+        "name": "\ud83d\udc76 Baby Fund - 2029",
+        "target": 20000,
+        "saved": 0,
+        "monthly": 300,
+        "deadline": "2029-06-01",
+        "phase": "phase1",
+        "priority": 2,
+        "note": "Estimativa: $20,000 para 1\u00ba ano (daycare ~$1,500/m\u00eas em Vancouver, suprimentos, gap de licen\u00e7a). 36 meses de runway. Come\u00e7ar agora = $300/m\u00eas."
+      },
+      {
+        "id": 9,
+        "name": "\ud83d\udc86 Earlobe Repair - Juliana 2027",
         "target": 2000,
         "saved": 0,
-        "monthly": 200
+        "monthly": 167,
+        "deadline": "2027-06-01",
+        "phase": "phase1",
+        "priority": 3,
+        "note": "Estimativa $2,000 CAD. Verificar cobertura Sun Life (normalmente n\u00e3o cobre procedimentos est\u00e9ticos). Prazo: 12 meses."
+      },
+      {
+        "id": 10,
+        "name": "\ud83e\uddb7 Clareamento Dental - Nicolas 2027",
+        "target": 900,
+        "saved": 0,
+        "monthly": 75,
+        "deadline": "2027-06-01",
+        "phase": "phase1",
+        "priority": 3,
+        "note": "Estimativa $900 CAD out-of-pocket. Sun Life cobre parcialmente ortodontia (verificar plano). Prazo: 12 meses."
+      },
+      {
+        "id": 11,
+        "name": "\ud83c\udf93 Nicolas College Fund",
+        "target": 50000,
+        "saved": 0,
+        "monthly": 150,
+        "deadline": "2035-09-01",
+        "phase": "always",
+        "priority": 3,
+        "note": "RESP pode ser op\u00e7\u00e3o (governo banca 20% at\u00e9 $500/ano = $2,500 gr\u00e1tis/ano). Considerar abrir RESP. $150/m\u00eas por 9 anos = ~$23k + rendimentos."
       }
     ]
   }
