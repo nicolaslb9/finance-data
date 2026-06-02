@@ -1,41 +1,57 @@
-const CACHE = 'finance-v1';
-const ASSETS = [
-  '/finance-data/',
-  '/finance-data/index.html',
-  'https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js'
-];
+// Bump this version to force all clients to update immediately
+const CACHE_VERSION = 'finance-v3';
 
 self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {}))
-  );
+  // Skip waiting so new SW activates immediately
   self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
+  // Delete ALL old caches on activate
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
+      Promise.all(keys.map(k => caches.delete(k)))
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
-  // GitHub API calls — always network only, never cache
-  if (e.request.url.includes('api.github.com')) return;
+  const url = e.request.url;
 
-  e.respondWith(
-    fetch(e.request)
-      .then(res => {
-        // Cache successful GET responses
-        if (e.request.method === 'GET' && res.status === 200) {
+  // Never intercept: GitHub API, data.json, external APIs
+  if (url.includes('api.github.com') ||
+      url.includes('data.json') ||
+      url.includes('fonts.googleapis.com') ||
+      url.includes('fonts.gstatic.com')) {
+    return; // pass through to network
+  }
+
+  // For the app HTML — network first, cache fallback (offline only)
+  if (e.request.mode === 'navigate' || url.endsWith('index.html') || url.endsWith('/')) {
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          // Cache the fresh version for offline use
           const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
+          caches.open(CACHE_VERSION).then(c => c.put(e.request, clone));
+          return res;
+        })
+        .catch(() => caches.match(e.request)) // offline fallback
+    );
+    return;
+  }
+
+  // For everything else (JS libs, icons) — cache first, network fallback
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      if (cached) return cached;
+      return fetch(e.request).then(res => {
+        if (res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE_VERSION).then(c => c.put(e.request, clone));
         }
         return res;
-      })
-      .catch(() => caches.match(e.request))
+      });
+    })
   );
 });
