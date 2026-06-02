@@ -185,6 +185,7 @@ select { cursor: pointer; }
 
 .fade-in { animation: fadeIn 0.18s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 </style>
 </head>
 <body>
@@ -1499,7 +1500,11 @@ async function githubRequest(method, path, body) {
 }
 
 async function loadFromGithub() {
-  if (!cfg.user||!cfg.token) { document.getElementById('cfg-status').textContent='Configure o GitHub primeiro'; return; }
+  if (!cfg.user||!cfg.token) {
+    const s = document.getElementById('cfg-status');
+    if (s) s.textContent='Configure o GitHub primeiro';
+    return;
+  }
   setSyncStatus('carregando…','saving');
   try {
     const file = await githubRequest('GET','data.json');
@@ -1511,7 +1516,9 @@ async function loadFromGithub() {
     localStorage.setItem('finance_savings',JSON.stringify(savings));
     render();
     setSyncStatus('sincronizado ✓','saved');
-    document.getElementById('cfg-status').textContent='✓ Dados carregados do GitHub';
+    const cfgStatusEl = document.getElementById('cfg-status');
+    if (cfgStatusEl) cfgStatusEl.textContent='✓ Dados carregados do GitHub';
+    showAutoConnectToast();
   } catch(e) {
     setSyncStatus('erro','error');
     document.getElementById('cfg-status').textContent='✗ '+e.message;
@@ -1803,9 +1810,48 @@ function addSinkingFund() {
   renderProvisions();
 }
 
+function showAutoConnectToast() {
+  // Only show toast if the page just loaded (not on manual saves)
+  if (window._toastShown) return;
+  window._toastShown = true;
+  const toast = document.createElement('div');
+  toast.style.cssText = [
+    'position:fixed','bottom:24px','right:24px','z-index:9999',
+    'background:#1a1a18','color:#f0f0f2','border-radius:10px',
+    'padding:12px 18px','font-size:13px','font-family:Geist,sans-serif',
+    'display:flex','align-items:center','gap:10px',
+    'box-shadow:0 4px 20px rgba(0,0,0,0.15)',
+    'animation:slideUp .25s ease','opacity:1','transition:opacity .3s'
+  ].join(';');
+  toast.innerHTML = '<span style="color:#34d399;font-size:16px">✓</span> Conectado ao GitHub automaticamente';
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity='0'; setTimeout(()=>toast.remove(), 300); }, 3000);
+}
+
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-async function tryAutoLoad() { if(cfg.user&&cfg.token){try{await loadFromGithub();}catch(e){}} }
+async function tryAutoLoad() {
+  if (!cfg.user || !cfg.token) {
+    setSyncStatus('sem configuração', '');
+    return;
+  }
+  // Already have credentials — silent connect, no user action needed
+  setSyncStatus('conectando…', 'saving');
+  try {
+    await loadFromGithub();
+    // loadFromGithub already calls setSyncStatus('sincronizado ✓','saved')
+  } catch(e) {
+    setSyncStatus('erro ao conectar', 'error');
+  }
+}
+
+// ── Pre-fill cfg fields as soon as the settings tab opens ───────────────────
+// (already done by loadCfgUI inside init, but re-ensure on tab switch)
+const _origShowTab = showTab;
+function showTab(name) {
+  _origShowTab(name);
+  if (name === 'settings') loadCfgUI();
+}
 
 init();
 tryAutoLoad();
