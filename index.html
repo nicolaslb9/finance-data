@@ -275,8 +275,39 @@ select { cursor: pointer; }
 
 <!-- BUDGET -->
 <div id="section-budget" class="section fade-in">
-  <div class="page-header"><div><h2>Orçamento</h2><p>Planejamento mensal</p></div></div>
-  <div class="grid2" style="margin-bottom:16px">
+  <div class="page-header">
+    <div><h2>Orçamento</h2><p>Planejamento mensal — alocação do income antes dos gastos</p></div>
+    <div style="display:flex;gap:8px">
+      <select id="budget-month-sel" onchange="changeMonth()" style="width:auto"></select>
+    </div>
+  </div>
+
+  <!-- ALLOCATION OVERVIEW -->
+  <div id="budget-overview-banner" style="margin-bottom:16px"></div>
+
+  <!-- 4 METRIC CARDS -->
+  <div class="metrics" id="budget-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
+
+  <!-- CHARTS ROW -->
+  <div class="grid3" style="margin-bottom:16px">
+    <div class="card" style="grid-column:span 1">
+      <div class="card-header"><h3>Alocação do income</h3><span class="sub" id="budget-pie-sub"></span></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-budget-pie"></canvas></div>
+    </div>
+    <div class="card" style="grid-column:span 2">
+      <div class="card-header"><h3>Orçado vs gasto por tipo</h3></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-budget-summary"></canvas></div>
+    </div>
+  </div>
+
+  <!-- WATERFALL — income breakdown -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>Cascata do income</h3><span class="sub">onde vai cada dólar</span></div>
+    <div id="budget-waterfall"></div>
+  </div>
+
+  <!-- INCOME + CATEGORIES -->
+  <div class="grid2">
     <div class="card">
       <div class="card-header"><h3>Renda do mês</h3><span class="sub" id="income-total-label"></span></div>
       <div class="income-tbl">
@@ -288,11 +319,15 @@ select { cursor: pointer; }
       <button class="btn btn-sm" style="margin-top:10px" onclick="addIncome()">+ Adicionar fonte</button>
     </div>
     <div class="card">
-      <div class="card-header"><h3>Resumo</h3></div>
-      <div class="chart-wrap" style="height:180px"><canvas id="chart-budget-summary"></canvas></div>
+      <div class="card-header">
+        <h3>Resumo por tipo</h3>
+        <span class="sub" id="budget-unalloc-label"></span>
+      </div>
+      <div id="budget-type-summary"></div>
     </div>
   </div>
-  <div class="card">
+
+  <div class="card" style="margin-top:16px">
     <div class="card-header"><h3>Categorias</h3><button class="btn btn-sm btn-primary" onclick="addBudgetItem()">+ Categoria</button></div>
     <div class="budget-tbl">
       <div class="tbl-header">
@@ -559,8 +594,8 @@ function render() {
   renderCatChart();
   renderAlerts();
   renderIncomeList();
-  renderBudgetSummaryChart();
   renderBudgetList();
+  renderBudgetOverview();
   renderTxTimeline();
   renderTopCats();
   renderTxList();
@@ -700,12 +735,13 @@ function renderIncomeList() {
   md().income.forEach(i => {
     h += `<div class="tbl-row">
       <input type="text" value="${esc(i.label)}" onchange="getIncome(${i.id}).label=this.value;autoSave()">
-      <input type="number" value="${i.amount}" min="0" onchange="getIncome(${i.id}).amount=+this.value;render();autoSave()">
+      <input type="number" value="${i.amount}" min="0" onchange="getIncome(${i.id}).amount=+this.value;render();renderBudgetOverview();autoSave()">
       <button class="del-btn" onclick="removeIncome(${i.id})">×</button>
     </div>`;
   });
   document.getElementById('income-list').innerHTML = h;
-  document.getElementById('income-total-label').textContent = fmt(total) + ' total';
+  const lbl = document.getElementById('income-total-label');
+  if (lbl) lbl.textContent = fmt(total) + ' total';
 }
 
 function getIncome(id) { return md().income.find(x=>x.id===id); }
@@ -715,14 +751,15 @@ function addIncome() { md().income.push({id:nextId++,label:'Nova renda',amount:0
 function renderBudgetSummaryChart() {
   destroyChart('budget-summary');
   const types = ['fixed','debt','needs','wants','savings'];
-  const ctx = document.getElementById('chart-budget-summary').getContext('2d');
-  charts['budget-summary'] = new Chart(ctx, {
+  const ctx = document.getElementById('chart-budget-summary');
+  if (!ctx) return;
+  charts['budget-summary'] = new Chart(ctx.getContext('2d'), {
     type: 'bar',
     data: {
       labels: types.map(typeLabel),
       datasets: [
-        { label: 'Orçado', data: types.map(t=>totalByType(t)), backgroundColor: types.map(t=>typeLightColor(t)), borderColor: types.map(t=>typeColor(t)), borderWidth: 1.5, borderRadius: 5 },
-        { label: 'Gasto', data: types.map(t=>spentByType(t)), backgroundColor: types.map(t=>typeColor(t)), borderRadius: 5 }
+        { label: 'Orçado', data: types.map(t=>totalByType(t)), backgroundColor: types.map(t=>typeLightColor(t)), borderColor: types.map(t=>typeColor(t)), borderWidth: 1.5, borderRadius: 5, barPercentage: 0.65 },
+        { label: 'Gasto', data: types.map(t=>spentByType(t)), backgroundColor: types.map(t=>typeColor(t)), borderRadius: 5, barPercentage: 0.65 }
       ]
     },
     options: {
@@ -734,6 +771,235 @@ function renderBudgetSummaryChart() {
       }
     }
   });
+}
+
+function renderBudgetPieChart() {
+  destroyChart('budget-pie');
+  const ctx = document.getElementById('chart-budget-pie');
+  if (!ctx) return;
+  const types = ['fixed','debt','needs','wants','savings'];
+  const inc = totalIncome();
+  const budgeted = types.map(t => totalByType(t));
+  const totalBud = budgeted.reduce((a,b)=>a+b,0);
+  const unalloc = Math.max(0, inc - totalBud);
+  const labels = [...types.map(typeLabel), 'Não alocado'];
+  const vals = [...budgeted, unalloc];
+  const colors = [...types.map(typeColor), '#e5e7eb'];
+  const pieEl = document.getElementById('budget-pie-sub');
+  if (pieEl) pieEl.textContent = unalloc > 0 ? fmt(unalloc) + ' livre' : '100% alocado';
+  charts['budget-pie'] = new Chart(ctx.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data: vals, backgroundColor: colors, borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '58%',
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Geist', size: 10 }, boxWidth: 10, padding: 8, color: '#6b6b66' } },
+        tooltip: { callbacks: { label: ctx => {
+          const pct = inc > 0 ? Math.round(ctx.parsed/inc*100) : 0;
+          return ` ${ctx.label}: ${fmt(ctx.parsed)} (${pct}%)`;
+        }}}
+      }
+    }
+  });
+}
+
+function renderBudgetMetrics() {
+  const el = document.getElementById('budget-metrics');
+  if (!el) return;
+  const inc = totalIncome();
+  const totalBud = md().budget.reduce((s,b)=>s+(+b.budget||0),0);
+  const totalSpent = md().budget.reduce((s,b)=>s+spentForCat(b.id),0);
+  const unalloc = inc - totalBud;
+  const allocPct = inc > 0 ? Math.round(totalBud/inc*100) : 0;
+  const spentPct = totalBud > 0 ? Math.round(totalSpent/totalBud*100) : 0;
+  const svBud = totalByType('savings');
+  const svPct = inc > 0 ? Math.round(svBud/inc*100) : 0;
+
+  el.innerHTML = `
+    <div class="metric">
+      <div class="lbl">Income total</div>
+      <div class="val" style="color:var(--green)">${fmt(inc)}</div>
+      <div class="sub">${md().income.length} fontes</div>
+    </div>
+    <div class="metric">
+      <div class="lbl">Já alocado</div>
+      <div class="val" style="color:${allocPct>=100?'var(--red)':allocPct>=90?'var(--amber)':'var(--text)'}">${fmt(totalBud)}</div>
+      <div class="sub">${allocPct}% do income</div>
+    </div>
+    <div class="metric">
+      <div class="lbl">Não alocado</div>
+      <div class="val" style="color:${unalloc<0?'var(--red)':unalloc===0?'var(--green)':'var(--amber)'}">${unalloc<0?'-':''}${fmt(Math.abs(unalloc))}</div>
+      <div class="sub">${unalloc<0?'acima do income':unalloc===0?'100% alocado':'ainda livre'}</div>
+    </div>
+    <div class="metric">
+      <div class="lbl">Savings / income</div>
+      <div class="val" style="color:#7c3aed">${svPct}%</div>
+      <div class="sub">${fmt(svBud)}/mês</div>
+    </div>
+  `;
+}
+
+function renderBudgetOverviewBanner() {
+  const el = document.getElementById('budget-overview-banner');
+  if (!el) return;
+  const inc = totalIncome();
+  const totalBud = md().budget.reduce((s,b)=>s+(+b.budget||0),0);
+  const unalloc = inc - totalBud;
+  const allocPct = inc > 0 ? Math.round(totalBud/inc*100) : 0;
+
+  let bannerStyle, icon, msg, sub;
+  if (unalloc < 0) {
+    bannerStyle = 'background:#fef2f2;border:1px solid #fecaca;color:#991b1b';
+    icon = '⚠️';
+    msg = `Orçamento ${fmt(Math.abs(unalloc))} acima do income`;
+    sub = 'Reduza categorias ou aumente a renda para equilibrar.';
+  } else if (unalloc === 0) {
+    bannerStyle = 'background:#f0fdf4;border:1px solid #bbf7d0;color:#166534';
+    icon = '✅';
+    msg = 'Income 100% alocado — orçamento zero-based perfeito';
+    sub = 'Todo o income tem um destino. Nenhum dólar sem função.';
+  } else if (allocPct >= 90) {
+    bannerStyle = 'background:#fffbeb;border:1px solid #fde68a;color:#92400e';
+    icon = '🟡';
+    msg = `${fmt(unalloc)} ainda não alocados (${100-allocPct}% do income)`;
+    sub = 'Quase lá! Considere adicionar em savings ou provisões.';
+  } else {
+    bannerStyle = 'background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af';
+    icon = '💡';
+    msg = `${fmt(unalloc)} ainda não alocados (${100-allocPct}% do income)`;
+    sub = `Adicione categorias até chegar em ${fmt(inc)}. Meta: cada dólar com um destino.`;
+  }
+
+  el.innerHTML = `<div style="${bannerStyle};border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:20px">${icon}</span>
+    <div>
+      <div style="font-size:14px;font-weight:600">${msg}</div>
+      <div style="font-size:12px;opacity:.8;margin-top:2px">${sub}</div>
+    </div>
+    <div style="margin-left:auto;text-align:right;flex-shrink:0">
+      <div style="font-size:22px;font-weight:700;font-family:'Geist Mono',monospace">${allocPct}%</div>
+      <div style="font-size:11px;opacity:.7">alocado</div>
+    </div>
+  </div>`;
+}
+
+function renderBudgetWaterfall() {
+  const el = document.getElementById('budget-waterfall');
+  if (!el) return;
+  const inc = totalIncome();
+  if (inc === 0) { el.innerHTML = '<div class="empty">Configure a renda primeiro</div>'; return; }
+
+  const types = [
+    { key: 'fixed',   label: '🏠 Despesas fixas',   color: '#94a3b8' },
+    { key: 'debt',    label: '💳 Dívidas',            color: '#ef4444' },
+    { key: 'savings', label: '💰 Savings',             color: '#8b5cf6' },
+    { key: 'needs',   label: '🛒 Necessidades',        color: '#22c55e' },
+    { key: 'wants',   label: '🎯 Desejos',             color: '#3b82f6' },
+  ];
+
+  let remaining = inc;
+  let h = `<div style="display:flex;flex-direction:column;gap:6px">`;
+
+  // Income bar
+  h += `<div style="display:grid;grid-template-columns:160px 1fr 90px;gap:10px;align-items:center">
+    <span style="font-size:12px;font-weight:600;color:var(--text);text-align:right">💵 Income total</span>
+    <div style="height:10px;background:#22c55e;border-radius:5px;width:100%"></div>
+    <span style="font-size:12px;font-family:'Geist Mono',monospace;font-weight:600;color:var(--green);text-align:right">${fmt(inc)}</span>
+  </div>
+  <div style="border-top:1px dashed var(--border);margin:4px 0 4px 168px"></div>`;
+
+  types.forEach(t => {
+    const bud = totalByType(t.key);
+    const sp = spentByType(t.key);
+    if (bud === 0 && sp === 0) return;
+    remaining -= bud;
+    const budPct = Math.min(100, bud / inc * 100);
+    const spPct = Math.min(budPct, sp / inc * 100);
+    const over = sp > bud;
+    h += `<div style="display:grid;grid-template-columns:160px 1fr 90px;gap:10px;align-items:center">
+      <span style="font-size:12px;color:var(--text2);text-align:right">${t.label}</span>
+      <div style="position:relative;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden">
+        <div style="position:absolute;height:100%;width:${budPct.toFixed(1)}%;background:${t.color}22;border-radius:4px"></div>
+        <div style="position:absolute;height:100%;width:${spPct.toFixed(1)}%;background:${over?'#ef4444':t.color};border-radius:4px"></div>
+      </div>
+      <div style="text-align:right">
+        <span style="font-size:12px;font-family:'Geist Mono',monospace;color:${over?'var(--red)':'var(--text2)'}">${fmt(bud)}</span>
+        ${sp>0?`<span style="font-size:10px;color:${over?'var(--red)':'var(--text3)'};margin-left:4px">(${fmt(sp)})</span>`:''}
+      </div>
+    </div>`;
+  });
+
+  const allocPct = Math.min(100, (inc - Math.max(0, remaining)) / inc * 100);
+  h += `<div style="border-top:1px dashed var(--border);margin:4px 0 4px 168px"></div>`;
+  h += `<div style="display:grid;grid-template-columns:160px 1fr 90px;gap:10px;align-items:center">
+    <span style="font-size:12px;font-weight:600;color:${remaining<0?'var(--red)':remaining===0?'var(--green)':'var(--amber)'};text-align:right">${remaining<0?'⚠️ Excesso':'✦ Não alocado'}</span>
+    <div style="height:8px;background:${remaining<0?'#fecaca':remaining===0?'#bbf7d0':'#fde68a'};border-radius:4px;overflow:hidden">
+      <div style="height:100%;width:${Math.min(100,Math.abs(remaining)/inc*100).toFixed(1)}%;background:${remaining<0?'var(--red)':remaining===0?'var(--green)':'var(--amber)'}"></div>
+    </div>
+    <span style="font-size:12px;font-family:'Geist Mono',monospace;font-weight:600;color:${remaining<0?'var(--red)':remaining===0?'var(--green)':'var(--amber)'};text-align:right">${remaining<0?'-':''}${fmt(Math.abs(remaining))}</span>
+  </div>`;
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+function renderBudgetTypeSummary() {
+  const el = document.getElementById('budget-type-summary');
+  const unallocEl = document.getElementById('budget-unalloc-label');
+  if (!el) return;
+  const inc = totalIncome();
+  const types = ['fixed','debt','needs','wants','savings'];
+  let h = '';
+  let totalBud = 0;
+  types.forEach(t => {
+    const bud = totalByType(t);
+    const sp = spentByType(t);
+    const pct = inc > 0 ? Math.round(bud/inc*100) : 0;
+    totalBud += bud;
+    h += `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${typeColor(t)};flex-shrink:0"></span>
+        <span style="font-size:13px">${typeLabel(t)}</span>
+        <span style="font-size:10px;background:${typeLightColor(t)};color:${typeColor(t)};padding:1px 6px;border-radius:20px;font-weight:600">${pct}%</span>
+      </div>
+      <div style="text-align:right">
+        <span style="font-size:13px;font-weight:600;font-family:'Geist Mono',monospace">${fmt(bud)}</span>
+        ${sp>0?`<div style="font-size:10px;color:var(--text3)">gasto: ${fmt(sp)}</div>`:''}
+      </div>
+    </div>`;
+  });
+  const unalloc = inc - totalBud;
+  if (unalloc !== 0) {
+    h += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:13px;color:${unalloc<0?'var(--red)':'var(--amber)'}">Não alocado</span>
+      <span style="font-size:13px;font-weight:600;font-family:'Geist Mono',monospace;color:${unalloc<0?'var(--red)':'var(--amber)'}">${unalloc<0?'-':''}${fmt(Math.abs(unalloc))}</span>
+    </div>`;
+  }
+  h += `<div style="display:flex;justify-content:space-between;padding:10px 0 0">
+    <span style="font-size:12px;font-weight:600;color:var(--text3)">TOTAL ALOCADO</span>
+    <span style="font-size:14px;font-weight:700;font-family:'Geist Mono',monospace">${fmt(totalBud)}</span>
+  </div>`;
+  el.innerHTML = h;
+  if (unallocEl) unallocEl.textContent = unalloc <= 0 ? '✓ 100% alocado' : fmt(unalloc) + ' livre';
+}
+
+function renderBudgetOverview() {
+  renderBudgetOverviewBanner();
+  renderBudgetMetrics();
+  renderBudgetPieChart();
+  renderBudgetSummaryChart();
+  renderBudgetWaterfall();
+  renderBudgetTypeSummary();
+  syncBudgetMonthSelect();
+}
+
+function syncBudgetMonthSelect() {
+  const sel = document.getElementById('budget-month-sel');
+  if (!sel) return;
+  const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  sel.innerHTML = MONTHS_SHORT.map((m,i)=>`<option value="${i}"${i===currentMonth?' selected':''}>${m} 2026</option>`).join('');
 }
 
 function renderBudgetList() {
@@ -757,8 +1023,8 @@ function renderBudgetList() {
 }
 
 function getBudget(id) { return md().budget.find(x=>x.id===id); }
-function removeBudget(id) { md().budget = md().budget.filter(x=>x.id!==id); render(); autoSave(); }
-function addBudgetItem() { md().budget.push({id:nextId++,name:'Nova categoria',type:'needs',budget:0}); render(); autoSave(); }
+function removeBudget(id) { md().budget = md().budget.filter(x=>x.id!==id); render(); renderBudgetOverview(); autoSave(); }
+function addBudgetItem() { md().budget.push({id:nextId++,name:'Nova categoria',type:'needs',budget:0}); render(); renderBudgetOverview(); autoSave(); }
 
 function renderTxTimeline() {
   destroyChart('tx-timeline');
@@ -1114,6 +1380,7 @@ function showTab(name) {
   const tabs = ['overview','budget','transactions','savings','provisions','settings'];
   document.getElementById('section-'+name).classList.add('active');
   document.querySelectorAll('.nav-item')[tabs.indexOf(name)].classList.add('active');
+  if (name==='budget') { renderBudgetOverview(); }
   if (name==='provisions') { loadSinkingFunds(); renderProvisions(); }
   if (name==='savings') { renderRecommendations(); renderPhasesPlan(); renderRetirementProjection(); }
 }
