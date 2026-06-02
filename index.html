@@ -595,7 +595,7 @@ select { cursor: pointer; }
     <div>
       <h2 style="font-size:20px;font-weight:600;letter-spacing:-0.4px;margin-bottom:4px">Sinking Funds</h2>
       <p style="font-size:13px;color:var(--text3);margin-bottom:16px">$100/mês separados antes de gastar</p>
-      <div id="sf-metrics" class="metrics" style="grid-template-columns:repeat(2,1fr);margin-bottom:0"></div>
+      <div id="sf-metrics" class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:0"></div>
     </div>
     <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px 18px">
       <div style="font-size:12px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">💡 O que são Sinking Funds?</div>
@@ -1924,7 +1924,8 @@ function sfSetBalance(id, val) {
     const contributed = sinkingFunds.every(f=>f.lastContribution===curMonth);
     metEl.innerHTML = `
       <div class="metric"><div class="lbl">Saldo acumulado</div><div class="val" style="color:var(--green)">${fmt(totalBal)}</div><div class="sub">disponível para usar</div></div>
-      <div class="metric"><div class="lbl">Alocado/mês</div><div class="val" style="color:#f59e0b">$${totalAlloc}</div><div class="sub">${unalloc>0?'$'+unalloc+' não distribuído':'✓ $100 distribuídos'}</div></div>
+      <div class="metric"><div class="lbl">Alocado/mês</div><div class="val" style="color:#f59e0b">$${totalAlloc}</div><div class="sub">${unalloc>0?'$'+unalloc+' livre':'✓ $100 distribuídos'}</div></div>
+      <div class="metric"><div class="lbl">Este mês</div><div class="val" style="font-size:18px">${contributed?'✅':'⏳'}</div><div class="sub">${contributed?'contribuição feita':'pendente'}</div></div>
     `;
   }
 }
@@ -1982,6 +1983,11 @@ function renderProvisions() {
       <div class="lbl">Alocado/mês</div>
       <div class="val" style="color:#f59e0b">$${totalAlloc}</div>
       <div class="sub">${unalloc > 0 ? '$'+unalloc+' livre' : '✓ $100 distribuídos'}</div>
+    </div>
+    <div class="metric">
+      <div class="lbl">Este mês</div>
+      <div class="val" style="font-size:18px">${contributed ? '✅' : '⏳'}</div>
+      <div class="sub">${contributed ? 'contribuição feita' : 'pendente'}</div>
     </div>
   `;
 
