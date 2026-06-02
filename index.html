@@ -2200,10 +2200,33 @@ window.addEventListener('resize', () => {
 </script>
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/finance-data/service-worker.js')
-      .then(reg => console.log('SW registered:', reg.scope))
-      .catch(err => console.log('SW error:', err));
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('/finance-data/service-worker.js');
+
+      // Check for updates every time the app opens
+      reg.update();
+
+      // When a new SW is waiting, activate it immediately
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW.addEventListener('statechange', () => {
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            // New version ready — reload to get fresh app
+            newSW.postMessage({ type: 'SKIP_WAITING' });
+            window.location.reload();
+          }
+        });
+      });
+
+      // If SW controller changes (new SW took over), reload
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+
+    } catch(err) {
+      console.log('SW error:', err);
+    }
   });
 }
 </script>
