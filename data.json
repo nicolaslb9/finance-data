@@ -86,13 +86,13 @@
         },
         {
           "id": 31,
-          "name": "Combustível",
+          "name": "CombustÃ­vel",
           "type": "needs",
           "budget": 200
         },
         {
           "id": 32,
-          "name": "Saúde / Health",
+          "name": "SaÃºde / Health",
           "type": "needs",
           "budget": 100
         },
@@ -157,7 +157,15 @@
           "budget": 300
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 1000,
+          "date": "2026-06-02",
+          "cat": 10,
+          "desc": "",
+          "amount": 0
+        }
+      ]
     }
   },
   "savings": {
@@ -191,7 +199,7 @@
     "goals": [
       {
         "id": 1,
-        "name": "Emergency Savings ($500/mês)",
+        "name": "Emergency Savings ($500/mÃªs)",
         "target": 10500,
         "saved": 7919,
         "monthly": 500
