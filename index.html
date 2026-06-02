@@ -338,24 +338,46 @@ select { cursor: pointer; }
 
 <!-- SAVINGS -->
 <div id="section-savings" class="section fade-in">
-  <div class="page-header"><div><h2>Savings</h2><p>Contas e metas de poupança</p></div></div>
-  <div class="metrics" id="savings-metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px"></div>
+  <div class="page-header"><div><h2>Savings &amp; Metas</h2><p>Patrimônio, metas e plano de aposentadoria</p></div></div>
+
+  <!-- METRICS ROW -->
+  <div class="metrics" id="savings-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
+
+  <!-- PATRIMÔNIO + RECOMENDAÇÕES -->
   <div class="grid2" style="margin-bottom:16px">
     <div class="card">
-      <div class="card-header"><h3>Patrimônio por conta</h3></div>
-      <div class="chart-wrap" style="height:200px"><canvas id="chart-wallet-pie"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><h3>Contas</h3><button class="btn btn-sm" onclick="addWallet()">+ Conta</button></div>
-      <div id="wallet-list"></div>
-      <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;">
-        <span style="font-size:12px;color:var(--text3);font-weight:500">TOTAL</span>
-        <span id="wallet-total" style="font-family:'Geist Mono',monospace;font-size:14px;font-weight:600;color:var(--green)">$0</span>
+      <div class="card-header"><h3>Patrimônio por conta</h3><span class="sub" id="wallet-total-label"></span></div>
+      <div class="chart-wrap" style="height:190px"><canvas id="chart-wallet-pie"></canvas></div>
+      <div style="margin-top:14px">
+        <div id="wallet-list"></div>
+        <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em">Total</span>
+          <span id="wallet-total" style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:600;color:var(--green)">$0</span>
+        </div>
+        <button class="btn btn-sm" style="margin-top:10px" onclick="addWallet()">+ Conta</button>
       </div>
     </div>
+    <div class="card" style="background:linear-gradient(135deg,#eff6ff 0%,#f5f3ff 100%);border-color:#dbeafe">
+      <div class="card-header"><h3 style="color:#1e40af">💡 Recomendações do Mês</h3><span class="sub" id="rec-phase-label" style="color:#3b82f6"></span></div>
+      <div id="recommendations"></div>
+    </div>
   </div>
+
+  <!-- PLANO FASEADO -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>📋 Plano de Savings — Fases</h3><span class="sub">baseado nas suas metas e renda</span></div>
+    <div id="phases-plan"></div>
+  </div>
+
+  <!-- APOSENTADORIA -->
+  <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#f0fdf4 0%,#eff6ff 100%);border-color:#bbf7d0">
+    <div class="card-header"><h3 style="color:#15803d">🏖️ Projeção de Aposentadoria</h3><span class="sub">meta: $6,000/mês aos 55 anos</span></div>
+    <div id="retirement-projection"></div>
+  </div>
+
+  <!-- METAS -->
   <div class="card">
-    <div class="card-header"><h3>Metas de savings</h3><button class="btn btn-sm" onclick="addGoal()">+ Meta</button></div>
+    <div class="card-header"><h3>Todas as metas</h3><button class="btn btn-sm" onclick="addGoal()">+ Meta</button></div>
     <div id="goals-list"></div>
   </div>
 </div>
@@ -512,6 +534,9 @@ function render() {
   renderWalletPie();
   renderWallets();
   renderGoals();
+  renderRecommendations();
+  renderPhasesPlan();
+  renderRetirementProjection();
 }
 
 function renderMetrics() {
@@ -785,13 +810,17 @@ function addTx() {
 
 function renderSavingsMetrics() {
   const total = savings.wallets.reduce((s,w)=>s+(+w.amount||0),0);
-  const goalsTotal = savings.goals.reduce((s,g)=>s+(+g.target||0),0);
-  const goalsSaved = savings.goals.reduce((s,g)=>s+(+g.saved||0),0);
-  const pct = goalsTotal > 0 ? Math.round(goalsSaved/goalsTotal*100) : 0;
+  const investGoals = savings.goals.filter(g=>['TFSA','RRP','Aposentadoria','Canada Life'].some(k=>g.name.includes(k)));
+  const retirementTotal = savings.wallets.filter(w=>['TFSA','Canada Life','Aposentadoria','RRP'].some(k=>w.name.includes(k))).reduce((s,w)=>s+(+w.amount||0),0);
+  const urgentGoals = savings.goals.filter(g=>g.monthly>0);
+  const monthlyAllocated = urgentGoals.reduce((s,g)=>s+(+g.monthly||0),0);
+  const income = (savings._income_total)||8511;
+  const savePct = income>0?Math.round(monthlyAllocated/income*100):0;
   document.getElementById('savings-metrics').innerHTML = `
-    <div class="metric"><div class="lbl">Total guardado</div><div class="val" style="color:var(--green)">${fmt(total)}</div></div>
-    <div class="metric"><div class="lbl">Progresso metas</div><div class="val" style="color:#7c3aed">${pct}%</div><div class="sub">${fmt(goalsSaved)} de ${fmt(goalsTotal)}</div></div>
-    <div class="metric"><div class="lbl">Meta mensal</div><div class="val">${fmt(totalByType('savings'))}</div><div class="sub">orçado este mês</div></div>
+    <div class="metric"><div class="lbl">Total guardado</div><div class="val" style="color:var(--green)">${fmt(total)}</div><div class="sub">em todas as contas</div></div>
+    <div class="metric"><div class="lbl">Para aposentadoria</div><div class="val" style="color:#7c3aed">${fmt(retirementTotal)}</div><div class="sub">TFSA + Canada Life</div></div>
+    <div class="metric"><div class="lbl">Alocado/mês</div><div class="val">${fmt(monthlyAllocated)}</div><div class="sub">${savePct}% da renda</div></div>
+    <div class="metric"><div class="lbl">Metas ativas</div><div class="val">${savings.goals.length}</div><div class="sub">${savings.goals.filter(g=>{const p=g.target>0?g.saved/g.target:0;return p>=1;}).length} concluídas</div></div>
   `;
 }
 
@@ -799,25 +828,34 @@ function renderWalletPie() {
   destroyChart('wallet-pie');
   const ws = savings.wallets.filter(w=>w.amount>0);
   if (ws.length === 0) return;
-  const colors = ['#3b82f6','#8b5cf6','#22c55e','#f59e0b','#ef4444','#06b6d4'];
+  const colors = ['#3b82f6','#8b5cf6','#22c55e','#f59e0b','#ef4444','#06b6d4','#ec4899','#14b8a6','#f97316','#84cc16','#a78bfa'];
   const ctx = document.getElementById('chart-wallet-pie').getContext('2d');
   charts['wallet-pie'] = new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ws.map(w=>w.name.length>20?w.name.slice(0,20)+'…':w.name),
+      labels: ws.map(w=>w.name.length>22?w.name.slice(0,22)+'…':w.name),
       datasets: [{ data: ws.map(w=>w.amount), backgroundColor: colors.slice(0,ws.length), borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }]
     },
-    options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { position: 'right', labels: { font: { family: 'Geist', size: 11 }, boxWidth: 10, padding: 8, color: '#6b6b66' } }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}` } } } }
+    options: { responsive: true, maintainAspectRatio: false, cutout: '58%',
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}` } } } }
   });
 }
 
 function renderWallets() {
   let h = '';
-  savings.wallets.forEach(w => {
+  const colors = ['#3b82f6','#8b5cf6','#22c55e','#f59e0b','#ef4444','#06b6d4','#ec4899','#14b8a6','#f97316','#84cc16','#a78bfa'];
+  savings.wallets.forEach((w,i) => {
+    const color = colors[i % colors.length];
+    const total = savings.wallets.reduce((s,x)=>s+(+x.amount||0),0);
+    const pct = total>0?Math.round((+w.amount||0)/total*100):0;
     h += `<div class="wallet-row">
-      <input class="wallet-name" type="text" value="${esc(w.name)}" onchange="savings.wallets.find(x=>x.id===${w.id}).name=this.value;autoSave()">
-      <div style="display:flex;align-items:center;gap:8px">
-        <input class="wallet-amt" type="number" value="${w.amount}" min="0" style="width:110px;text-align:right" onchange="savings.wallets.find(x=>x.id===${w.id}).amount=+this.value;renderWallets();renderWalletPie();renderSavingsMetrics();autoSave()">
+      <div style="display:flex;align-items:center;gap:8px;flex:1">
+        <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></span>
+        <input class="wallet-name" type="text" value="${esc(w.name)}" onchange="savings.wallets.find(x=>x.id===${w.id}).name=this.value;autoSave()">
+        <span style="font-size:10px;color:var(--text3);font-family:'Geist Mono',monospace">${pct}%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <input class="wallet-amt" type="number" value="${w.amount}" min="0" style="width:100px;text-align:right" onchange="savings.wallets.find(x=>x.id===${w.id}).amount=+this.value;renderWallets();renderWalletPie();renderSavingsMetrics();autoSave()">
         <button class="del-btn" onclick="savings.wallets=savings.wallets.filter(x=>x.id!==${w.id});renderWallets();renderWalletPie();autoSave()">×</button>
       </div>
     </div>`;
@@ -825,33 +863,216 @@ function renderWallets() {
   const total = savings.wallets.reduce((s,w)=>s+(+w.amount||0),0);
   document.getElementById('wallet-list').innerHTML = h;
   document.getElementById('wallet-total').textContent = fmt(total);
+  const lbl = document.getElementById('wallet-total-label');
+  if(lbl) lbl.textContent = savings.wallets.length + ' contas';
 }
 function addWallet() { savings.wallets.push({id:nextId++,name:'Nova conta',amount:0}); renderWallets(); autoSave(); }
 
+function getCurrentPhase() {
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  if (y < 2026 || (y===2026 && m<=8)) return 'phase1'; // up to Sept 2026
+  if (y===2026 || (y===2027 && m<=2)) return 'phase2'; // Oct 2026 - Mar 2027
+  return 'phase3';
+}
+
+function renderRecommendations() {
+  const phase = getCurrentPhase();
+  const phaseNames = {phase1:'Fase 1: Japão + Base', phase2:'Fase 2: Brasil + Aceleração', phase3:'Fase 3: Regime permanente'};
+  const recPhaseEl = document.getElementById('rec-phase-label');
+  if(recPhaseEl) recPhaseEl.textContent = phaseNames[phase]||'';
+
+  const plans = {
+    phase1: [
+      {emoji:'🇯🇵', label:'Japan Trip', amount:1067, note:'Prioridade máxima — prazo Set/26', color:'#ef4444'},
+      {emoji:'🛡️', label:'Emergency Fund', amount:500, note:'Meta: $33k — atualmente $7,919', color:'#f59e0b'},
+      {emoji:'🎄', label:'Christmas Fund', amount:133, note:'$800 até Dez/26', color:'#22c55e'},
+      {emoji:'📈', label:'TFSA (VGRO)', amount:300, note:'Crescimento composto longo prazo', color:'#3b82f6'},
+      {emoji:'🇧🇷', label:'Brasil 2027', amount:200, note:'Começar pequeno agora', color:'#8b5cf6'},
+      {emoji:'👶', label:'Baby Fund', amount:300, note:'3 anos de runway — começar cedo', color:'#ec4899'},
+      {emoji:'💆', label:'Earlobe + Dental', amount:167, note:'Procedimentos 2027', color:'#06b6d4'},
+      {emoji:'🎓', label:'College Nicolas', amount:100, note:'Longo prazo — RESP recomendado', color:'#14b8a6'},
+    ],
+    phase2: [
+      {emoji:'🇧🇷', label:'Brasil 2027', amount:667, note:'Aumentar após Japão — $4k até Mar/27', color:'#ef4444'},
+      {emoji:'🛡️', label:'Emergency Fund', amount:500, note:'Continuação', color:'#f59e0b'},
+      {emoji:'📈', label:'TFSA (VGRO)', amount:400, note:'Aumentar contribuição', color:'#3b82f6'},
+      {emoji:'💼', label:'Aposentadoria Extra', amount:300, note:'RRSP ou investimento adicional', color:'#8b5cf6'},
+      {emoji:'👶', label:'Baby Fund', amount:400, note:'Aumentar — 2029 se aproxima', color:'#ec4899'},
+      {emoji:'💆', label:'Earlobe + Dental', amount:200, note:'Prazo se aproxima', color:'#06b6d4'},
+      {emoji:'🎓', label:'College Nicolas', amount:150, note:'Steady', color:'#14b8a6'},
+    ],
+    phase3: [
+      {emoji:'🛡️', label:'Emergency Fund', amount:300, note:'Fase final — meta $33k', color:'#f59e0b'},
+      {emoji:'📈', label:'TFSA (VGRO)', amount:600, note:'Maximizar contribuição anual ($7k/ano)', color:'#3b82f6'},
+      {emoji:'💼', label:'Aposentadoria Extra', amount:800, note:'RRSP — gap de $1.3M para $1.8M', color:'#8b5cf6'},
+      {emoji:'👶', label:'Baby Fund', amount:500, note:'2029 — sprint final', color:'#ec4899'},
+      {emoji:'🎓', label:'College Nicolas', amount:200, note:'RESP ativo', color:'#14b8a6'},
+      {emoji:'📊', label:'Diversificação', amount:200, note:'Considerar ETFs além VGRO', color:'#22c55e'},
+    ]
+  };
+
+  const items = plans[phase]||plans.phase1;
+  const total = items.reduce((s,x)=>s+x.amount,0);
+  let h = '';
+  items.forEach(item => {
+    h += `<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(59,130,246,0.1)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:15px">${item.emoji}</span>
+        <div>
+          <div style="font-size:13px;font-weight:500;color:#1e40af">${item.label}</div>
+          <div style="font-size:11px;color:#6b7280">${item.note}</div>
+        </div>
+      </div>
+      <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:${item.color};white-space:nowrap">${fmt(item.amount)}<span style="font-size:10px;font-weight:400;color:#9ca3af">/mês</span></span>
+    </div>`;
+  });
+  h += `<div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:2px solid rgba(59,130,246,0.2)">
+    <span style="font-size:12px;font-weight:600;color:#1e40af">Total savings/mês</span>
+    <span style="font-family:'Geist Mono',monospace;font-size:14px;font-weight:700;color:#1e40af">${fmt(total)}</span>
+  </div>`;
+  const recEl = document.getElementById('recommendations');
+  if(recEl) recEl.innerHTML = h;
+}
+
+function renderPhasesPlan() {
+  const phasesEl = document.getElementById('phases-plan');
+  if(!phasesEl) return;
+  const phase = getCurrentPhase();
+  const phases = [
+    {id:'phase1', label:'Fase 1', period:'Agora → Set 2026', goal:'Japan Trip + Base sólida', color:'#ef4444', bg:'#fef2f2', border:'#fecaca',
+     items:['🇯🇵 Japan: $1,067/mês','🛡️ Emergency: $500/mês','🎄 Natal: $133/mês','📈 TFSA: $300/mês','🇧🇷 Brasil: $200/mês','👶 Baby: $300/mês','💆 Médico: $167/mês'],
+     total:2667},
+    {id:'phase2', label:'Fase 2', period:'Out 2026 → Mar 2027', goal:'Brasil + Acelerar aposentadoria', color:'#f59e0b', bg:'#fffbeb', border:'#fde68a',
+     items:['🇧🇷 Brasil: $667/mês','🛡️ Emergency: $500/mês','📈 TFSA: $400/mês','💼 Aposentadoria: $300/mês','👶 Baby: $400/mês','💆 Médico: $200/mês'],
+     total:2467},
+    {id:'phase3', label:'Fase 3', period:'Abr 2027 em diante', goal:'Regime permanente — aposentadoria', color:'#22c55e', bg:'#f0fdf4', border:'#bbf7d0',
+     items:['📈 TFSA: $600/mês (max $7k/ano)','💼 Aposentadoria Extra: $800/mês','🛡️ Emergency: $300/mês','👶 Baby: $500/mês','🎓 College: $200/mês','📊 Diversificação: $200/mês'],
+     total:2600},
+  ];
+
+  let h = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">`;
+  phases.forEach(p => {
+    const isActive = p.id === phase;
+    h += `<div style="background:${p.bg};border:${isActive?'2px':'1px'} solid ${isActive?p.color:p.border};border-radius:10px;padding:14px;position:relative">
+      ${isActive?`<span style="position:absolute;top:-8px;right:12px;background:${p.color};color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">ATUAL</span>`:''}
+      <div style="font-size:11px;font-weight:700;color:${p.color};text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">${p.label}</div>
+      <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:2px">${p.period}</div>
+      <div style="font-size:11px;color:#6b7280;margin-bottom:10px">${p.goal}</div>
+      ${p.items.map(i=>`<div style="font-size:11px;color:#374151;padding:2px 0;border-bottom:1px solid rgba(0,0,0,0.05)">${i}</div>`).join('')}
+      <div style="margin-top:8px;font-size:12px;font-weight:700;color:${p.color}">Total: ${fmt(p.total)}/mês</div>
+    </div>`;
+  });
+  h += '</div>';
+  phasesEl.innerHTML = h;
+}
+
+function renderRetirementProjection() {
+  const retEl = document.getElementById('retirement-projection');
+  if(!el) return;
+
+  function fvAnnuity(pmt, rAnnual, years) {
+    const r = rAnnual/12, n = years*12;
+    return pmt * ((1+r)**n - 1) / r;
+  }
+  function fvLumpSum(pv, rAnnual, years) {
+    return pv * (1 + rAnnual/12)**(years*12);
+  }
+
+  const r = 0.06;
+  const rrpMonthly = 517;
+  const tfsa = savings.wallets.find(w=>w.name.includes('TFSA'));
+  const cl = savings.wallets.find(w=>w.name.includes('Canada Life'));
+  const extra = savings.wallets.find(w=>w.name.includes('Aposentadoria')||w.name.includes('Extra'));
+
+  const tfsaNow = tfsa?+tfsa.amount:3904;
+  const clNow = cl?+cl.amount:5012;
+  const extraNow = extra?+extra.amount:0;
+
+  // Nicolas: 28 years | Juliana: 25 years (use 28 = conservative)
+  const rrpFv = fvAnnuity(rrpMonthly, r, 28);
+  const tfsaFv = fvLumpSum(tfsaNow, r, 28) + fvAnnuity(500, r, 28);
+  const clFv = fvLumpSum(clNow, r, 28);
+  const extraFv = fvAnnuity(300, r, 4) + fvAnnuity(800, r, 24); // phase3 projection
+  const totalProjected = rrpFv + tfsaFv + clFv + extraFv;
+  const target = 1800000;
+  const gap = Math.max(0, target - totalProjected);
+  const pct = Math.min(100, Math.round(totalProjected/target*100));
+
+  const items = [
+    {label:'Canada Life RRP (Juliana)', value: rrpFv, note:'$517/mês × 28 anos @ 6%', color:'#8b5cf6'},
+    {label:'TFSA VGRO (ambos)', value: tfsaFv, note:`${fmt(tfsaNow)} atual + $500/mês @ 6%`, color:'#3b82f6'},
+    {label:'Canada Life atual crescendo', value: clFv, note:`${fmt(clNow)} atual @ 6%`, color:'#22c55e'},
+    {label:'Investimentos extras', value: extraFv, note:'$300/mês fase2 + $800/mês fase3', color:'#f59e0b'},
+  ];
+
+  let h = `
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px">
+    <div>
+      <div style="font-size:12px;color:#6b7280;margin-bottom:6px">Projeção em 28 anos (Nicolas aos 55)</div>
+      <div style="font-size:28px;font-weight:700;color:#15803d;font-family:'Geist Mono',monospace;letter-spacing:-1px">${fmt(totalProjected)}</div>
+      <div style="font-size:12px;color:#6b7280;margin-top:4px">de ${fmt(target)} necessários</div>
+      <div style="margin-top:10px;height:8px;background:#dcfce7;border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:#22c55e;border-radius:4px;transition:width .5s"></div>
+      </div>
+      <div style="font-size:11px;color:#16a34a;margin-top:4px;font-weight:600">${pct}% do caminho</div>
+    </div>
+    <div>
+      <div style="font-size:12px;color:#6b7280;margin-bottom:8px">Composição do portfólio</div>
+      ${items.map(x=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #dcfce7">
+        <div><span style="display:inline-block;width:8px;height:8px;background:${x.color};border-radius:50%;margin-right:6px"></span><span style="font-size:12px;color:#374151">${x.label}</span><br><span style="font-size:10px;color:#9ca3af;margin-left:14px">${x.note}</span></div>
+        <span style="font-size:12px;font-weight:600;font-family:'Geist Mono',monospace;color:${x.color};white-space:nowrap">${fmt(x.value)}</span>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;background:#dcfce7;border-radius:8px;padding:12px;margin-top:4px">
+    <div style="text-align:center"><div style="font-size:10px;color:#166534;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Gap restante</div><div style="font-size:16px;font-weight:700;color:${gap>0?'#dc2626':'#16a34a'};font-family:'Geist Mono',monospace">${gap>0?fmt(gap):'✓ OK'}</div></div>
+    <div style="text-align:center"><div style="font-size:10px;color:#166534;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Renda mensal aposentadoria</div><div style="font-size:16px;font-weight:700;color:#15803d;font-family:'Geist Mono',monospace">$6,000</div></div>
+    <div style="text-align:center"><div style="font-size:10px;color:#166534;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Anos até aposentadoria</div><div style="font-size:16px;font-weight:700;color:#15803d;font-family:'Geist Mono',monospace">28 anos</div></div>
+  </div>
+  <div style="margin-top:12px;padding:10px 12px;background:#eff6ff;border-radius:8px;border-left:3px solid #3b82f6">
+    <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:4px">💡 Sobre o VGRO e diversificação</div>
+    <div style="font-size:12px;color:#374151;line-height:1.6">VGRO (80% ações/20% renda fixa) é uma boa escolha para horizonte de 28 anos. Para reduzir risco gradualmente, considere migrar 20-30% para <strong>XBAL</strong> (60/40) após os 40 anos de vocês. O Canada Life RRP já funciona como âncora conservadora. Não há necessidade de mudança agora.</div>
+  </div>`;
+  retEl.innerHTML = h;
+}
+
 function renderGoals() {
   let h = '';
-  savings.goals.forEach(g => {
+  const priorityOrder = savings.goals.slice().sort((a,b)=>(a.priority||9)-(b.priority||9));
+  priorityOrder.forEach(g => {
     const pct = g.target>0 ? clamp(g.saved/g.target*100,0,100) : 0;
     const left = Math.max(0, g.target-g.saved);
     const months = g.monthly>0 ? Math.ceil(left/g.monthly) : '∞';
-    const barColor = pct>=100?'var(--green)':pct>=60?'var(--accent)':'#8b5cf6';
+    const barColor = pct>=100?'#22c55e':pct>=60?'#3b82f6':'#8b5cf6';
+    const urgency = g.deadline ? (() => {
+      const d = new Date(g.deadline), now = new Date();
+      const diff = Math.ceil((d-now)/(1000*60*60*24*30));
+      if(diff<=3) return `<span style="font-size:10px;background:#fef2f2;color:#dc2626;padding:1px 6px;border-radius:20px;font-weight:600;margin-left:6px">⚡ ${diff}m</span>`;
+      if(diff<=6) return `<span style="font-size:10px;background:#fffbeb;color:#d97706;padding:1px 6px;border-radius:20px;font-weight:600;margin-left:6px">${diff}m</span>`;
+      return '';
+    })() : '';
     h += `<div class="prog-wrap">
       <div class="prog-head">
-        <input class="prog-name" type="text" value="${esc(g.name)}" onchange="savings.goals.find(x=>x.id===${g.id}).name=this.value;autoSave()">
+        <div style="display:flex;align-items:center;flex:1;gap:4px">
+          <input class="prog-name" type="text" value="${esc(g.name)}" onchange="savings.goals.find(x=>x.id===${g.id}).name=this.value;autoSave()">
+          ${urgency}
+        </div>
         <span class="prog-pct">${Math.round(pct)}%</span>
       </div>
       <div class="prog-bar"><div class="prog-fill" style="width:${pct.toFixed(1)}%;background:${barColor}"></div></div>
+      ${g.note?`<div style="font-size:11px;color:#6b7280;margin-bottom:6px;line-height:1.5">${esc(g.note)}</div>`:''}
       <div class="prog-meta">
-        <span>Meta: <input type="number" value="${g.target}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).target=+this.value;renderGoals();renderSavingsMetrics();autoSave()"></span>
-        <span>Guardado: <input type="number" value="${g.saved}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).saved=+this.value;renderGoals();renderSavingsMetrics();autoSave()"></span>
-        <span>Mensal: <input type="number" value="${g.monthly}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).monthly=+this.value;renderGoals();autoSave()"></span>
+        <span>Meta: <input type="number" value="${g.target}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).target=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>
+        <span>Guardado: <input type="number" value="${g.saved}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).saved=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>
+        <span>Mensal: <input type="number" value="${g.monthly}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).monthly=+this.value;renderGoals();renderRecommendations();autoSave()"></span>
         <span style="color:var(--accent);font-weight:500">≈ ${months} meses</span>
       </div>
     </div>`;
   });
   document.getElementById('goals-list').innerHTML = h;
 }
-function addGoal() { savings.goals.push({id:nextId++,name:'Nova meta',target:1000,saved:0,monthly:100}); renderGoals(); renderSavingsMetrics(); autoSave(); }
+function addGoal() { savings.goals.push({id:nextId++,name:'Nova meta',target:1000,saved:0,monthly:100,priority:5}); renderGoals(); renderSavingsMetrics(); autoSave(); }
 
 function showTab(name) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
