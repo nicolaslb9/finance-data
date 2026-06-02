@@ -761,9 +761,12 @@ function init() {
   if (sc) { try { cfg = JSON.parse(sc); loadCfgUI(); } catch(e){} }
   if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
 
-  // Sync sinkingFunds from savings
+  // Sync sinkingFunds from savings — if empty, seed from defaults
   if (savings.sinkingFunds && savings.sinkingFunds.length) {
     sinkingFunds = savings.sinkingFunds;
+  } else {
+    // No saved data — sinkingFunds keeps its default 4 categories defined above
+    savings.sinkingFunds = sinkingFunds;
   }
 
   render();
@@ -1801,12 +1804,19 @@ function resetData() {
 }
 // ============ SINKING FUNDS / PROVISIONS ============
 
-let sinkingFunds = [];
+let sinkingFunds = [
+  {id:1,name:'Carro',icon:'🚗',balance:0,monthlyContribution:50,note:'Car wash, troca de óleo, mecânica, pneus, multas',history:[]},
+  {id:2,name:'Saúde',icon:'🏥',balance:0,monthlyContribution:25,note:'Dentista, vitaminas, remédios, óculos, fisio',history:[]},
+  {id:3,name:'Casa & Assinaturas',icon:'🏠',balance:0,monthlyContribution:15,note:'Costco membership, utensílios, manutenção do apt',history:[]},
+  {id:4,name:'Beleza & Pessoal',icon:'💅',balance:0,monthlyContribution:10,note:'Sephora, skincare, produtos pessoais',history:[]},
+];
 
 function loadSinkingFunds() {
+  // Only replace defaults if GitHub/localStorage has actual data
   if (savings.sinkingFunds && savings.sinkingFunds.length) {
     sinkingFunds = savings.sinkingFunds;
   }
+  // If still empty (no GitHub data yet), keep the defaults defined at top
   syncProvisionBudget();
 }
 
