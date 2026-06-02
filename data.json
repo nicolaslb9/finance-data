@@ -194,6 +194,11 @@
         "id": 5,
         "name": "College / Future Big Purchases",
         "amount": 700
+      },
+      {
+        "id": 1001,
+        "name": "Nova conta",
+        "amount": 0
       }
     ],
     "goals": [
