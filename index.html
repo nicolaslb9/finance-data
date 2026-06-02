@@ -742,7 +742,17 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
+const APP_VERSION = '2026-06-v3'; // bump to force localStorage refresh
+
 function init() {
+  // If app version changed, wipe localStorage so GitHub data takes over
+  const storedVersion = localStorage.getItem('app_version');
+  if (storedVersion !== APP_VERSION) {
+    localStorage.removeItem('finance_data');
+    localStorage.removeItem('finance_savings');
+    localStorage.setItem('app_version', APP_VERSION);
+  }
+
   const s = localStorage.getItem('finance_data');
   if (s) { try { data = JSON.parse(s); } catch(e){} }
   const sv = localStorage.getItem('finance_savings');
@@ -750,10 +760,12 @@ function init() {
   const sc = localStorage.getItem('finance_cfg');
   if (sc) { try { cfg = JSON.parse(sc); loadCfgUI(); } catch(e){} }
   if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
-  // Always sync sinkingFunds from savings object (handles stale localStorage)
+
+  // Sync sinkingFunds from savings
   if (savings.sinkingFunds && savings.sinkingFunds.length) {
     sinkingFunds = savings.sinkingFunds;
   }
+
   render();
   loadWeeklyReport();
 }
