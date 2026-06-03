@@ -214,7 +214,8 @@
       {
         "id": 1000,
         "name": "College",
-        "amount": 0
+        "amount": 700,
+        "startingBalance": 700
       }
     ],
     "goals": [
