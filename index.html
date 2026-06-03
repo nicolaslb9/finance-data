@@ -774,7 +774,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v24'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v25'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -2008,10 +2008,12 @@ function totalSinkingMonthly() {
 }
 
 function syncProvisionBudget() {
+  // Only auto-create if it doesn't exist — user can edit the budget value per month freely
   const total = totalSinkingMonthly();
   const provItem = md().budget.find(b => b.type === 'provision');
-  if (provItem) provItem.budget = total;
-  else if (total > 0) md().budget.push({id:60, name:'🔧 Sinking Funds', type:'provision', budget: total});
+  if (!provItem && total > 0) {
+    md().budget.push({id:60, name:'Sinking Funds', type:'provision', budget: total});
+  }
 }
 
 // ── Called every new month: add contributions ────────────────────────────────
@@ -2058,6 +2060,53 @@ function sfUse(id) {
 }
 
 // ── Edit monthly contribution ────────────────────────────────────────────────
+function sfSetTotal(newTotal) {
+  // Redistribute newTotal proportionally across categories
+  if (!sinkingFunds.length) return;
+  const currentTotal = sinkingFunds.reduce((s,f) => s + (+f.monthlyContribution||0), 0);
+  if (currentTotal === 0) {
+    // If all zero, split equally
+    const each = Math.floor(newTotal / sinkingFunds.length);
+    sinkingFunds.forEach((f,i) => {
+      f.monthlyContribution = (i === sinkingFunds.length-1)
+        ? newTotal - each*(sinkingFunds.length-1)
+        : each;
+    });
+  } else {
+    // Scale proportionally
+    let allocated = 0;
+    sinkingFunds.forEach((f, i) => {
+      if (i === sinkingFunds.length - 1) {
+        f.monthlyContribution = Math.max(0, newTotal - allocated);
+      } else {
+        const scaled = Math.round((+f.monthlyContribution||0) / currentTotal * newTotal);
+        f.monthlyContribution = scaled;
+        allocated += scaled;
+      }
+    });
+  }
+  saveSinkingFunds();
+  syncProvisionBudget();
+  // Also update the budget provision line for current month
+  const provItem = md().budget.find(b => b.type === 'provision');
+  if (provItem) { provItem.budget = newTotal; autoSave(); }
+  renderProvisions();
+  renderBudgetOverview();
+}
+
+function sfEditContribDirect(id, val) {
+  const f = sinkingFunds.find(x => x.id === id);
+  if (!f || isNaN(val) || val < 0) return;
+  f.monthlyContribution = val;
+  saveSinkingFunds();
+  syncProvisionBudget();
+  // Update budget provision line
+  const provItem = md().budget.find(b => b.type === 'provision');
+  if (provItem) { provItem.budget = totalSinkingMonthly(); autoSave(); }
+  renderProvisions();
+  renderBudgetOverview();
+}
+
 function sfEditContrib(id) {
   const f = sinkingFunds.find(x => x.id === id);
   if (!f) return;
@@ -2158,12 +2207,41 @@ function renderProvisions() {
 
   // ── Contribute bar ──
   if (barEl) {
-    barEl.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-      <span style="font-size:13px;color:var(--text2)">
-        Contribuição mensal: <strong>$${totalAlloc}</strong> distribuídos entre as categorias
-        ${contributed ? '<span style="color:var(--green);margin-left:6px">✓ adicionado este mês</span>' : ''}
-      </span>
-      <button class="btn btn-primary btn-sm" onclick="sfAddMonthlyAll()" style="white-space:nowrap">+ Adicionar contribuição do mês</button>
+    barEl.innerHTML = `
+    <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+
+      <!-- Top row: total editor + contribute button -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:13px;color:var(--text2);font-weight:500">Total este mês:</span>
+          <div style="display:flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:4px 10px">
+            <span style="font-size:13px;color:var(--text3)">$</span>
+            <input type="number" id="sf-total-input" value="${totalAlloc}" min="0" step="10"
+              style="width:70px;border:none;background:transparent;font-size:15px;font-weight:700;color:var(--accent);font-family:'Geist Mono',monospace;text-align:center;outline:none"
+              onchange="sfSetTotal(+this.value)"
+              title="Altere o total mensal — redistribui proporcionalmente">
+          </div>
+          <span style="font-size:11px;color:var(--text3)">${contributed ? '<span style="color:var(--green)">✓ adicionado este mês</span>' : 'pendente'}</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="sfAddMonthlyAll()" style="white-space:nowrap">
+          + Adicionar $${totalAlloc} do mês
+        </button>
+      </div>
+
+      <!-- Per-category quick edit row -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--bg4)">
+        <span style="font-size:11px;color:var(--text3);align-self:center;white-space:nowrap">Por categoria:</span>
+        ${sinkingFunds.map(f => `
+          <div style="display:flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px 8px">
+            <span class="emo" style="font-size:12px">${SF_EMOJI[f.id] || '📦'}</span>
+            <span style="font-size:11px;color:var(--text2)">${esc(f.name)}</span>
+            <span style="font-size:11px;color:var(--text3)">$</span>
+            <input type="number" value="${f.monthlyContribution}" min="0" step="5"
+              style="width:44px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--accent);font-family:'Geist Mono',monospace;text-align:center;outline:none"
+              onchange="sfEditContribDirect(${f.id}, +this.value)">
+          </div>
+        `).join('')}
+      </div>
     </div>`;
   }
 
