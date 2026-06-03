@@ -157,7 +157,15 @@
           "budget": 300
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 1000,
+          "date": "2026-06-03",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        }
+      ]
     }
   },
   "savings": {
@@ -241,7 +249,7 @@
         "target": 1800000,
         "saved": 3904,
         "monthly": 300,
-        "note": "VGRO — crescimento de longo prazo. Limite anual $7,000. Aumentar apos as viagens."
+        "note": "VGRO â crescimento de longo prazo. Limite anual $7,000. Aumentar apos as viagens."
       },
       {
         "id": 1002,
@@ -274,7 +282,7 @@
         "name": "Carro",
         "balance": 0,
         "monthlyContribution": 50,
-        "note": "Car wash, troca de Ã³leo, mecÃ¢nica, pneus, multas",
+        "note": "Car wash, troca de ÃÂ³leo, mecÃÂ¢nica, pneus, multas",
         "history": []
       },
       {
@@ -282,7 +290,7 @@
         "name": "Saude",
         "balance": 0,
         "monthlyContribution": 20,
-        "note": "Dentista, vitaminas, remÃ©dios, Ã³culos, fisio",
+        "note": "Dentista, vitaminas, remÃÂ©dios, ÃÂ³culos, fisio",
         "history": []
       },
       {
@@ -290,7 +298,7 @@
         "name": "Casa & Assinaturas",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "Costco membership, utensÃ­lios, manutenÃ§Ã£o do apt",
+        "note": "Costco membership, utensÃÂ­lios, manutenÃÂ§ÃÂ£o do apt",
         "history": []
       },
       {
@@ -298,7 +306,7 @@
         "name": "Presentes & Datas",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "AniversÃ¡rios, Natal, datas especiais, jantares de comemoraÃ§Ã£o",
+        "note": "AniversÃÂ¡rios, Natal, datas especiais, jantares de comemoraÃÂ§ÃÂ£o",
         "history": []
       }
     ]
