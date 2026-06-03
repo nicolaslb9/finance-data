@@ -186,6 +186,10 @@ select { cursor: pointer; }
   .badge-label { display: none; }
 }
 
+@media (min-width: 721px) {
+  #floating-save-btn { bottom:24px !important; left:auto !important; right:24px !important; transform:none !important; }
+}
+
 @media (max-width: 720px) {
   /* ── Layout: sidebar becomes bottom tab bar ── */
   .app { flex-direction: column-reverse; min-height: 100dvh; }
@@ -318,6 +322,7 @@ select { cursor: pointer; }
 
 .fade-in { animation: fadeIn 0.18s ease; }
 @keyframes spin { to { transform:rotate(360deg); } }
+.save-spinner { display:inline-block;width:11px;height:11px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 </style>
@@ -1768,13 +1773,47 @@ async function saveToGithub() {
     const body = { message:'update '+new Date().toISOString(), content };
     if (sha) body.sha = sha;
     await githubRequest('PUT','data.json',body);
-    setSyncStatus('salvo ✓','saved');
+    const now = new Date();
+    localStorage.setItem('last_save_time', now.toISOString());
+    setSyncStatus('salvo ✓', 'saved');
     localStorage.setItem('finance_data',JSON.stringify(data));
     localStorage.setItem('finance_savings',JSON.stringify(savings));
+    updateSaveButton('saved', now);
   } catch(e) {
     setSyncStatus('erro ao salvar','error');
-    alert('Erro ao salvar: '+e.message);
+    updateSaveButton('error');
   }
+}
+
+function updateSaveButton(state, time) {
+  const btn = document.getElementById('floating-save-btn');
+  if (!btn) return;
+  if (state === 'saving') {
+    btn.innerHTML = '<span class="save-spinner"></span> Salvando…';
+    btn.style.background = '#f59e0b'; btn.style.borderColor = '#f59e0b';
+  } else if (state === 'saved') {
+    const t = time ? time.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '';
+    btn.innerHTML = '✓ Salvo ' + t;
+    btn.style.background = '#16a34a'; btn.style.borderColor = '#16a34a';
+    setTimeout(() => {
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 1v10M4 7l4 4 4-4M2 14h12"/></svg> Salvar agora';
+      btn.style.background = 'var(--accent)'; btn.style.borderColor = 'var(--accent)';
+    }, 2500);
+  } else if (state === 'error') {
+    btn.innerHTML = '⚠ Erro — toque p/ tentar';
+    btn.style.background = '#dc2626'; btn.style.borderColor = '#dc2626';
+  }
+}
+
+async function manualSave() {
+  if (!cfg.user || !cfg.token) {
+    alert('Configure o GitHub primeiro (aba Configurações) para salvar na nuvem.');
+    showTab('settings');
+    return;
+  }
+  clearTimeout(saveTimer);
+  updateSaveButton('saving');
+  await saveToGithub();
 }
 
 async function testConnection() {
@@ -1791,9 +1830,11 @@ function autoSave() {
   localStorage.setItem('finance_data',JSON.stringify(data));
   localStorage.setItem('finance_savings',JSON.stringify(savings));
   if (cfg.user&&cfg.token) {
-    setSyncStatus('não salvo*','saving');
+    setSyncStatus('salvando…','saving');
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(saveToGithub,3000);
+    saveTimer = setTimeout(saveToGithub,1500);
+  } else {
+    setSyncStatus('só local — configure GitHub','error');
   }
 }
 
@@ -2558,6 +2599,22 @@ async function tryAutoLoad() {
 init();
 tryAutoLoad();
 </script>
+<!-- Floating Save Button (always visible) -->
+<button id="floating-save-btn" onclick="manualSave()" style="
+  position:fixed;
+  bottom:calc(72px + env(safe-area-inset-bottom) + 12px);
+  left:50%;transform:translateX(-50%);
+  background:var(--accent);color:#fff;border:1px solid var(--accent);
+  border-radius:24px;padding:10px 20px;
+  font-family:'Geist',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  z-index:98;display:flex;align-items:center;gap:7px;
+  transition:background .2s,border-color .2s;white-space:nowrap;
+">
+  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 1v10M4 7l4 4 4-4M2 14h12"/></svg>
+  Salvar agora
+</button>
+
 <!-- Mobile FAB -->
 <button id="mobile-fab" onclick="addTx()" style="
   display:none;position:fixed;bottom:calc(72px + env(safe-area-inset-bottom) + 12px);right:16px;
