@@ -82,7 +82,7 @@
           "id": 30,
           "name": "🛒 Groceries",
           "type": "needs",
-          "budget": 800
+          "budget": 700
         },
         {
           "id": 31,
@@ -159,8 +159,8 @@
         {
           "id": 1003,
           "name": "🎓 Nicolas College",
-          "type": "needs",
-          "budget": 0
+          "type": "savings",
+          "budget": 50
         }
       ],
       "transactions": []
