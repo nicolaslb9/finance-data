@@ -48,9 +48,13 @@ body { font-family: 'Geist', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Sy
 /* ── Emoji always use system color font on all platforms ── */
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-/* Force emoji rendering with system color emoji fonts everywhere */
-* { font-variant-emoji: emoji; }
-input, select, button, .wallet-name, .prog-name { font-family: 'Geist', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif !important; }
+/* Reliable emoji rendering: text font first, then color emoji fallbacks */
+body, input, select, button, textarea, span, div, h1, h2, h3, p, label, option {
+  font-family: 'Geist', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+}
+.mono, [style*="Geist Mono"] {
+  font-family: 'Geist Mono', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', monospace;
+}
 
 .app { display: flex; min-height: 100vh; }
 
@@ -762,7 +766,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v18'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v19'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
