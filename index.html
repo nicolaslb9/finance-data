@@ -599,14 +599,14 @@ select { cursor: pointer; }
   <div class="grid2" style="margin-bottom:16px;align-items:start">
     <div>
       <h2 style="font-size:20px;font-weight:600;letter-spacing:-0.4px;margin-bottom:4px">Sinking Funds</h2>
-      <p style="font-size:13px;color:var(--text3);margin-bottom:16px">$100/mês separados antes de gastar</p>
+      <p style="font-size:13px;color:var(--text3);margin-bottom:16px">Valor mensal flexível, distribuído em categorias</p>
       <div id="sf-metrics" class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:0"></div>
     </div>
     <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px 18px">
       <div style="font-size:12px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">💡 O que são Sinking Funds?</div>
       <div style="font-size:13px;color:#92400e;line-height:1.7">
         É uma reserva para gastos <strong>previsíveis mas irregulares</strong> — coisas que você sabe que vão acontecer, mas não todo mês.<br><br>
-        Todo mês você separa $100 antes de gastar. Quando chegar a troca de óleo ou o dentista, o dinheiro já está lá — sem surpresa no orçamento.
+        Todo mês você separa um valor antes de gastar. Pode variar quanto quiser — edite a contribuição de cada categoria com o botão "Editar". O total atualiza sozinho no orçamento.
       </div>
     </div>
   </div>
@@ -758,7 +758,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v13'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v14'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1213,7 +1213,7 @@ function renderBudgetTypeSummary() {
 
 function totalSinkingMonthly() {
   if (!sinkingFunds || sinkingFunds.length === 0) return 0;
-  return sinkingFunds.reduce((s,f) => s + (+f.monthlyProvision||0), 0);
+  return sinkingFunds.reduce((s,f) => s + (+f.monthlyContribution||0), 0);
 }
 
 function syncProvisionBudget() {
@@ -1855,12 +1855,14 @@ function saveSinkingFunds() {
 }
 
 function totalSinkingMonthly() {
-  return 100; // fixed $100/month total
+  return (sinkingFunds||[]).reduce((s,f)=>s+(+f.monthlyContribution||0),0);
 }
 
 function syncProvisionBudget() {
+  const total = totalSinkingMonthly();
   const provItem = md().budget.find(b => b.type === 'provision');
-  if (provItem) provItem.budget = 100;
+  if (provItem) provItem.budget = total;
+  else if (total > 0) md().budget.push({id:60, name:'🔧 Sinking Funds', type:'provision', budget: total});
 }
 
 // ── Called every new month: add contributions ────────────────────────────────
@@ -1909,20 +1911,14 @@ function sfUse(id) {
 function sfEditContrib(id) {
   const f = sinkingFunds.find(x => x.id === id);
   if (!f) return;
-  const total = sinkingFunds.reduce((s, x) => s + (+x.monthlyContribution || 0), 0);
-  const others = total - (+f.monthlyContribution || 0);
   const val = parseFloat(prompt(
-    `Contribuição mensal para "${f.name}":\n(Restante alocado nas outras categorias: $${others}. Total deve ser $100)`,
+    `Contribuição mensal para "${f.name}" ($):`,
     f.monthlyContribution
   ));
   if (!isNaN(val) && val >= 0) {
-    const newTotal = others + val;
-    if (newTotal > 100) {
-      alert(`Isso deixaria o total em $${newTotal}. Ajuste outras categorias primeiro.`);
-      return;
-    }
     f.monthlyContribution = val;
     saveSinkingFunds();
+    syncProvisionBudget();
     renderProvisions();
   }
 }
@@ -1943,7 +1939,7 @@ function sfSetBalance(id, val) {
     const contributed = sinkingFunds.every(f=>f.lastContribution===curMonth);
     metEl.innerHTML = `
       <div class="metric"><div class="lbl">Saldo acumulado</div><div class="val" style="color:var(--green)">${fmt(totalBal)}</div><div class="sub">disponível para usar</div></div>
-      <div class="metric"><div class="lbl">Alocado/mês</div><div class="val" style="color:#f59e0b">$${totalAlloc}</div><div class="sub">${unalloc>0?'$'+unalloc+' livre':'✓ $100 distribuídos'}</div></div>
+      <div class="metric"><div class="lbl">Total/mês</div><div class="val" style="color:#f59e0b">$${totalAlloc}</div><div class="sub">soma das categorias</div></div>
       <div class="metric"><div class="lbl">Este mês</div><div class="val" style="font-size:18px">${contributed?'✅':'⏳'}</div><div class="sub">${contributed?'contribuição feita':'pendente'}</div></div>
     `;
   }
@@ -1987,7 +1983,7 @@ function renderProvisions() {
 
   const totalBal    = sinkingFunds.reduce((s, f) => s + (+f.balance || 0), 0);
   const totalAlloc  = sinkingFunds.reduce((s, f) => s + (+f.monthlyContribution || 0), 0);
-  const unalloc     = 100 - totalAlloc;
+  const unalloc     = 0; // no fixed cap — total is whatever you allocate
   const curMonth    = new Date().toISOString().slice(0, 7);
   const contributed = sinkingFunds.every(f => f.lastContribution === curMonth);
 
@@ -1999,9 +1995,9 @@ function renderProvisions() {
       <div class="sub">disponível para usar</div>
     </div>
     <div class="metric">
-      <div class="lbl">Alocado/mês</div>
+      <div class="lbl">Total/mês</div>
       <div class="val" style="color:#f59e0b">$${totalAlloc}</div>
-      <div class="sub">${unalloc > 0 ? '$'+unalloc+' livre' : '✓ $100 distribuídos'}</div>
+      <div class="sub">soma das categorias</div>
     </div>
     <div class="metric">
       <div class="lbl">Este mês</div>
@@ -2017,7 +2013,7 @@ function renderProvisions() {
         Contribuição mensal: <strong>$${totalAlloc}</strong> distribuídos entre as categorias
         ${contributed ? '<span style="color:var(--green);margin-left:6px">✓ adicionado este mês</span>' : ''}
       </span>
-      <button class="btn btn-primary btn-sm" onclick="sfAddMonthlyAll()" style="white-space:nowrap">+ Adicionar $100 do mês</button>
+      <button class="btn btn-primary btn-sm" onclick="sfAddMonthlyAll()" style="white-space:nowrap">+ Adicionar contribuição do mês</button>
     </div>`;
   }
 
