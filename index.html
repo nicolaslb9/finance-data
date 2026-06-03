@@ -11,6 +11,8 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>N&J Budget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -40,15 +42,15 @@
   --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Geist', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Android Emoji', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; padding-bottom: env(safe-area-inset-bottom); }
+body { font-family: 'Geist', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; padding-bottom: env(safe-area-inset-bottom); }
 ::-webkit-scrollbar { width: 4px; }
 
 /* ── Emoji always use system color font on all platforms ── */
-@font-face {
-  font-family: 'EmojiSystem';
-  src: local('Apple Color Emoji'), local('Segoe UI Emoji'), local('Noto Color Emoji'), local('Android Emoji');
-}
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* Force emoji rendering with system color emoji fonts everywhere */
+* { font-variant-emoji: emoji; }
+input, select, button, .wallet-name, .prog-name { font-family: 'Geist', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif !important; }
 
 .app { display: flex; min-height: 100vh; }
 
@@ -556,7 +558,7 @@ select { cursor: pointer; }
   <!-- PATRIMÔNIO + RECOMENDAÇÕES -->
   <div class="grid2" style="margin-bottom:16px">
     <div class="card">
-      <div class="card-header"><h3>Patrimônio por conta</h3><span class="sub" style="font-size:10px">🔗 = soma do orçamento</span></div>
+      <div class="card-header"><h3>Patrimônio por conta</h3><span class="sub" style="font-size:10px">🔗 puxa do orçamento · editável</span></div>
       <div class="chart-wrap" style="height:190px"><canvas id="chart-wallet-pie"></canvas></div>
       <div style="margin-top:14px">
         <div id="wallet-list"></div>
@@ -758,7 +760,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v15'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v16'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1458,18 +1460,31 @@ function depositsForLink(linkId) {
 
 // Effective wallet balance = starting balance + linked deposits
 function walletBalance(w) {
+  // Base value (manually set / starting) + auto deposits from linked budget category
   const base = (+w.startingBalance || 0);
-  const deposits = depositsForLink(w.linkId);
-  // If wallet has no link, use its manual amount
-  if (!w.linkId) return (+w.amount || 0);
+  const deposits = w.linkId ? depositsForLink(w.linkId) : 0;
   return base + deposits;
+}
+
+// When user manually edits the displayed balance, adjust the base so the
+// new total matches what they typed (keeping the auto deposits intact)
+function setWalletManual(id, newValue) {
+  const w = savings.wallets.find(x => x.id === id);
+  if (!w) return;
+  const deposits = w.linkId ? depositsForLink(w.linkId) : 0;
+  w.startingBalance = (+newValue || 0) - deposits; // base absorbs the difference
+  w.amount = (+newValue || 0);
+  renderWallets();
+  renderWalletPie();
+  renderSavingsMetrics();
+  autoSave();
 }
 
 function renderWallets() {
   let h = '';
   const colors = ['#3b82f6','#8b5cf6','#22c55e','#f59e0b','#ef4444','#06b6d4','#ec4899','#14b8a6','#f97316','#84cc16','#a78bfa'];
   // Sync linked wallet amounts before rendering
-  savings.wallets.forEach(w => { if (w.linkId) w.amount = walletBalance(w); });
+  savings.wallets.forEach(w => { w.amount = walletBalance(w); });
   savings.wallets.forEach((w,i) => {
     const color = colors[i % colors.length];
     const total = savings.wallets.reduce((s,x)=>s+(+x.amount||0),0);
@@ -1483,10 +1498,7 @@ function renderWallets() {
         <span style="font-size:10px;color:var(--text3);font-family:'Geist Mono',monospace">${pct}%</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px">
-        ${linked
-          ? `<span class="wallet-amt" style="width:100px;text-align:right;font-family:'Geist Mono',monospace;font-weight:600;color:${color}">${fmt(w.amount)}</span>`
-          : `<input class="wallet-amt" type="number" value="${w.amount}" min="0" style="width:100px;text-align:right" onchange="savings.wallets.find(x=>x.id===${w.id}).amount=+this.value;renderWallets();renderWalletPie();renderSavingsMetrics();autoSave()">`
-        }
+        <input class="wallet-amt" type="number" value="${w.amount}" min="0" style="width:100px;text-align:right${linked?';color:'+color+';font-weight:600':''}" onchange="setWalletManual(${w.id}, +this.value)" title="${linked?'Vinculado ao orçamento — mas você pode ajustar manualmente':'Editável'}">
         <button class="del-btn" onclick="savings.wallets=savings.wallets.filter(x=>x.id!==${w.id});renderWallets();renderWalletPie();autoSave()">×</button>
       </div>
     </div>`;
