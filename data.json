@@ -202,6 +202,11 @@
         "id": 1004,
         "name": "🎓 Nicolas College",
         "amount": 700
+      },
+      {
+        "id": 1005,
+        "name": "Nova conta",
+        "amount": 0
       }
     ],
     "goals": [
