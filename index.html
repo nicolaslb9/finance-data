@@ -6,11 +6,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Finance">
+<meta name="apple-mobile-web-app-title" content="N&J Budget">
 <meta name="theme-color" content="#2563eb">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Finance Dashboard</title>
+<title>N&J Budget</title>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -327,7 +327,7 @@ select { cursor: pointer; }
 
 <nav class="sidebar">
   <div class="logo">
-    <h1><span class="logo-dot"></span>Finance</h1>
+    <h1><span class="logo-dot"></span>N&amp;J Budget</h1>
     <span id="month-label">Jun 2026</span>
   </div>
   <div class="nav">
@@ -2492,7 +2492,7 @@ function scheduleWeeklyNotification() {
 
     // Schedule via setTimeout (works when app is open)
     setTimeout(() => {
-      new Notification('Finance Dashboard 📊', {
+      new Notification('N&J Budget 📊', {
         body: 'Seu relatório semanal está pronto. Toque para abrir.',
         icon: '/finance-data/icon-192.png',
         badge: '/finance-data/icon-192.png',
