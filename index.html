@@ -556,7 +556,7 @@ select { cursor: pointer; }
   <!-- PATRIMÔNIO + RECOMENDAÇÕES -->
   <div class="grid2" style="margin-bottom:16px">
     <div class="card">
-      <div class="card-header"><h3>Patrimônio por conta</h3><span class="sub" id="wallet-total-label"></span></div>
+      <div class="card-header"><h3>Patrimônio por conta</h3><span class="sub" style="font-size:10px">🔗 = soma do orçamento</span></div>
       <div class="chart-wrap" style="height:190px"><canvas id="chart-wallet-pie"></canvas></div>
       <div style="margin-top:14px">
         <div id="wallet-list"></div>
@@ -758,7 +758,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v14'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v15'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1442,21 +1442,51 @@ function renderWalletPie() {
   });
 }
 
+// Sum of all deposits made to a linked savings category across ALL months
+function depositsForLink(linkId) {
+  if (!linkId) return 0;
+  let total = 0;
+  for (const mk in data) {
+    const month = data[mk];
+    if (!month.transactions) continue;
+    for (const tx of month.transactions) {
+      if (tx.cat === linkId) total += (+tx.amount || 0);
+    }
+  }
+  return total;
+}
+
+// Effective wallet balance = starting balance + linked deposits
+function walletBalance(w) {
+  const base = (+w.startingBalance || 0);
+  const deposits = depositsForLink(w.linkId);
+  // If wallet has no link, use its manual amount
+  if (!w.linkId) return (+w.amount || 0);
+  return base + deposits;
+}
+
 function renderWallets() {
   let h = '';
   const colors = ['#3b82f6','#8b5cf6','#22c55e','#f59e0b','#ef4444','#06b6d4','#ec4899','#14b8a6','#f97316','#84cc16','#a78bfa'];
+  // Sync linked wallet amounts before rendering
+  savings.wallets.forEach(w => { if (w.linkId) w.amount = walletBalance(w); });
   savings.wallets.forEach((w,i) => {
     const color = colors[i % colors.length];
     const total = savings.wallets.reduce((s,x)=>s+(+x.amount||0),0);
     const pct = total>0?Math.round((+w.amount||0)/total*100):0;
+    const linked = !!w.linkId;
     h += `<div class="wallet-row">
       <div style="display:flex;align-items:center;gap:8px;flex:1">
         <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></span>
-        <input class="wallet-name" type="text" value="${esc(w.name)}" onchange="savings.wallets.find(x=>x.id===${w.id}).name=this.value;autoSave()">
+        <input class="wallet-name" type="text" value="${esc(w.name)}" ${linked?'readonly style=\"opacity:.85\"':''} onchange="savings.wallets.find(x=>x.id===${w.id}).name=this.value;autoSave()">
+        ${linked?'<span title=\"Vinculado ao orçamento\" style=\"font-size:11px\">🔗</span>':''}
         <span style="font-size:10px;color:var(--text3);font-family:'Geist Mono',monospace">${pct}%</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px">
-        <input class="wallet-amt" type="number" value="${w.amount}" min="0" style="width:100px;text-align:right" onchange="savings.wallets.find(x=>x.id===${w.id}).amount=+this.value;renderWallets();renderWalletPie();renderSavingsMetrics();autoSave()">
+        ${linked
+          ? `<span class="wallet-amt" style="width:100px;text-align:right;font-family:'Geist Mono',monospace;font-weight:600;color:${color}">${fmt(w.amount)}</span>`
+          : `<input class="wallet-amt" type="number" value="${w.amount}" min="0" style="width:100px;text-align:right" onchange="savings.wallets.find(x=>x.id===${w.id}).amount=+this.value;renderWallets();renderWalletPie();renderSavingsMetrics();autoSave()">`
+        }
         <button class="del-btn" onclick="savings.wallets=savings.wallets.filter(x=>x.id!==${w.id});renderWallets();renderWalletPie();autoSave()">×</button>
       </div>
     </div>`;
