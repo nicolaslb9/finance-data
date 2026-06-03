@@ -119,6 +119,8 @@ select { cursor: pointer; }
 .btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
 .btn-sm { padding: 5px 10px; font-size: 12px; }
 .del-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 3px 5px; font-size: 15px; line-height: 1; transition: color 0.12s; border-radius: 4px; }
+.rename-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 2px 6px; font-size: 16px; line-height: 1; border-radius: 4px; flex-shrink: 0; font-weight: 700; letter-spacing: 1px; }
+.rename-btn:hover { color: var(--accent); background: var(--bg3); }
 .del-btn:hover { color: var(--red); background: var(--red-light); }
 
 /* HORIZONTAL BARS */
@@ -760,7 +762,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v16'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v17'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1312,7 +1314,10 @@ function renderBudgetList() {
     const bal = (+b.budget||0) - sp;
     const over = bal < 0;
     h += `<div class="tbl-row">
-      <input type="text" value="${esc(b.name)}" onchange="getBudget(${b.id}).name=this.value;renderTxList();autoSave()">
+      <div style="display:flex;align-items:center;gap:4px;min-width:0">
+        <span style="flex:1;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(b.name)}">${esc(b.name)}</span>
+        <button class="rename-btn" onclick="renameBudget(${b.id})" title="Renomear">⋯</button>
+      </div>
       <select onchange="getBudget(${b.id}).type=this.value;render();autoSave()">
         ${['fixed','debt','needs','wants','savings'].map(t=>`<option value="${t}"${b.type===t?' selected':''}>${typeLabel(t)}</option>`).join('')}
       </select>
@@ -1493,8 +1498,9 @@ function renderWallets() {
     h += `<div class="wallet-row">
       <div style="display:flex;align-items:center;gap:8px;flex:1">
         <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></span>
-        <input class="wallet-name" type="text" value="${esc(w.name)}" ${linked?'readonly style=\"opacity:.85\"':''} onchange="savings.wallets.find(x=>x.id===${w.id}).name=this.value;autoSave()">
+        <span class="wallet-name" style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(w.name)}">${esc(w.name)}</span>
         ${linked?'<span title=\"Vinculado ao orçamento\" style=\"font-size:11px\">🔗</span>':''}
+        <button class="rename-btn" onclick="renameWallet(${w.id})" title="Renomear">⋯</button>
         <span style="font-size:10px;color:var(--text3);font-family:'Geist Mono',monospace">${pct}%</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px">
@@ -1674,9 +1680,10 @@ function renderGoals() {
     })() : '';
     h += `<div class="prog-wrap">
       <div class="prog-head">
-        <div style="display:flex;align-items:center;flex:1;gap:4px">
-          <input class="prog-name" type="text" value="${esc(g.name)}" onchange="savings.goals.find(x=>x.id===${g.id}).name=this.value;autoSave()">
+        <div style="display:flex;align-items:center;flex:1;gap:4px;min-width:0">
+          <span class="prog-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(g.name)}">${esc(g.name)}</span>
           ${urgency}
+          <button class="rename-btn" onclick="renameGoal(${g.id})" title="Renomear">⋯</button>
         </div>
         <span class="prog-pct">${Math.round(pct)}%</span>
       </div>
@@ -2084,6 +2091,7 @@ function renderProvisions() {
           <div style="font-size:20px;font-weight:700;font-family:'Geist Mono',monospace;color:${color}">${fmt(bal)}</div>
           <div style="font-size:11px;color:var(--text3)">+${fmt(contrib)}/mês</div>
         </div>
+        <button class="rename-btn" onclick="renameSinkingFund(${f.id})" title="Renomear">⋯</button>
         <button class="del-btn" onclick="sfDeleteCategory(${f.id})">✕</button>
       </div>
 
@@ -2592,6 +2600,41 @@ function showAutoConnectToast() {
   toast.innerHTML = '<span style="color:#34d399;font-size:16px">✓</span> Conectado ao GitHub automaticamente';
   document.body.appendChild(toast);
   setTimeout(() => { toast.style.opacity='0'; setTimeout(()=>toast.remove(), 300); }, 3000);
+}
+
+// ── Generic rename helper for titles (avoids emoji-in-input bug) ─────────────
+function renameBudget(id) {
+  const b = getBudget(id);
+  if (!b) return;
+  const v = prompt('Renomear categoria (pode usar emoji):', b.name);
+  if (v !== null && v.trim()) { b.name = v.trim(); render(); autoSave(); }
+}
+
+function renameWallet(id) {
+  const w = savings.wallets.find(x => x.id === id);
+  if (!w) return;
+  const v = prompt('Renomear conta (pode usar emoji):', w.name);
+  if (v !== null && v.trim()) { w.name = v.trim(); renderWallets(); renderWalletPie(); autoSave(); }
+}
+
+function renameGoal(id) {
+  const g = savings.goals.find(x => x.id === id);
+  if (!g) return;
+  const v = prompt('Renomear meta (pode usar emoji):', g.name);
+  if (v !== null && v.trim()) { g.name = v.trim(); renderGoals(); autoSave(); }
+}
+
+function renameSinkingFund(id) {
+  const f = sinkingFunds.find(x => x.id === id);
+  if (!f) return;
+  const v = prompt('Renomear categoria (pode usar emoji):', (f.icon? f.icon+' ':'') + f.name);
+  if (v !== null && v.trim()) {
+    // Split leading emoji if present
+    const parts = v.trim().match(/^(\p{Emoji}\uFE0F?)?\s*(.*)$/u);
+    if (parts && parts[1]) { f.icon = parts[1]; f.name = parts[2]; }
+    else { f.name = v.trim(); }
+    saveSinkingFunds(); renderProvisions();
+  }
 }
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
