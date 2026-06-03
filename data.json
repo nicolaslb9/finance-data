@@ -121,6 +121,12 @@
           "budget": 100
         },
         {
+          "id": 1010,
+          "name": "💆 Earlobe + Dental",
+          "type": "savings",
+          "budget": 50
+        },
+        {
           "id": 60,
           "name": "🔧 Sinking Funds",
           "type": "provision",
@@ -149,12 +155,6 @@
           "name": "🎁 Allowance Juliana",
           "type": "wants",
           "budget": 300
-        },
-        {
-          "id": 1010,
-          "name": "💆 Earlobe + Dental",
-          "type": "savings",
-          "budget": 50
         }
       ],
       "transactions": []
@@ -164,17 +164,17 @@
     "wallets": [
       {
         "id": 1,
-        "name": "🎯 Emergency Savings",
+        "name": "Emergency Savings (Wealthsimple)",
         "amount": 7919
       },
       {
         "id": 2,
-        "name": "🇯🇵 Japan Trip",
-        "amount": 300
+        "name": "Travel / Viagens",
+        "amount": 0
       },
       {
         "id": 3,
-        "name": "📈 TFSA",
+        "name": "TFSA",
         "amount": 3904
       },
       {
@@ -190,52 +190,39 @@
     ],
     "goals": [
       {
-        "id": 50,
-        "name": "🎯 Emergency Savings",
-        "target": 33000,
+        "id": 1,
+        "name": "Emergency Savings ($500/mês)",
+        "target": 10500,
         "saved": 7919,
-        "monthly": 300,
-        "note": "Meta: 6 meses de despesas (~$5,500/mês). Reserva de segurança."
+        "monthly": 500
       },
       {
-        "id": 51,
-        "name": "🇯🇵 Japan Trip",
-        "target": 3500,
-        "saved": 300,
-        "monthly": 1000,
-        "note": "Voo e estadia pagos. Meta para gastos na viagem (Set/2026)."
-      },
-      {
-        "id": 52,
-        "name": "📈 TFSA",
+        "id": 2,
+        "name": "TFSA Retirement",
         "target": 12000,
         "saved": 3904,
-        "monthly": 300,
-        "note": "Investimento de longo prazo (VGRO). Limite anual $7,000."
+        "monthly": 300
       },
       {
-        "id": 1002,
-        "name": "👶 Baby Fund",
-        "target": 20000,
+        "id": 3,
+        "name": "Brazil Fund",
+        "target": 2600,
         "saved": 0,
-        "monthly": 30,
-        "note": "Reserva para o bebê (2029). Daycare, licença, suprimentos."
+        "monthly": 200
       },
       {
-        "id": 1006,
-        "name": "🇧🇷 Brasil 2027",
-        "target": 4000,
+        "id": 4,
+        "name": "Travel / Viagens",
+        "target": 3000,
         "saved": 0,
-        "monthly": 100,
-        "note": "Viagem ao Brasil em Março/2027."
+        "monthly": 500
       },
       {
-        "id": 1010,
-        "name": "💆 Earlobe + Dental",
-        "target": 2900,
+        "id": 5,
+        "name": "Immigration",
+        "target": 2000,
         "saved": 0,
-        "monthly": 50,
-        "note": "Earlobe repair (Juliana, ~$2.000) + clareamento dental (Nicolas, ~$900). Procedimentos para 2027. Verificar cobertura Sun Life."
+        "monthly": 200
       }
     ],
     "sinkingFunds": [
@@ -264,6 +251,15 @@
         "balance": 0,
         "monthlyContribution": 15,
         "note": "Costco membership, utensílios, manutenção do apt",
+        "history": []
+      },
+      {
+        "id": 4,
+        "name": "Beleza & Pessoal",
+        "icon": "💅",
+        "balance": 0,
+        "monthlyContribution": 10,
+        "note": "Sephora, skincare, produtos pessoais",
         "history": []
       }
     ]
