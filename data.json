@@ -252,15 +252,6 @@
         "monthlyContribution": 15,
         "note": "Costco membership, utensílios, manutenção do apt",
         "history": []
-      },
-      {
-        "id": 4,
-        "name": "Beleza & Pessoal",
-        "icon": "💅",
-        "balance": 0,
-        "monthlyContribution": 10,
-        "note": "Sephora, skincare, produtos pessoais",
-        "history": []
       }
     ]
   }
