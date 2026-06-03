@@ -112,7 +112,7 @@
           "id": 1002,
           "name": "👶 Baby Fund",
           "type": "savings",
-          "budget": 0
+          "budget": 30
         },
         {
           "id": 1006,
@@ -164,7 +164,7 @@
     "wallets": [
       {
         "id": 1,
-        "name": "Emergency Savings (Wealthsimple)",
+        "name": "🎯 Emergency Savings",
         "amount": 7919
       },
       {
@@ -251,6 +251,15 @@
         "balance": 0,
         "monthlyContribution": 15,
         "note": "Costco membership, utensílios, manutenção do apt",
+        "history": []
+      },
+      {
+        "id": 4,
+        "name": "Beleza & Pessoal",
+        "icon": "💅",
+        "balance": 0,
+        "monthlyContribution": 10,
+        "note": "Sephora, skincare, produtos pessoais",
         "history": []
       }
     ]
