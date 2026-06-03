@@ -166,8 +166,8 @@
         "id": 50,
         "linkId": 50,
         "name": "Emergency Savings",
-        "startingBalance": 7919,
-        "amount": 7919
+        "startingBalance": 13,
+        "amount": 13
       },
       {
         "id": 51,
@@ -215,7 +215,7 @@
     "goals": [
       {
         "id": 1,
-        "name": "Emergency Savings ($500/m\u00c3s)",
+        "name": "Emergency Savings ($500/mÃs)",
         "target": 10500,
         "saved": 7919,
         "monthly": 500
@@ -253,37 +253,37 @@
       {
         "id": 1,
         "name": "Carro",
-        "icon": "\u00f0\u009f\u009a\u0097",
+        "icon": "ð",
         "balance": 0,
         "monthlyContribution": 50,
-        "note": "Car wash, troca de \u00c3\u00b3leo, mec\u00c3\u00a2nica, pneus, multas",
+        "note": "Car wash, troca de Ã³leo, mecÃ¢nica, pneus, multas",
         "history": []
       },
       {
         "id": 2,
-        "name": "Sa\u00c3\u00bade",
-        "icon": "\u00f0\u009f\u008f\u00a5",
+        "name": "SaÃºde",
+        "icon": "ð¥",
         "balance": 0,
         "monthlyContribution": 20,
-        "note": "Dentista, vitaminas, rem\u00c3\u00a9dios, \u00c3\u00b3culos, fisio",
+        "note": "Dentista, vitaminas, remÃ©dios, Ã³culos, fisio",
         "history": []
       },
       {
         "id": 3,
         "name": "Casa & Assinaturas",
-        "icon": "\u00f0\u009f\u008f\u00a0",
+        "icon": "ð ",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "Costco membership, utens\u00c3\u00adlios, manuten\u00c3\u00a7\u00c3\u00a3o do apt",
+        "note": "Costco membership, utensÃ­lios, manutenÃ§Ã£o do apt",
         "history": []
       },
       {
         "id": 5,
         "name": "Presentes & Datas",
-        "icon": "\u00f0\u009f\u008e\u0081",
+        "icon": "ð",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "Anivers\u00c3\u00a1rios, Natal, datas especiais, jantares de comemora\u00c3\u00a7\u00c3\u00a3o",
+        "note": "AniversÃ¡rios, Natal, datas especiais, jantares de comemoraÃ§Ã£o",
         "history": []
       }
     ]
