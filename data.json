@@ -202,11 +202,6 @@
           "id": 4,
           "label": "Income 4 (Nicolas)",
           "amount": 2160
-        },
-        {
-          "id": 1000,
-          "label": "Nova renda",
-          "amount": 0
         }
       ],
       "budget": [
