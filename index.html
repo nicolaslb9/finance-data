@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root {
@@ -54,6 +55,13 @@ body, input, select, button, textarea, span, div, h1, h2, h3, p, label, option {
 }
 .mono, [style*="Geist Mono"] {
   font-family: 'Geist Mono', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', monospace;
+}
+/* Dedicated emoji span — forces emoji font first, guarantees color emoji */
+.emo {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+  font-style: normal;
+  font-weight: normal;
+  display: inline-block;
 }
 
 .app { display: flex; min-height: 100vh; }
@@ -766,7 +774,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v19'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v20'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1319,7 +1327,7 @@ function renderBudgetList() {
     const over = bal < 0;
     h += `<div class="tbl-row">
       <div style="display:flex;align-items:center;gap:4px;min-width:0">
-        <span style="flex:1;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(b.name)}">${esc(b.name)}</span>
+        <span style="flex:1;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(b.name)}">${withEmoji(b.name)}</span>
         <button class="rename-btn" onclick="renameBudget(${b.id})" title="Renomear">⋯</button>
       </div>
       <select onchange="getBudget(${b.id}).type=this.value;render();autoSave()">
@@ -1502,7 +1510,7 @@ function renderWallets() {
     h += `<div class="wallet-row">
       <div style="display:flex;align-items:center;gap:8px;flex:1">
         <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></span>
-        <span class="wallet-name" style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(w.name)}">${esc(w.name)}</span>
+        <span class="wallet-name" style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(w.name)}">${withEmoji(w.name)}</span>
         ${linked?'<span title=\"Vinculado ao orçamento\" style=\"font-size:11px\">🔗</span>':''}
         <button class="rename-btn" onclick="renameWallet(${w.id})" title="Renomear">⋯</button>
         <span style="font-size:10px;color:var(--text3);font-family:'Geist Mono',monospace">${pct}%</span>
@@ -1550,7 +1558,7 @@ function renderRecommendations() {
   items.forEach(item => {
     h += `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:12px">
       <div style="flex:1">
-        <div style="font-size:13px;font-weight:500;color:var(--accent)">${esc(item.label)}</div>
+        <div style="font-size:13px;font-weight:500;color:var(--accent)">${withEmoji(item.label)}</div>
         ${item.note ? `<div style="font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4">${esc(item.note)}</div>` : ''}
       </div>
       <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:${item.color};white-space:nowrap">${fmt(item.amount)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mês</span></span>
@@ -1685,7 +1693,7 @@ function renderGoals() {
     h += `<div class="prog-wrap">
       <div class="prog-head">
         <div style="display:flex;align-items:center;flex:1;gap:4px;min-width:0">
-          <span class="prog-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(g.name)}">${esc(g.name)}</span>
+          <span class="prog-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(g.name)}">${withEmoji(g.name)}</span>
           ${urgency}
           <button class="rename-btn" onclick="renameGoal(${g.id})" title="Renomear">⋯</button>
         </div>
@@ -2086,9 +2094,9 @@ function renderProvisions() {
 
       <!-- Header row: icon + name + balance + delete -->
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <span style="font-size:22px;line-height:1">${f.icon || '📦'}</span>
+        <span class="emo" style="font-size:22px;line-height:1">${f.icon || '📦'}</span>
         <div style="flex:1">
-          <div style="font-size:15px;font-weight:600;color:var(--text)">${esc(f.name)}</div>
+          <div style="font-size:15px;font-weight:600;color:var(--text)">${withEmoji(f.name)}</div>
           <div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(f.note || '')}</div>
         </div>
         <div style="text-align:right">
@@ -2639,6 +2647,16 @@ function renameSinkingFund(id) {
     else { f.name = v.trim(); }
     saveSinkingFunds(); renderProvisions();
   }
+}
+
+// Wraps any emoji characters in a .emo span so they always render in color
+function withEmoji(str) {
+  const s = esc(str);
+  // Match emoji (incl. flags, ZWJ sequences, variation selectors)
+  return s.replace(
+    /(\p{Extended_Pictographic}(\u200D\p{Extended_Pictographic})*[\uFE0F]?|[\u{1F1E6}-\u{1F1FF}]{2})/gu,
+    '<span class="emo">$1</span>'
+  );
 }
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
