@@ -130,7 +130,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 150
+          "budget": 100
         },
         {
           "id": 40,
@@ -295,7 +295,7 @@
         "id": 1,
         "name": "Carro",
         "balance": 0,
-        "monthlyContribution": 75,
+        "monthlyContribution": 50,
         "note": "Car wash, troca de ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ³leo, mecÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢nica, pneus, multas",
         "history": []
       },
@@ -303,7 +303,7 @@
         "id": 2,
         "name": "Saude",
         "balance": 0,
-        "monthlyContribution": 30,
+        "monthlyContribution": 20,
         "note": "Dentista, vitaminas, remÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©dios, ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ³culos, fisio",
         "history": []
       },
@@ -311,7 +311,7 @@
         "id": 3,
         "name": "Casa & Assinaturas",
         "balance": 0,
-        "monthlyContribution": 23,
+        "monthlyContribution": 15,
         "note": "Costco membership, utensÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ­lios, manutenÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ§ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ£o do apt",
         "history": []
       },
@@ -319,7 +319,7 @@
         "id": 5,
         "name": "Presentes & Datas",
         "balance": 0,
-        "monthlyContribution": 22,
+        "monthlyContribution": 15,
         "note": "AniversÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡rios, Natal, datas especiais, jantares de comemoraÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ§ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ£o",
         "history": []
       }
