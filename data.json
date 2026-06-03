@@ -217,7 +217,7 @@
         "id": 50,
         "name": "Emergency Savings",
         "target": 30096,
-        "saved": 7919,
+        "saved": 13,
         "monthly": 300,
         "note": "Meta: 6x gastos essenciais (fixo+dividas+necessidades = $5,016/mes). Atual: $7,919."
       },
@@ -235,7 +235,7 @@
         "target": 1800000,
         "saved": 3904,
         "monthly": 300,
-        "note": "VGRO \u2014 crescimento de longo prazo. Limite anual $7,000. Aumentar apos as viagens."
+        "note": "VGRO — crescimento de longo prazo. Limite anual $7,000. Aumentar apos as viagens."
       },
       {
         "id": 1002,
@@ -268,7 +268,7 @@
         "name": "Carro",
         "balance": 0,
         "monthlyContribution": 50,
-        "note": "Car wash, troca de \u00c3\u00b3leo, mec\u00c3\u00a2nica, pneus, multas",
+        "note": "Car wash, troca de Ã³leo, mecÃ¢nica, pneus, multas",
         "history": []
       },
       {
@@ -276,7 +276,7 @@
         "name": "Saude",
         "balance": 0,
         "monthlyContribution": 20,
-        "note": "Dentista, vitaminas, rem\u00c3\u00a9dios, \u00c3\u00b3culos, fisio",
+        "note": "Dentista, vitaminas, remÃ©dios, Ã³culos, fisio",
         "history": []
       },
       {
@@ -284,7 +284,7 @@
         "name": "Casa & Assinaturas",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "Costco membership, utens\u00c3\u00adlios, manuten\u00c3\u00a7\u00c3\u00a3o do apt",
+        "note": "Costco membership, utensÃ­lios, manutenÃ§Ã£o do apt",
         "history": []
       },
       {
@@ -292,7 +292,7 @@
         "name": "Presentes & Datas",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "Anivers\u00c3\u00a1rios, Natal, datas especiais, jantares de comemora\u00c3\u00a7\u00c3\u00a3o",
+        "note": "AniversÃ¡rios, Natal, datas especiais, jantares de comemoraÃ§Ã£o",
         "history": []
       }
     ]
