@@ -273,6 +273,15 @@
         "monthlyContribution": 15,
         "note": "Costco membership, utens\u00edlios, manuten\u00e7\u00e3o do apt",
         "history": []
+      },
+      {
+        "id": 5,
+        "name": "Presentes & Datas",
+        "icon": "\ud83c\udf81",
+        "balance": 0,
+        "monthlyContribution": 15,
+        "note": "Anivers\u00e1rios, Natal, datas especiais, jantares de comemora\u00e7\u00e3o",
+        "history": []
       }
     ]
   }
