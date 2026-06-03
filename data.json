@@ -220,76 +220,85 @@
     ],
     "goals": [
       {
-        "id": 1,
-        "name": "Emergency Savings ($500/mÃs)",
-        "target": 10500,
+        "id": 50,
+        "name": "Emergency Savings",
+        "target": 33000,
         "saved": 7919,
-        "monthly": 500
+        "monthly": 300,
+        "note": "Meta: 6 meses de despesas (~$5,500/mes). Vancouver exige reserva robusta."
       },
       {
-        "id": 2,
-        "name": "TFSA Retirement",
-        "target": 12000,
+        "id": 51,
+        "name": "Japan Trip",
+        "target": 3500,
+        "saved": 300,
+        "monthly": 1000,
+        "note": "Voo e estadia pagos. Meta para gastos na viagem. Prazo: Setembro 2026."
+      },
+      {
+        "id": 52,
+        "name": "TFSA",
+        "target": 1800000,
         "saved": 3904,
-        "monthly": 300
+        "monthly": 300,
+        "note": "VGRO \u2014 crescimento de longo prazo. Limite anual $7,000. Aumentar apos as viagens."
       },
       {
-        "id": 3,
-        "name": "Brazil Fund",
-        "target": 2600,
+        "id": 1002,
+        "name": "Baby Fund",
+        "target": 20000,
         "saved": 0,
-        "monthly": 200
+        "monthly": 30,
+        "note": "Planejado para 2029. Daycare em Vancouver ~$1,500/mes. Comecar cedo."
       },
       {
-        "id": 4,
-        "name": "Travel / Viagens",
-        "target": 3000,
+        "id": 1006,
+        "name": "Brasil 2027",
+        "target": 4000,
         "saved": 0,
-        "monthly": 500
+        "monthly": 100,
+        "note": "Viagem ao Brasil em Marco/2027. Aumentar para $667/mes apos o Japao."
       },
       {
-        "id": 5,
-        "name": "Immigration",
-        "target": 2000,
+        "id": 1010,
+        "name": "Earlobe + Dental",
+        "target": 2900,
         "saved": 0,
-        "monthly": 200
+        "monthly": 50,
+        "note": "Earlobe repair Juliana (~$2,000) + clareamento Nicolas (~$900). Verificar Sun Life."
       }
     ],
     "sinkingFunds": [
       {
         "id": 1,
         "name": "Carro",
-        "icon": "ð",
         "balance": 0,
         "monthlyContribution": 50,
-        "note": "Car wash, troca de Ã³leo, mecÃ¢nica, pneus, multas",
+        "note": "Car wash, troca de \u00c3\u00b3leo, mec\u00c3\u00a2nica, pneus, multas",
         "history": []
       },
       {
         "id": 2,
-        "name": "SaÃºde",
-        "icon": "ð¥",
+        "name": "Saude",
         "balance": 0,
         "monthlyContribution": 20,
-        "note": "Dentista, vitaminas, remÃ©dios, Ã³culos, fisio",
+        "note": "Dentista, vitaminas, rem\u00c3\u00a9dios, \u00c3\u00b3culos, fisio",
         "history": []
       },
       {
         "id": 3,
         "name": "Casa & Assinaturas",
-        "icon": "ð ",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "Costco membership, utensÃ­lios, manutenÃ§Ã£o do apt",
+        "note": "Costco membership, utens\u00c3\u00adlios, manuten\u00c3\u00a7\u00c3\u00a3o do apt",
         "history": []
       },
       {
         "id": 5,
         "name": "Presentes & Datas",
-        "icon": "ð",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "AniversÃ¡rios, Natal, datas especiais, jantares de comemoraÃ§Ã£o",
+        "note": "Anivers\u00c3\u00a1rios, Natal, datas especiais, jantares de comemora\u00c3\u00a7\u00c3\u00a3o",
         "history": []
       }
     ]
