@@ -163,29 +163,53 @@
   "savings": {
     "wallets": [
       {
-        "id": 1,
-        "name": "Emergency Savings (Wealthsimple)",
+        "id": 50,
+        "linkId": 50,
+        "name": "🎯 Emergency Savings",
+        "startingBalance": 7919,
+        "amount": 7919
+      },
+      {
+        "id": 51,
+        "linkId": 51,
+        "name": "🇯🇵 Japan Trip",
+        "startingBalance": 300,
+        "amount": 300
+      },
+      {
+        "id": 52,
+        "linkId": 52,
+        "name": "📈 TFSA",
+        "startingBalance": 3904,
+        "amount": 3904
+      },
+      {
+        "id": 1002,
+        "linkId": 1002,
+        "name": "👶 Baby Fund",
+        "startingBalance": 0,
         "amount": 0
       },
       {
-        "id": 2,
-        "name": "Travel / Viagens",
+        "id": 1006,
+        "linkId": 1006,
+        "name": "🇧🇷 Brasil 2027",
+        "startingBalance": 0,
         "amount": 0
       },
       {
-        "id": 3,
-        "name": "TFSA",
+        "id": 1010,
+        "linkId": 1010,
+        "name": "💆 Earlobe + Dental",
+        "startingBalance": 0,
         "amount": 0
       },
       {
-        "id": 4,
-        "name": "Retirement Fund (Canada Life)",
-        "amount": 0
-      },
-      {
-        "id": 5,
-        "name": "College / Future Big Purchases",
-        "amount": 0
+        "id": 900,
+        "linkId": null,
+        "name": "🏦 Canada Life RRP (Juliana)",
+        "startingBalance": 5012,
+        "amount": 5012
       }
     ],
     "goals": [
