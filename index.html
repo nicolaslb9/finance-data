@@ -719,7 +719,7 @@ let saveTimer = null;
 let charts = {};
 
 function defaultMonthData() {
-  // Mirror of June 2026 — edit per month as needed
+  // Mirror of June 2026 — emojis are added by catLabel() in JS, NOT stored in names
   return {
     income: [
       {id:1,label:'Income 1 (Juliana)',amount:1768},
@@ -728,28 +728,28 @@ function defaultMonthData() {
       {id:4,label:'Income 4 (Nicolas)',amount:2160},
     ],
     budget: [
-      {id:20,name:'🚙 Car Financing',type:'debt',budget:592},
-      {id:21,name:'🍎 iPhone Financing',type:'debt',budget:120},
-      {id:10,name:'🏡 Aluguel',type:'fixed',budget:2310},
-      {id:11,name:'⚡ BC Hydro',type:'fixed',budget:45},
-      {id:12,name:'📶 Telus',type:'fixed',budget:80},
-      {id:13,name:'🛡️ Car Insurance',type:'fixed',budget:327},
-      {id:14,name:'🛡️ Home Insurance',type:'fixed',budget:32},
-      {id:15,name:'📲 Koodo Phone Plans',type:'fixed',budget:110},
-      {id:1000,name:'🧠 Terapia',type:'fixed',budget:400},
-      {id:30,name:'🛒 Groceries',type:'needs',budget:800},
-      {id:31,name:'⛽ Gas',type:'needs',budget:200},
-      {id:50,name:'🎯 Emergency Savings',type:'savings',budget:300},
-      {id:51,name:'🇯🇵 Japan Trip',type:'savings',budget:1000},
-      {id:52,name:'📈 TFSA',type:'savings',budget:300},
-      {id:1002,name:'👶 Baby Fund',type:'savings',budget:30},
-      {id:1006,name:'🇧🇷 Brasil 2027',type:'savings',budget:100},
-      {id:1010,name:'💆 Earlobe + Dental',type:'savings',budget:50},
-      {id:60,name:'🔧 Sinking Funds',type:'provision',budget:100},
-      {id:40,name:'🍸 Restaurante & Fun',type:'wants',budget:300},
-      {id:42,name:'🔁 Subscriptions',type:'wants',budget:108},
-      {id:43,name:'🎁 Allowance Nicolas',type:'wants',budget:300},
-      {id:44,name:'🎁 Allowance Juliana',type:'wants',budget:300},
+      {id:20,name:'Car Financing',type:'debt',budget:592},
+      {id:21,name:'iPhone Financing',type:'debt',budget:120},
+      {id:10,name:'Aluguel',type:'fixed',budget:2310},
+      {id:11,name:'BC Hydro',type:'fixed',budget:45},
+      {id:12,name:'Telus',type:'fixed',budget:80},
+      {id:13,name:'Car Insurance',type:'fixed',budget:327},
+      {id:14,name:'Home Insurance',type:'fixed',budget:32},
+      {id:15,name:'Koodo Phone Plans',type:'fixed',budget:110},
+      {id:1000,name:'Terapia',type:'fixed',budget:400},
+      {id:30,name:'Groceries',type:'needs',budget:800},
+      {id:31,name:'Gas',type:'needs',budget:200},
+      {id:50,name:'Emergency Savings',type:'savings',budget:300},
+      {id:51,name:'Japan Trip',type:'savings',budget:1000},
+      {id:52,name:'TFSA',type:'savings',budget:300},
+      {id:1002,name:'Baby Fund',type:'savings',budget:30},
+      {id:1006,name:'Brasil 2027',type:'savings',budget:100},
+      {id:1010,name:'Earlobe + Dental',type:'savings',budget:50},
+      {id:60,name:'Sinking Funds',type:'provision',budget:100},
+      {id:40,name:'Restaurante & Fun',type:'wants',budget:300},
+      {id:42,name:'Subscriptions',type:'wants',budget:108},
+      {id:43,name:'Allowance Nicolas',type:'wants',budget:300},
+      {id:44,name:'Allowance Juliana',type:'wants',budget:300},
     ],
     transactions: [],
   };
@@ -774,7 +774,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v21'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v22'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1315,7 +1315,7 @@ function renderBudgetList() {
     const over = bal < 0;
     h += `<div class="tbl-row">
       <div style="display:flex;align-items:center;gap:4px;min-width:0">
-        <span style="flex:1;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(b.name)}">${withEmoji(b.name)}</span>
+        <span style="flex:1;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(b.name)}">${catLabel(b.id, b.name)}</span>
         <button class="rename-btn" onclick="renameBudget(${b.id})" title="Renomear">⋯</button>
       </div>
       <select onchange="getBudget(${b.id}).type=this.value;render();autoSave()">
@@ -1498,7 +1498,7 @@ function renderWallets() {
     h += `<div class="wallet-row">
       <div style="display:flex;align-items:center;gap:8px;flex:1">
         <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></span>
-        <span class="wallet-name" style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(w.name)}">${withEmoji(w.name)}</span>
+        <span class="wallet-name" style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(w.name)}">${walletLabel(w.id, w.name)}</span>
         ${linked?'<span title=\"Vinculado ao orçamento\" style=\"font-size:11px\">🔗</span>':''}
         <button class="rename-btn" onclick="renameWallet(${w.id})" title="Renomear">⋯</button>
         <span style="font-size:10px;color:var(--text3);font-family:'Geist Mono',monospace">${pct}%</span>
@@ -1546,7 +1546,7 @@ function renderRecommendations() {
   items.forEach(item => {
     h += `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:12px">
       <div style="flex:1">
-        <div style="font-size:13px;font-weight:500;color:var(--accent)">${withEmoji(item.label)}</div>
+        <div style="font-size:13px;font-weight:500;color:var(--accent)">${walletLabel(item.id||0, item.label)}</div>
         ${item.note ? `<div style="font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4">${esc(item.note)}</div>` : ''}
       </div>
       <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:${item.color};white-space:nowrap">${fmt(item.amount)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mês</span></span>
@@ -1681,7 +1681,7 @@ function renderGoals() {
     h += `<div class="prog-wrap">
       <div class="prog-head">
         <div style="display:flex;align-items:center;flex:1;gap:4px;min-width:0">
-          <span class="prog-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(g.name)}">${withEmoji(g.name)}</span>
+          <span class="prog-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(g.name)}">${walletLabel(g.id, g.name)}</span>
           ${urgency}
           <button class="rename-btn" onclick="renameGoal(${g.id})" title="Renomear">⋯</button>
         </div>
@@ -2600,6 +2600,37 @@ function showAutoConnectToast() {
   toast.innerHTML = '<span style="color:#34d399;font-size:16px">✓</span> Conectado ao GitHub automaticamente';
   document.body.appendChild(toast);
   setTimeout(() => { toast.style.opacity='0'; setTimeout(()=>toast.remove(), 300); }, 3000);
+}
+
+// ── Emoji map per category ID (kept in JS, not in data, avoids encoding bugs) ──
+const CAT_EMOJI = {
+  // Debt
+  20: '🚗', 21: '📱',
+  // Fixed
+  10: '🏠', 11: '⚡', 12: '📡', 13: '🛡️', 14: '🛡️', 15: '📲', 1000: '🧠',
+  // Needs
+  30: '🛒', 31: '⛽', 32: '❤️', 33: '🏡',
+  // Savings
+  50: '🎯', 51: '🗾', 52: '📈', 1002: '👶', 1006: '🇧🇷', 1010: '💆',
+  // Provision
+  60: '🔧',
+  // Wants
+  40: '🍽️', 41: '✨', 42: '🔁', 43: '🎁', 44: '🎁', 45: '👗',
+};
+
+// Wallet/goal emoji by ID
+const WALLET_EMOJI = {
+  50: '🎯', 51: '🗾', 52: '📈', 1002: '👶', 1006: '🇧🇷', 1010: '💆', 900: '🏦',
+};
+
+// Returns "emoji Name" — emoji hardcoded in JS, name from data
+function catLabel(id, name) {
+  const em = CAT_EMOJI[id] || '';
+  return em ? `<span class="emo">${em}</span> ${esc(name)}` : esc(name);
+}
+function walletLabel(id, name) {
+  const em = WALLET_EMOJI[id] || '';
+  return em ? `<span class="emo">${em}</span> ${esc(name)}` : esc(name);
 }
 
 // ── Generic rename helper for titles (avoids emoji-in-input bug) ─────────────
