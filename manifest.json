@@ -1,6 +1,6 @@
 {
-  "name": "Finance Dashboard",
-  "short_name": "Finance",
+  "name": "N&J Budget",
+  "short_name": "N&J Budget",
   "description": "Controle de gastos pessoal \u2014 Nicolas & Juliana",
   "start_url": "/finance-data/",
   "scope": "/finance-data/",
