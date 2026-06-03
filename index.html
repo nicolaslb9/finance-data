@@ -572,7 +572,7 @@ select { cursor: pointer; }
   <!-- PATRIMÔNIO + RECOMENDAÇÕES -->
   <div class="grid2" style="margin-bottom:16px">
     <div class="card">
-      <div class="card-header"><h3>Patrimônio por conta</h3><span class="sub" style="font-size:10px">🔗 puxa do orçamento · editável</span></div>
+      <div class="card-header"><h3>Patrimônio por conta</h3><span class="sub" style="font-size:10px" id="wallet-total-label">🔗 puxa do orçamento · editável</span></div>
       <div class="chart-wrap" style="height:190px"><canvas id="chart-wallet-pie"></canvas></div>
       <div style="margin-top:14px">
         <div id="wallet-list"></div>
@@ -774,7 +774,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v20'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v21'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1227,21 +1227,9 @@ function renderBudgetTypeSummary() {
   if (unallocEl) unallocEl.textContent = unalloc <= 0 ? '✓ 100% alocado' : fmt(unalloc) + ' livre';
 }
 
-function totalSinkingMonthly() {
-  if (!sinkingFunds || sinkingFunds.length === 0) return 0;
-  return sinkingFunds.reduce((s,f) => s + (+f.monthlyContribution||0), 0);
-}
 
-function syncProvisionBudget() {
-  // Keep the 'provision' budget item in sync with sum of sinking funds
-  const total = totalSinkingMonthly();
-  const provItem = md().budget.find(b => b.type === 'provision');
-  if (provItem) {
-    provItem.budget = total;
-  } else if (total > 0) {
-    md().budget.push({id:60, name:'Provisões (Sinking Funds)', type:'provision', budget: total});
-  }
-}
+
+
 
 function renderBudgetSinkingCard() {
   const el = document.getElementById('budget-sinking-card');
