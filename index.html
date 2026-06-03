@@ -758,7 +758,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v8'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v9'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1478,62 +1478,39 @@ function getCurrentPhase() {
 }
 
 function renderRecommendations() {
-  const phase = getCurrentPhase();
-  const phaseNames = {phase1:'Fase 1: Japão + Base', phase2:'Fase 2: Brasil + Aceleração', phase3:'Fase 3: Regime permanente'};
   const recPhaseEl = document.getElementById('rec-phase-label');
-  if(recPhaseEl) recPhaseEl.textContent = phaseNames[phase]||'';
+  if (recPhaseEl) recPhaseEl.textContent = 'Baseado nas suas metas';
 
-  const plans = {
-    phase1: [
-      {emoji:'🇯🇵', label:'Japan Trip', amount:1067, note:'Prioridade máxima — prazo Set/26', color:'#ef4444'},
-      {emoji:'🛡️', label:'Emergency Fund', amount:500, note:'Meta: $33k — atualmente $7,919', color:'#f59e0b'},
-      {emoji:'🎄', label:'Christmas Fund', amount:133, note:'$800 até Dez/26', color:'#22c55e'},
-      {emoji:'📈', label:'TFSA (VGRO)', amount:300, note:'Crescimento composto longo prazo', color:'#3b82f6'},
-      {emoji:'🇧🇷', label:'Brasil 2027', amount:200, note:'Começar pequeno agora', color:'#8b5cf6'},
-      {emoji:'👶', label:'Baby Fund', amount:300, note:'3 anos de runway — começar cedo', color:'#ec4899'},
-      {emoji:'💆', label:'Earlobe + Dental', amount:167, note:'Procedimentos 2027', color:'#06b6d4'},
-      {emoji:'🎓', label:'College Nicolas', amount:100, note:'Longo prazo — RESP recomendado', color:'#14b8a6'},
-    ],
-    phase2: [
-      {emoji:'🇧🇷', label:'Brasil 2027', amount:667, note:'Aumentar após Japão — $4k até Mar/27', color:'#ef4444'},
-      {emoji:'🛡️', label:'Emergency Fund', amount:500, note:'Continuação', color:'#f59e0b'},
-      {emoji:'📈', label:'TFSA (VGRO)', amount:400, note:'Aumentar contribuição', color:'#3b82f6'},
-      {emoji:'💼', label:'Aposentadoria Extra', amount:300, note:'RRSP ou investimento adicional', color:'#8b5cf6'},
-      {emoji:'👶', label:'Baby Fund', amount:400, note:'Aumentar — 2029 se aproxima', color:'#ec4899'},
-      {emoji:'💆', label:'Earlobe + Dental', amount:200, note:'Prazo se aproxima', color:'#06b6d4'},
-      {emoji:'🎓', label:'College Nicolas', amount:150, note:'Steady', color:'#14b8a6'},
-    ],
-    phase3: [
-      {emoji:'🛡️', label:'Emergency Fund', amount:300, note:'Fase final — meta $33k', color:'#f59e0b'},
-      {emoji:'📈', label:'TFSA (VGRO)', amount:600, note:'Maximizar contribuição anual ($7k/ano)', color:'#3b82f6'},
-      {emoji:'💼', label:'Aposentadoria Extra', amount:800, note:'RRSP — gap de $1.3M para $1.8M', color:'#8b5cf6'},
-      {emoji:'👶', label:'Baby Fund', amount:500, note:'2029 — sprint final', color:'#ec4899'},
-      {emoji:'🎓', label:'College Nicolas', amount:200, note:'RESP ativo', color:'#14b8a6'},
-      {emoji:'📊', label:'Diversificação', amount:200, note:'Considerar ETFs além VGRO', color:'#22c55e'},
-    ]
-  };
+  // Build recommendations directly from the real savings goals
+  const goals = savings.goals || [];
+  const COLORS = ['#ef4444','#f59e0b','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#14b8a6','#22c55e'];
 
-  const items = plans[phase]||plans.phase1;
-  const total = items.reduce((s,x)=>s+x.amount,0);
+  let items = goals.map((g, i) => ({
+    label: g.name,
+    amount: +g.monthly || 0,
+    note: g.note || '',
+    color: COLORS[i % COLORS.length]
+  })).filter(x => x.amount > 0);
+
+  const total = items.reduce((s, x) => s + x.amount, 0);
+
   let h = '';
   items.forEach(item => {
-    h += `<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(59,130,246,0.1)">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:15px">${item.emoji}</span>
-        <div>
-          <div style="font-size:13px;font-weight:500;color:#1e40af">${item.label}</div>
-          <div style="font-size:11px;color:#6b7280">${item.note}</div>
-        </div>
+    h += `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:12px">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500;color:var(--accent)">${esc(item.label)}</div>
+        ${item.note ? `<div style="font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4">${esc(item.note)}</div>` : ''}
       </div>
-      <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:${item.color};white-space:nowrap">${fmt(item.amount)}<span style="font-size:10px;font-weight:400;color:#9ca3af">/mês</span></span>
+      <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:${item.color};white-space:nowrap">${fmt(item.amount)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mês</span></span>
     </div>`;
   });
-  h += `<div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:2px solid rgba(59,130,246,0.2)">
-    <span style="font-size:12px;font-weight:600;color:#1e40af">Total savings/mês</span>
-    <span style="font-family:'Geist Mono',monospace;font-size:14px;font-weight:700;color:#1e40af">${fmt(total)}</span>
+  h += `<div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:2px solid var(--border)">
+    <span style="font-size:13px;font-weight:600;color:var(--text)">Total savings/mês</span>
+    <span style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:700;color:var(--accent)">${fmt(total)}</span>
   </div>`;
+
   const recEl = document.getElementById('recommendations');
-  if(recEl) recEl.innerHTML = h;
+  if (recEl) recEl.innerHTML = h;
 }
 
 function renderPhasesPlan() {
