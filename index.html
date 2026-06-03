@@ -774,7 +774,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v23'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v24'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1615,30 +1615,80 @@ function renderPhasesPlan() {
   const phasesEl = document.getElementById('phases-plan');
   if(!phasesEl) return;
   const phase = getCurrentPhase();
+
   const phases = [
-    {id:'phase1', label:'Fase 1', period:'Agora → Set 2026', goal:'Japan Trip + Base sólida', color:'#ef4444', bg:'#fef2f2', border:'#fecaca',
-     items:['🇯🇵 Japan: $1,067/mês','🛡️ Emergency: $500/mês','🎄 Natal: $133/mês','📈 TFSA: $300/mês','🇧🇷 Brasil: $200/mês','👶 Baby: $300/mês','💆 Médico: $167/mês'],
-     total:2667},
-    {id:'phase2', label:'Fase 2', period:'Out 2026 → Mar 2027', goal:'Brasil + Acelerar aposentadoria', color:'#f59e0b', bg:'#fffbeb', border:'#fde68a',
-     items:['🇧🇷 Brasil: $667/mês','🛡️ Emergency: $500/mês','📈 TFSA: $400/mês','💼 Aposentadoria: $300/mês','👶 Baby: $400/mês','💆 Médico: $200/mês'],
-     total:2467},
-    {id:'phase3', label:'Fase 3', period:'Abr 2027 em diante', goal:'Regime permanente — aposentadoria', color:'#22c55e', bg:'#f0fdf4', border:'#bbf7d0',
-     items:['📈 TFSA: $600/mês (max $7k/ano)','💼 Aposentadoria Extra: $800/mês','🛡️ Emergency: $300/mês','👶 Baby: $500/mês','🎓 College: $200/mês','📊 Diversificação: $200/mês'],
-     total:2600},
+    {
+      id: 'phase1',
+      label: 'Fase 1',
+      period: 'Agora → Set/2026',
+      goal: 'Japan Trip + fundamentos',
+      color: '#ef4444', bg: '#fef2f2', border: '#fecaca',
+      items: [
+        { id:51,  label:'Japan Trip',       amount:1000, note:'Prioridade maxima — prazo Set 4' },
+        { id:50,  label:'Emergency Savings',amount:300,  note:'Construindo ate $30,096' },
+        { id:52,  label:'TFSA',             amount:300,  note:'Manter sempre — VGRO' },
+        { id:1006,label:'Brasil 2027',      amount:100,  note:'Comecar pequeno agora' },
+        { id:1002,label:'Baby Fund',        amount:30,   note:'Inicio — 2029 ainda longe' },
+        { id:1010,label:'Earlobe + Dental', amount:50,   note:'Prazo 2027' },
+      ]
+    },
+    {
+      id: 'phase2',
+      label: 'Fase 2',
+      period: 'Out/2026 → Mar/2027',
+      goal: 'Brasil + acelerar aposentadoria',
+      color: '#f59e0b', bg: '#fffbeb', border: '#fde68a',
+      items: [
+        { id:1006,label:'Brasil 2027',      amount:667,  note:'Aumentar — meta $4k ate Mar/27' },
+        { id:50,  label:'Emergency Savings',amount:400,  note:'Continuacao' },
+        { id:52,  label:'TFSA',             amount:400,  note:'Aumentar contribuicao' },
+        { id:1002,label:'Baby Fund',        amount:200,  note:'Aumentar — 2029 se aproxima' },
+        { id:1010,label:'Earlobe + Dental', amount:200,  note:'Prazo chegando' },
+      ]
+    },
+    {
+      id: 'phase3',
+      label: 'Fase 3',
+      period: 'Abr/2027 em diante',
+      goal: 'Regime permanente — aposentadoria',
+      color: '#22c55e', bg: '#f0fdf4', border: '#bbf7d0',
+      items: [
+        { id:52,  label:'TFSA',             amount:600,  note:'Maximizar $7k/ano' },
+        { id:50,  label:'Emergency Savings',amount:300,  note:'Sprint final ate $30,096' },
+        { id:1002,label:'Baby Fund',        amount:400,  note:'2029 — sprint final' },
+        { id:900, label:'Canada Life RRP',  amount:517,  note:'Auto-descontado salario Juliana' },
+      ]
+    },
   ];
 
   let h = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">`;
+
   phases.forEach(p => {
     const isActive = p.id === phase;
+    const total = p.items.reduce((s,x)=>s+x.amount,0);
+
     h += `<div style="background:${p.bg};border:${isActive?'2px':'1px'} solid ${isActive?p.color:p.border};border-radius:10px;padding:14px;position:relative">
-      ${isActive?`<span style="position:absolute;top:-8px;right:12px;background:${p.color};color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">ATUAL</span>`:''}
-      <div style="font-size:11px;font-weight:700;color:${p.color};text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">${p.label}</div>
+      ${isActive ? `<span style="position:absolute;top:-9px;right:12px;background:${p.color};color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em">ATUAL</span>` : ''}
+      <div style="font-size:11px;font-weight:700;color:${p.color};text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">${p.label}</div>
       <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:2px">${p.period}</div>
-      <div style="font-size:11px;color:#6b7280;margin-bottom:10px">${p.goal}</div>
-      ${p.items.map(i=>`<div style="font-size:11px;color:#374151;padding:2px 0;border-bottom:1px solid rgba(0,0,0,0.05)">${i}</div>`).join('')}
-      <div style="margin-top:8px;font-size:12px;font-weight:700;color:${p.color}">Total: ${fmt(p.total)}/mês</div>
+      <div style="font-size:11px;color:#6b7280;margin-bottom:10px;font-style:italic">${p.goal}</div>
+      ${p.items.map(x => {
+        const em = WALLET_EMOJI[x.id] || '';
+        return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.05);gap:6px">
+          <div style="font-size:11px;color:#374151;display:flex;align-items:center;gap:4px;min-width:0">
+            ${em ? `<span class="emo" style="font-size:12px;flex-shrink:0">${em}</span>` : ''}
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.label)}</span>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:${p.color};white-space:nowrap;font-family:'Geist Mono',monospace">${fmt(x.amount)}</span>
+        </div>`;
+      }).join('')}
+      <div style="margin-top:8px;padding-top:6px;border-top:1px solid ${p.border};display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:11px;color:#6b7280">Total/mes</span>
+        <span style="font-size:13px;font-weight:700;color:${p.color};font-family:'Geist Mono',monospace">${fmt(total)}</span>
+      </div>
     </div>`;
   });
+
   h += '</div>';
   phasesEl.innerHTML = h;
 }
