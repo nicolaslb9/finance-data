@@ -187,7 +187,7 @@ select { cursor: pointer; }
 }
 
 @media (min-width: 721px) {
-  #floating-save-btn { bottom:24px !important; left:24px !important; right:auto !important; transform:none !important; }
+  #floating-save-btn { bottom:24px !important; left:auto !important; right:24px !important; transform:none !important; }
 }
 
 @media (max-width: 720px) {
@@ -758,7 +758,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v9'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v10'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -2580,7 +2580,7 @@ tryAutoLoad();
 <button id="floating-save-btn" onclick="manualSave()" style="
   position:fixed;
   bottom:calc(72px + env(safe-area-inset-bottom) + 12px);
-  left:16px;transform:none;
+  left:50%;transform:translateX(-50%);
   background:var(--accent);color:#fff;border:1px solid var(--accent);
   border-radius:24px;padding:10px 20px;
   font-family:'Geist',sans-serif;font-size:13px;font-weight:600;
