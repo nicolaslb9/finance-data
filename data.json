@@ -210,6 +210,11 @@
         "name": "Canada Life RRP (Juliana)",
         "amount": 5012,
         "startingBalance": 5012
+      },
+      {
+        "id": 1000,
+        "name": "Nova conta",
+        "amount": 0
       }
     ],
     "goals": [
