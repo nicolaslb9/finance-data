@@ -762,7 +762,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v17'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v18'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1595,7 +1595,7 @@ function renderPhasesPlan() {
 
 function renderRetirementProjection() {
   const retEl = document.getElementById('retirement-projection');
-  if(!el) return;
+  if(!retEl) return;
 
   function fvAnnuity(pmt, rAnnual, years) {
     const r = rAnnual/12, n = years*12;
