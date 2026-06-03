@@ -181,6 +181,11 @@
         "id": 1000,
         "name": "👶 Baby Fund",
         "amount": 0
+      },
+      {
+        "id": 1001,
+        "name": "Nova conta",
+        "amount": 0
       }
     ],
     "goals": [
