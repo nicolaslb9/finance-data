@@ -149,6 +149,12 @@
           "name": "\ud83c\udf81 Allowance Juliana",
           "type": "wants",
           "budget": 300
+        },
+        {
+          "id": 1010,
+          "name": "\ud83d\udc86 Earlobe + Dental",
+          "type": "savings",
+          "budget": 50
         }
       ],
       "transactions": []
@@ -222,6 +228,14 @@
         "saved": 0,
         "monthly": 100,
         "note": "Viagem ao Brasil em Mar\u00e7o/2027."
+      },
+      {
+        "id": 1010,
+        "name": "\ud83d\udc86 Earlobe + Dental",
+        "target": 2900,
+        "saved": 0,
+        "monthly": 50,
+        "note": "Earlobe repair (Juliana, ~$2.000) + clareamento dental (Nicolas, ~$900). Procedimentos para 2027. Verificar cobertura Sun Life."
       }
     ],
     "sinkingFunds": [
