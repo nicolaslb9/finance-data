@@ -774,7 +774,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v22'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v23'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1527,34 +1527,84 @@ function getCurrentPhase() {
 
 function renderRecommendations() {
   const recPhaseEl = document.getElementById('rec-phase-label');
-  if (recPhaseEl) recPhaseEl.textContent = 'Baseado nas suas metas';
 
-  // Build recommendations directly from the real savings goals
-  const goals = savings.goals || [];
-  const COLORS = ['#ef4444','#f59e0b','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#14b8a6','#22c55e'];
+  // Determine phase based on current date
+  const now = new Date();
+  const phase = (now.getFullYear() < 2026 || (now.getFullYear()===2026 && now.getMonth()<=8))
+    ? 'phase1'
+    : (now.getFullYear()===2026 || (now.getFullYear()===2027 && now.getMonth()<=2))
+    ? 'phase2' : 'phase3';
 
-  let items = goals.map((g, i) => ({
-    label: g.name,
-    amount: +g.monthly || 0,
-    note: g.note || '',
-    color: COLORS[i % COLORS.length]
-  })).filter(x => x.amount > 0);
+  const phaseLabels = {
+    phase1: 'Fase 1 · Agora ate Set/2026',
+    phase2: 'Fase 2 · Out/2026 - Mar/2027',
+    phase3: 'Fase 3 · Abr/2027 em diante'
+  };
+  if (recPhaseEl) recPhaseEl.textContent = phaseLabels[phase];
 
-  const total = items.reduce((s, x) => s + x.amount, 0);
+  // Real recommendations based on actual goals + planning conversations
+  // Phase 1: Japan sprint + base building
+  // Phase 2: Brazil + retirement ramp up
+  // Phase 3: Permanent regime
+  const plans = {
+    phase1: [
+      { id:51, label:'Japan Trip',        amount:1000, color:'#ef4444',
+        note:'Prioridade maxima — prazo Set 4, 2026. Faltam ~$3,200.' },
+      { id:50, label:'Emergency Savings', amount:300,  color:'#f59e0b',
+        note:'Construindo ate $33k (6x despesas). Atualmente $7,919.' },
+      { id:52, label:'TFSA',              amount:300,  color:'#3b82f6',
+        note:'VGRO — crescimento composto. Manter contribuicao mesmo nas fases de viagem.' },
+      { id:1006,label:'Brasil 2027',       amount:100,  color:'#22c55e',
+        note:'Comecar pequeno agora. Aumentar para $667/mes apos o Japao.' },
+      { id:1002,label:'Baby Fund',         amount:30,   color:'#ec4899',
+        note:'2029 — 3 anos de runway. Comecar cedo, aumentar gradualmente.' },
+      { id:1010,label:'Earlobe + Dental',  amount:50,   color:'#06b6d4',
+        note:'Juliana ~$2,000 + Nicolas ~$900. Prazo 2027. Verificar Sun Life.' },
+    ],
+    phase2: [
+      { id:1006,label:'Brasil 2027',       amount:667,  color:'#ef4444',
+        note:'Aumentar apos Japao — meta $4,000 ate Marco/2027.' },
+      { id:50, label:'Emergency Savings', amount:400,  color:'#f59e0b',
+        note:'Continuar construindo ate $33k.' },
+      { id:52, label:'TFSA',              amount:400,  color:'#3b82f6',
+        note:'Aumentar contribuicao — maximizar limite anual ($7,000/ano).' },
+      { id:1002,label:'Baby Fund',         amount:200,  color:'#ec4899',
+        note:'Aumentar — 2029 se aproxima. Meta $20,000.' },
+      { id:1010,label:'Earlobe + Dental',  amount:200,  color:'#06b6d4',
+        note:'Prazo se aproxima — reforcar contribuicao.' },
+    ],
+    phase3: [
+      { id:52, label:'TFSA',              amount:600,  color:'#3b82f6',
+        note:'Maximizar — $7,000/ano. Principal veiculo de aposentadoria.' },
+      { id:50, label:'Emergency Savings', amount:300,  color:'#f59e0b',
+        note:'Fase final ate $33k. Depois redirecionar para aposentadoria.' },
+      { id:1002,label:'Baby Fund',         amount:400,  color:'#ec4899',
+        note:'Sprint final — 2029 chegando. Meta $20,000.' },
+      { id:900, label:'Canada Life RRP',  amount:517,  color:'#8b5cf6',
+        note:'Auto-descontado do salario da Juliana. 5% + empresa dobra = $517/mes.' },
+    ]
+  };
+
+  const items = plans[phase] || plans.phase1;
+  const total = items.reduce((s,x)=>s+x.amount,0);
 
   let h = '';
   items.forEach(item => {
-    h += `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:12px">
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:500;color:var(--accent)">${walletLabel(item.id||0, item.label)}</div>
-        ${item.note ? `<div style="font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4">${esc(item.note)}</div>` : ''}
+    const em = WALLET_EMOJI[item.id] || '';
+    h += `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);gap:12px">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px">
+          ${em ? `<span class="emo" style="font-size:14px">${em}</span>` : ''}
+          <span>${esc(item.label)}</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4">${esc(item.note)}</div>
       </div>
-      <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:${item.color};white-space:nowrap">${fmt(item.amount)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mês</span></span>
+      <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:${item.color};white-space:nowrap;flex-shrink:0">${fmt(item.amount)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mes</span></span>
     </div>`;
   });
   h += `<div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:2px solid var(--border)">
-    <span style="font-size:13px;font-weight:600;color:var(--text)">Total savings/mês</span>
-    <span style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:700;color:var(--accent)">${fmt(total)}</span>
+    <span style="font-size:12px;font-weight:600;color:var(--text)">Total savings/mes</span>
+    <span style="font-family:'Geist Mono',monospace;font-size:14px;font-weight:700;color:var(--accent)">${fmt(total)}</span>
   </div>`;
 
   const recEl = document.getElementById('recommendations');
@@ -1940,7 +1990,8 @@ function sfUse(id) {
   const bal = +f.balance || 0;
   if (bal <= 0) { alert('Saldo zerado nesta categoria.'); return; }
 
-  const amtStr = prompt(`Quanto você gastou em "${f.icon} ${f.name}"?\n(Saldo disponível: $${bal.toFixed(0)})`, '');
+  const em = SF_EMOJI[f.id] || "";
+  const amtStr = prompt(`Quanto você gastou em "${em} ${f.name}"?\n(Saldo disponível: $${bal.toFixed(0)})`, '');
   if (!amtStr) return;
   const amt = parseFloat(amtStr);
   if (isNaN(amt) || amt <= 0) return;
@@ -2082,9 +2133,9 @@ function renderProvisions() {
 
       <!-- Header row: icon + name + balance + delete -->
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <span class="emo" style="font-size:22px;line-height:1">${f.icon || '📦'}</span>
+        <span class="emo" style="font-size:22px;line-height:1;flex-shrink:0">${SF_EMOJI[f.id] || '📦'}</span>
         <div style="flex:1">
-          <div style="font-size:15px;font-weight:600;color:var(--text)">${withEmoji(f.name)}</div>
+          <div style="font-size:15px;font-weight:600;color:var(--text)">${esc(f.name)}</div>
           <div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(f.note || '')}</div>
         </div>
         <div style="text-align:right">
@@ -2623,6 +2674,19 @@ const WALLET_EMOJI = {
   50: '🎯', 51: '🗾', 52: '📈', 1002: '👶', 1006: '🇧🇷', 1010: '💆', 900: '🏦',
 };
 
+// Sinking fund emoji by ID — kept in JS, not in data
+const SF_EMOJI = {
+  1: '🚗',  // Carro
+  2: '🏥',  // Saude
+  3: '🏠',  // Casa & Assinaturas
+  5: '🎁',  // Presentes & Datas
+};
+
+function sfLabel(id, name) {
+  const em = SF_EMOJI[id] || '📦';
+  return `<span class="emo">${em}</span> ${esc(name)}`;
+}
+
 // Returns "emoji Name" — emoji hardcoded in JS, name from data
 function catLabel(id, name) {
   const em = CAT_EMOJI[id] || '';
@@ -2658,7 +2722,7 @@ function renameGoal(id) {
 function renameSinkingFund(id) {
   const f = sinkingFunds.find(x => x.id === id);
   if (!f) return;
-  const v = prompt('Renomear categoria (pode usar emoji):', (f.icon? f.icon+' ':'') + f.name);
+  const v = prompt('Renomear categoria:', f.name);
   if (v !== null && v.trim()) {
     // Split leading emoji if present
     const parts = v.trim().match(/^(\p{Emoji}\uFE0F?)?\s*(.*)$/u);
