@@ -758,7 +758,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v7'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v8'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -1302,7 +1302,7 @@ function syncBudgetMonthSelect() {
 }
 
 function renderBudgetList() {
-  const TYPE_ORDER = {debt:0, fixed:1, needs:2, savings:3, provision:4, wants:5};
+  const TYPE_ORDER = {debt:0, fixed:1, savings:2, needs:3, provision:4, wants:5};
   const sorted = [...md().budget].sort((a,b) => (TYPE_ORDER[a.type]??9) - (TYPE_ORDER[b.type]??9));
   let h = '';
   sorted.forEach(b => {
