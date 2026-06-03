@@ -112,7 +112,7 @@
           "id": 1002,
           "name": "👶 Baby Fund",
           "type": "savings",
-          "budget": 0
+          "budget": 30
         },
         {
           "id": 1006,
@@ -124,7 +124,7 @@
           "id": 1010,
           "name": "💆 Earlobe + Dental",
           "type": "savings",
-          "budget": 0
+          "budget": 50
         },
         {
           "id": 60,
