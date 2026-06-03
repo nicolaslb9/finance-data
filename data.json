@@ -26,133 +26,133 @@
       "budget": [
         {
           "id": 20,
-          "name": "ð Car Financing",
+          "name": "🚙 Car Financing",
           "type": "debt",
           "budget": 592
         },
         {
           "id": 21,
-          "name": "ð iPhone Financing",
+          "name": "🍎 iPhone Financing",
           "type": "debt",
           "budget": 120
         },
         {
           "id": 10,
-          "name": "ð¡ Aluguel",
+          "name": "🏡 Aluguel",
           "type": "fixed",
           "budget": 2310
         },
         {
           "id": 11,
-          "name": "â¡ BC Hydro",
+          "name": "⚡ BC Hydro",
           "type": "fixed",
           "budget": 45
         },
         {
           "id": 12,
-          "name": "ð¶ Telus",
+          "name": "📶 Telus",
           "type": "fixed",
           "budget": 80
         },
         {
           "id": 13,
-          "name": "ð¡ï¸ Car Insurance",
+          "name": "🛡️ Car Insurance",
           "type": "fixed",
           "budget": 327
         },
         {
           "id": 14,
-          "name": "ð¡ï¸ Home Insurance",
+          "name": "🛡️ Home Insurance",
           "type": "fixed",
           "budget": 32
         },
         {
           "id": 15,
-          "name": "ð² Koodo Phone Plans",
+          "name": "📲 Koodo Phone Plans",
           "type": "fixed",
           "budget": 110
         },
         {
           "id": 1000,
-          "name": "ð§  Terapia",
+          "name": "🧠 Terapia",
           "type": "fixed",
           "budget": 400
         },
         {
           "id": 30,
-          "name": "ð Groceries",
+          "name": "🛒 Groceries",
           "type": "needs",
           "budget": 800
         },
         {
           "id": 31,
-          "name": "â½ Gas",
+          "name": "⛽ Gas",
           "type": "needs",
           "budget": 200
         },
         {
           "id": 50,
-          "name": "ð¯ Emergency Savings",
+          "name": "🎯 Emergency Savings",
           "type": "savings",
           "budget": 300
         },
         {
           "id": 51,
-          "name": "ð¯ðµ Japan Trip",
+          "name": "🇯🇵 Japan Trip",
           "type": "savings",
           "budget": 1000
         },
         {
           "id": 52,
-          "name": "ð TFSA",
+          "name": "📈 TFSA",
           "type": "savings",
           "budget": 300
         },
         {
           "id": 1002,
-          "name": "ð¶ Baby Fund",
+          "name": "👶 Baby Fund",
           "type": "savings",
           "budget": 30
         },
         {
           "id": 1006,
-          "name": "ð§ð· Brasil 2027",
+          "name": "🇧🇷 Brasil 2027",
           "type": "savings",
           "budget": 100
         },
         {
           "id": 1010,
-          "name": "ð Earlobe + Dental",
+          "name": "💆 Earlobe + Dental",
           "type": "savings",
           "budget": 50
         },
         {
           "id": 60,
-          "name": "ð§ Sinking Funds",
+          "name": "🔧 Sinking Funds",
           "type": "provision",
           "budget": 100
         },
         {
           "id": 40,
-          "name": "ð¸ Restaurante & Fun",
+          "name": "🍸 Restaurante & Fun",
           "type": "wants",
           "budget": 300
         },
         {
           "id": 42,
-          "name": "ð Subscriptions",
+          "name": "🔁 Subscriptions",
           "type": "wants",
           "budget": 108
         },
         {
           "id": 43,
-          "name": "ð Allowance Nicolas",
+          "name": "🎁 Allowance Nicolas",
           "type": "wants",
           "budget": 300
         },
         {
           "id": 44,
-          "name": "ð Allowance Juliana",
+          "name": "🎁 Allowance Juliana",
           "type": "wants",
           "budget": 300
         }
@@ -163,59 +163,35 @@
   "savings": {
     "wallets": [
       {
-        "id": 50,
-        "linkId": 50,
-        "name": "ð¯ Emergency Savings",
-        "amount": 7919,
-        "startingBalance": 7919
+        "id": 1,
+        "name": "Emergency Savings (Wealthsimple)",
+        "amount": 0
       },
       {
-        "id": 51,
-        "linkId": 51,
-        "name": "ð¯ðµ Japan Trip",
-        "amount": 300,
-        "startingBalance": 300
+        "id": 2,
+        "name": "Travel / Viagens",
+        "amount": 0
       },
       {
-        "id": 52,
-        "linkId": 52,
-        "name": "ð TFSA",
-        "amount": 3904,
-        "startingBalance": 3904
+        "id": 3,
+        "name": "TFSA",
+        "amount": 0
       },
       {
-        "id": 1002,
-        "linkId": 1002,
-        "name": "ð¶ Baby Fund",
-        "amount": 0,
-        "startingBalance": 0
+        "id": 4,
+        "name": "Retirement Fund (Canada Life)",
+        "amount": 0
       },
       {
-        "id": 1006,
-        "linkId": 1006,
-        "name": "ð§ð· Brasil 2027",
-        "amount": 0,
-        "startingBalance": 0
-      },
-      {
-        "id": 1010,
-        "linkId": 1010,
-        "name": "ð Earlobe + Dental",
-        "amount": 0,
-        "startingBalance": 0
-      },
-      {
-        "id": 900,
-        "linkId": null,
-        "name": "🏦 Canada Life RRP (Juliana)",
-        "amount": 5012,
-        "startingBalance": 5012
+        "id": 5,
+        "name": "College / Future Big Purchases",
+        "amount": 0
       }
     ],
     "goals": [
       {
         "id": 1,
-        "name": "Emergency Savings ($500/mÃªs)",
+        "name": "Emergency Savings ($500/mês)",
         "target": 10500,
         "saved": 7919,
         "monthly": 500
@@ -253,37 +229,37 @@
       {
         "id": 1,
         "name": "Carro",
-        "icon": "ð",
+        "icon": "🚗",
         "balance": 0,
         "monthlyContribution": 50,
-        "note": "Car wash, troca de Ã³leo, mecÃ¢nica, pneus, multas",
+        "note": "Car wash, troca de óleo, mecânica, pneus, multas",
         "history": []
       },
       {
         "id": 2,
-        "name": "SaÃºde",
-        "icon": "ð¥",
+        "name": "Saúde",
+        "icon": "🏥",
         "balance": 0,
         "monthlyContribution": 20,
-        "note": "Dentista, vitaminas, remÃ©dios, Ã³culos, fisio",
+        "note": "Dentista, vitaminas, remédios, óculos, fisio",
         "history": []
       },
       {
         "id": 3,
         "name": "Casa & Assinaturas",
-        "icon": "ð ",
+        "icon": "🏠",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "Costco membership, utensÃ­lios, manutenÃ§Ã£o do apt",
+        "note": "Costco membership, utensílios, manutenção do apt",
         "history": []
       },
       {
         "id": 5,
         "name": "Presentes & Datas",
-        "icon": "ð",
+        "icon": "🎁",
         "balance": 0,
         "monthlyContribution": 15,
-        "note": "AniversÃ¡rios, Natal, datas especiais, jantares de comemoraÃ§Ã£o",
+        "note": "Aniversários, Natal, datas especiais, jantares de comemoração",
         "history": []
       }
     ]
