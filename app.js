@@ -61,7 +61,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v26'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v27'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -2108,7 +2108,7 @@ const CAT_EMOJI = {
 
 // Wallet/goal emoji by ID
 const WALLET_EMOJI = {
-  50: '🎯', 51: '🗾', 52: '📈', 1002: '👶', 1006: '🇧🇷', 1010: '💆', 900: '🏦',
+  50: '🎯', 51: '🗾', 52: '📈', 1002: '👶', 1006: '🇧🇷', 1010: '💆', 900: '🏦', 1000: '🎓',
 };
 
 // Sinking fund emoji by ID — kept in JS, not in data
