@@ -155,6 +155,12 @@
           "name": "Allowance Juliana",
           "type": "wants",
           "budget": 300
+        },
+        {
+          "id": 1000,
+          "name": "Nova categoria",
+          "type": "needs",
+          "budget": 0
         }
       ],
       "transactions": [
