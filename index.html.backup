@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="N&J Budget">
+<meta name="theme-color" content="#2563eb">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>N&J Budget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/finance-data/styles.css?v=2026-06-v26">
+
+</head>
+<body>
+<div class="app">
+
+<nav class="sidebar">
+  <div class="logo">
+    <h1><span class="logo-dot"></span>N&amp;J Budget</h1>
+    <span id="month-label">Jun 2026</span>
+  </div>
+  <div class="nav">
+    <div class="nav-item active" onclick="showTab('overview')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="1" width="6" height="6" rx="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.2"/></svg>
+      Visão Geral
+    </div>
+    <div class="nav-item" onclick="showTab('budget')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h8M2 12h5"/></svg>
+      Orçamento
+    </div>
+    <div class="nav-item" onclick="showTab('transactions')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5h12M2 9h8M2 13h5"/><circle cx="13" cy="11" r="2.5"/><path d="M13 9.5v1l.8.8"/></svg>
+      Gastos
+    </div>
+    <div class="nav-item" onclick="showTab('savings')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8c0-2.76 2.24-5 5-5s5 2.24 5 5-2.24 5-5 5"/><path d="M8 6v2.5l1.5 1"/><path d="M1 13l3-3"/></svg>
+      Savings
+    </div>
+    <div class="nav-item" onclick="showTab('provisions')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v4l2.5 2.5"/><circle cx="8" cy="9" r="6"/></svg>
+      Provisões
+    </div>
+    <div class="nav-item" onclick="showTab('cardebt')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="4" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><path d="M1 9l2-5h10l2 5"/><path d="M1 9h14"/></svg>
+      Dívida Carro
+    </div>
+    <div class="nav-item" onclick="showTab('settings')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+      Configurações
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="sync-pill" id="sync-status"><span class="sync-dot"></span>não configurado</div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- OVERVIEW -->
+<div id="section-overview" class="section active fade-in">
+  <div class="page-header">
+    <div>
+      <h2>Visão Geral</h2>
+      <p>Resumo financeiro do mês</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div id="mobile-sync-badge" title="Status GitHub" style="cursor:pointer" onclick="showTab('settings')"></div>
+      <select id="month-sel" onchange="changeMonth()">
+        <option value="0">Jan 2026</option><option value="1">Fev 2026</option>
+        <option value="2">Mar 2026</option><option value="3">Abr 2026</option>
+        <option value="4">Mai 2026</option><option value="5" selected>Jun 2026</option>
+        <option value="6">Jul 2026</option><option value="7">Ago 2026</option>
+        <option value="8">Set 2026</option><option value="9">Out 2026</option>
+        <option value="10">Nov 2026</option><option value="11">Dez 2026</option>
+      </select>
+      <button class="btn btn-sm btn-primary" onclick="saveToGithub()">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 1v10M4 7l4 4 4-4M2 14h12"/></svg>
+        Salvar
+      </button>
+    </div>
+  </div>
+  <div class="metrics" id="metrics"></div>
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><h3>Gastos por tipo</h3><span class="sub" id="donut-total"></span></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-donut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Orçado vs gasto</h3></div>
+      <div id="bars"></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header"><h3>Gastos por categoria</h3></div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-cats"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Alertas</h3></div>
+      <div id="alerts"></div>
+    </div>
+  </div>
+
+  <!-- WEEKLY REPORT -->
+  <div class="card" id="weekly-report-card" style="margin-top:4px">
+    <div class="card-header">
+      <h3>📋 Relatório Semanal</h3>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span id="report-date-label" style="font-size:11px;color:var(--text3)"></span>
+        <button class="btn btn-sm" onclick="generateWeeklyReport()" id="report-gen-btn">Gerar agora</button>
+        <button class="btn btn-sm" onclick="requestNotificationPermission()" title="Ativar notificação semanal" style="font-size:12px;padding:5px 8px">🔔</button>
+      </div>
+    </div>
+    <div id="weekly-report-content">
+      <div style="padding:24px 0;text-align:center;color:var(--text3);font-size:13px">
+        Nenhum relatório ainda. Clique em "Gerar agora" para criar o primeiro.
+      </div>
+    </div>
+    <div id="report-loading" style="display:none;padding:20px 0;text-align:center">
+      <div style="display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--text3)">
+        <div style="width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite"></div>
+        Analisando seus dados com IA…
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BUDGET -->
+<div id="section-budget" class="section fade-in">
+  <div class="page-header">
+    <div><h2>Orçamento</h2><p>Planejamento mensal — alocação do income antes dos gastos</p></div>
+    <div style="display:flex;gap:8px">
+      <select id="budget-month-sel" onchange="changeMonth()" style="width:auto"></select>
+    </div>
+  </div>
+
+  <!-- ALLOCATION OVERVIEW -->
+  <div id="budget-overview-banner" style="margin-bottom:16px"></div>
+
+  <!-- 4 METRIC CARDS -->
+  <div class="metrics" id="budget-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
+
+  <!-- CHARTS ROW -->
+  <div class="grid3" style="margin-bottom:16px">
+    <div class="card" style="grid-column:span 1">
+      <div class="card-header"><h3>Alocação do income</h3><span class="sub" id="budget-pie-sub"></span></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-budget-pie"></canvas></div>
+    </div>
+    <div class="card" style="grid-column:span 2">
+      <div class="card-header"><h3>Orçado vs gasto por tipo</h3></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-budget-summary"></canvas></div>
+    </div>
+  </div>
+
+  <!-- WATERFALL — income breakdown -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>Cascata do income</h3><span class="sub">onde vai cada dólar</span></div>
+    <div id="budget-waterfall"></div>
+  </div>
+
+  <!-- SINKING FUNDS LINK CARD -->
+  <div id="budget-sinking-card" style="margin-bottom:16px"></div>
+
+  <!-- INCOME + CATEGORIES -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header"><h3>Renda do mês</h3><span class="sub" id="income-total-label"></span></div>
+      <div class="income-tbl">
+        <div class="tbl-header">
+          <span class="col-lbl">Fonte</span><span class="col-lbl">Valor (CAD)</span><span></span>
+        </div>
+        <div id="income-list"></div>
+      </div>
+      <button class="btn btn-sm" style="margin-top:10px" onclick="addIncome()">+ Adicionar fonte</button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Resumo por tipo</h3>
+        <span class="sub" id="budget-unalloc-label"></span>
+      </div>
+      <div id="budget-type-summary"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-header"><h3>Categorias</h3><button class="btn btn-sm btn-primary" onclick="addBudgetItem()">+ Categoria</button></div>
+    <div class="budget-tbl">
+      <div class="tbl-header">
+        <span class="col-lbl">Nome</span>
+        <span class="col-lbl">Tipo</span>
+        <span class="col-lbl">Orçado</span>
+        <span class="col-lbl budget-spent-col">Gasto</span>
+        <span class="col-lbl budget-bal-col">Saldo</span>
+        <span></span>
+      </div>
+      <div id="budget-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSACTIONS -->
+<div id="section-transactions" class="section fade-in">
+  <div class="page-header">
+    <div><h2>Gastos</h2><p>Subtrai automaticamente do orçamento</p></div>
+    <button class="btn btn-primary" onclick="addTx()">+ Adicionar gasto</button>
+  </div>
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><h3>Gastos no mês</h3></div>
+      <div class="chart-wrap" style="height:160px"><canvas id="chart-tx-timeline"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Top categorias</h3></div>
+      <div id="top-cats"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Todas as transações</h3><span class="sub" id="tx-count"></span></div>
+    <div class="tx-tbl">
+      <div class="tbl-header">
+        <span class="col-lbl">Data</span>
+        <span class="col-lbl">Categoria</span>
+        <span class="col-lbl tx-desc-col">Descrição</span>
+        <span class="col-lbl">Valor</span>
+        <span class="col-lbl tx-type-col">Tipo</span>
+        <span></span>
+      </div>
+      <div id="tx-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVINGS -->
+<div id="section-savings" class="section fade-in">
+  <div class="page-header"><div><h2>Savings &amp; Metas</h2><p>Patrimônio, metas e plano de aposentadoria</p></div></div>
+
+  <!-- METRICS ROW -->
+  <div class="metrics" id="savings-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
+
+  <!-- PATRIMÔNIO + RECOMENDAÇÕES -->
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><h3>Patrimônio por conta</h3><span class="sub" style="font-size:10px" id="wallet-total-label">🔗 puxa do orçamento · editável</span></div>
+      <div class="chart-wrap" style="height:190px"><canvas id="chart-wallet-pie"></canvas></div>
+      <div style="margin-top:14px">
+        <div id="wallet-list"></div>
+        <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em">Total</span>
+          <span id="wallet-total" style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:600;color:var(--green)">$0</span>
+        </div>
+        <button class="btn btn-sm" style="margin-top:10px" onclick="addWallet()">+ Conta</button>
+      </div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#eff6ff 0%,#f5f3ff 100%);border-color:#dbeafe">
+      <div class="card-header"><h3 style="color:#1e40af">💡 Recomendações do Mês</h3><span class="sub" id="rec-phase-label" style="color:#3b82f6"></span></div>
+      <div id="recommendations"></div>
+    </div>
+  </div>
+
+  <!-- PLANO FASEADO -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>📋 Plano de Savings — Fases</h3><span class="sub">baseado nas suas metas e renda</span></div>
+    <div id="phases-plan"></div>
+  </div>
+
+  <!-- APOSENTADORIA -->
+  <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#f0fdf4 0%,#eff6ff 100%);border-color:#bbf7d0">
+    <div class="card-header"><h3 style="color:#15803d">🏖️ Projeção de Aposentadoria</h3><span class="sub">meta: $6,000/mês aos 55 anos</span></div>
+    <div id="retirement-projection"></div>
+  </div>
+
+  <!-- METAS -->
+  <div class="card">
+    <div class="card-header"><h3>Todas as metas</h3><button class="btn btn-sm" onclick="addGoal()">+ Meta</button></div>
+    <div id="goals-list"></div>
+  </div>
+</div>
+
+<!-- PROVISIONS -->
+<div id="section-provisions" class="section fade-in">
+
+  <!-- HEADER + CONCEPT SIDE BY SIDE -->
+  <div class="grid2" style="margin-bottom:16px;align-items:start">
+    <div>
+      <h2 style="font-size:20px;font-weight:600;letter-spacing:-0.4px;margin-bottom:4px">Sinking Funds</h2>
+      <p style="font-size:13px;color:var(--text3);margin-bottom:16px">Valor mensal flexível, distribuído em categorias</p>
+      <div id="sf-metrics" class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:0"></div>
+    </div>
+    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px 18px">
+      <div style="font-size:12px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">💡 O que são Sinking Funds?</div>
+      <div style="font-size:13px;color:#92400e;line-height:1.7">
+        É uma reserva para gastos <strong>previsíveis mas irregulares</strong> — coisas que você sabe que vão acontecer, mas não todo mês.<br><br>
+        Todo mês você separa um valor antes de gastar. Pode variar quanto quiser — edite a contribuição de cada categoria com o botão "Editar". O total atualiza sozinho no orçamento.
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTRIBUTE BAR -->
+  <div id="sf-contribute-bar" style="margin-bottom:16px"></div>
+
+  <!-- CATEGORY CARDS -->
+  <div id="sf-categories"></div>
+
+  <!-- ADD CATEGORY -->
+  <div style="margin-top:4px">
+    <button class="btn btn-sm" onclick="sfAddCategory()">+ Nova categoria</button>
+  </div>
+</div>
+
+<!-- CAR DEBT -->
+<div id="section-cardebt" class="section fade-in">
+  <div class="page-header">
+    <div><h2>Dívida do Carro</h2><p>Financiamento · 9.49% a.a. · Vence Nov 2028</p></div>
+  </div>
+  <div class="metrics" id="car-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header"><h3>Amortização mensal</h3></div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-car-amort"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Saldo devedor ao longo do tempo</h3></div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-car-balance"></canvas></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>💡 Qual é a melhor estratégia?</h3></div>
+    <div id="car-recommendations"></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Simulador de aporte</h3><span class="sub">veja quanto economiza dando um valor extra agora</span></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <label style="font-size:13px;color:var(--text2)">Aporte extra:</label>
+      <input type="number" id="car-lump-input" value="1000" min="0" step="500" style="width:130px" oninput="renderCarLumpSim()">
+      <span style="font-size:13px;color:var(--text3)">CAD</span>
+    </div>
+    <div id="car-lump-result"></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="section-settings" class="section fade-in">
+  <div class="page-header"><div><h2>Configurações</h2><p>Sync com GitHub</p></div></div>
+  <div class="card">
+    <div class="settings-group">
+      <h4>GitHub Sync</h4>
+      <div class="settings-row"><label>Usuário GitHub</label><input type="text" id="cfg-user" placeholder="seu-usuario" oninput="saveCfg()"></div>
+      <div class="settings-row"><label>Repositório</label><input type="text" id="cfg-repo" placeholder="finance-data" oninput="saveCfg()"></div>
+      <div class="settings-row"><label>Personal Access Token</label><input type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxx" oninput="saveCfg()"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="testConnection()">Testar conexão</button>
+        <button class="btn" onclick="loadFromGithub()">Carregar dados</button>
+        <button class="btn" onclick="saveToGithub()">Salvar agora</button>
+      </div>
+      <div id="cfg-status" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
+    </div>
+    <div class="settings-group" style="border-top:1px solid var(--border);padding-top:16px">
+      <h4>Como configurar</h4>
+      <ol style="font-size:13px;color:var(--text2);line-height:2.2;padding-left:18px">
+        <li>Crie repositório público no GitHub chamado <code style="background:var(--bg3);padding:1px 6px;border-radius:4px;font-family:'Geist Mono',monospace">finance-data</code></li>
+        <li>Vá em <b>Settings → Developer settings → Personal access tokens → Tokens (classic)</b></li>
+        <li>Gere token com permissão <code style="background:var(--bg3);padding:1px 6px;border-radius:4px;font-family:'Geist Mono',monospace">repo</code></li>
+        <li>Cole o token acima e clique <b>Testar conexão</b></li>
+        <li>Salve este <code style="background:var(--bg3);padding:1px 6px;border-radius:4px;font-family:'Geist Mono',monospace">index.html</code> no repositório e ative GitHub Pages</li>
+      </ol>
+    </div>
+    <div class="settings-group" style="border-top:1px solid var(--border);padding-top:16px">
+      <h4>Backup local</h4>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="exportData()">Exportar JSON</button>
+        <button class="btn btn-sm" onclick="document.getElementById('import-file').click()">Importar JSON</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn btn-sm" style="color:var(--red);border-color:#fecaca" onclick="if(confirm('Apagar todos os dados?'))resetData()">Resetar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script src="/finance-data/app.js?v=2026-06-v26"></script>
+
+</body>
+</html>
