@@ -1,5 +1,5 @@
 // Bump this version to force all clients to update immediately
-const CACHE_VERSION = 'finance-v3';
+const CACHE_VERSION = 'finance-v4';
 
 self.addEventListener('install', e => {
   // Skip waiting so new SW activates immediately
@@ -26,8 +26,9 @@ self.addEventListener('fetch', e => {
     return; // pass through to network
   }
 
-  // For the app HTML — network first, cache fallback (offline only)
-  if (e.request.mode === 'navigate' || url.endsWith('index.html') || url.endsWith('/')) {
+  // For app HTML, app.js, styles.css — network first, cache fallback (always fresh code)
+  if (e.request.mode === 'navigate' || url.endsWith('index.html') || url.endsWith('/') ||
+      url.includes('app.js') || url.includes('styles.css')) {
     e.respondWith(
       fetch(e.request)
         .then(res => {
