@@ -6,6 +6,7 @@ function render() {
   renderBars();
   renderCatChart();
   renderAlerts();
+  renderHistory();
   renderIncomeList();
   syncProvisionBudget();
   renderBudgetList();
