@@ -487,7 +487,7 @@ function renderWallets() {
       </div>
       <div style="display:flex;align-items:center;gap:6px">
         <input class="wallet-amt" type="number" value="${w.amount}" min="0" style="width:100px;text-align:right${linked?';color:'+color+';font-weight:600':''}" onchange="setWalletManual(${w.id}, +this.value)" title="${linked?'Vinculado ao orçamento — mas você pode ajustar manualmente':'Editável'}">
-        <button class="del-btn" onclick="savings.wallets=savings.wallets.filter(x=>x.id!==${w.id});renderWallets();renderWalletPie();autoSave()">×</button>
+        <button class="del-btn" onclick="if(confirm('Remover a conta \'${esc(w.name)}\' do patrimonio?')){savings.wallets=savings.wallets.filter(x=>x.id!==${w.id});renderWallets();renderWalletPie();autoSave()}">×</button>
       </div>
     </div>`;
   });
