@@ -511,10 +511,16 @@
       {
         "id": 5,
         "name": "Presentes & Datas",
-        "balance": 15,
+        "balance": 0,
         "monthlyContribution": 15,
         "note": "Aniversarios, Natal, datas especiais, jantares de comemoracao",
-        "history": [],
+        "history": [
+          {
+            "date": "2026-06-05",
+            "amount": 15,
+            "desc": ""
+          }
+        ],
         "lastContribution": "2026-06"
       }
     ]
