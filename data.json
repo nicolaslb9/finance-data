@@ -466,10 +466,16 @@
       {
         "id": 1,
         "name": "Carro",
-        "balance": 50,
+        "balance": 0,
         "monthlyContribution": 50,
         "note": "Car wash, troca de oleo, mecanica, pneus, multas",
-        "history": [],
+        "history": [
+          {
+            "date": "2026-06-05",
+            "amount": 50,
+            "desc": ""
+          }
+        ],
         "lastContribution": "2026-06"
       },
       {
