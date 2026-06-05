@@ -2,7 +2,7 @@
 
 function totalIncome() { return md().income.reduce((s,i)=>s+(+i.amount||0),0); }
 function getIncome(id) { return md().income.find(x=>x.id===id); }
-function removeIncome(id) { md().income = md().income.filter(x=>x.id!==id); render(); autoSave(); }
+function removeIncome(id) { if(!confirm('Remover esta linha de renda?')) return; md().income = md().income.filter(x=>x.id!==id); render(); autoSave(); }
 function addIncome() { md().income.push({id:nextId++,label:'Nova renda',amount:0}); render(); autoSave(); }
 
 function syncBudgetMonthSelect() {
@@ -13,7 +13,7 @@ function syncBudgetMonthSelect() {
 }
 
 function getBudget(id) { return md().budget.find(x=>x.id===id); }
-function removeBudget(id) { md().budget = md().budget.filter(x=>x.id!==id); render(); renderBudgetOverview(); autoSave(); }
+function removeBudget(id) { const b=getBudget(id); if(!confirm(`Remover a categoria "${b?b.name:''}"?`)) return; md().budget = md().budget.filter(x=>x.id!==id); render(); renderBudgetOverview(); autoSave(); }
 function addBudgetItem() { md().budget.push({id:nextId++,name:'Nova categoria',type:'needs',budget:0}); render(); renderBudgetOverview(); autoSave(); }
 
 function syncProvisionBudget() {
