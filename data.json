@@ -466,34 +466,38 @@
       {
         "id": 1,
         "name": "Carro",
-        "balance": 0,
+        "balance": 50,
         "monthlyContribution": 50,
         "note": "Car wash, troca de oleo, mecanica, pneus, multas",
-        "history": []
+        "history": [],
+        "lastContribution": "2026-06"
       },
       {
         "id": 2,
         "name": "Saude",
-        "balance": 0,
+        "balance": 20,
         "monthlyContribution": 20,
         "note": "Dentista, vitaminas, remedios, oculos, fisio",
-        "history": []
+        "history": [],
+        "lastContribution": "2026-06"
       },
       {
         "id": 3,
         "name": "Casa & Assinaturas",
-        "balance": 0,
+        "balance": 15,
         "monthlyContribution": 15,
         "note": "Costco membership, utensilios, manutencao do apt",
-        "history": []
+        "history": [],
+        "lastContribution": "2026-06"
       },
       {
         "id": 5,
         "name": "Presentes & Datas",
-        "balance": 0,
+        "balance": 15,
         "monthlyContribution": 15,
         "note": "Aniversarios, Natal, datas especiais, jantares de comemoracao",
-        "history": []
+        "history": [],
+        "lastContribution": "2026-06"
       }
     ]
   }
