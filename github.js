@@ -82,7 +82,24 @@ async function saveToGithub() {
   const content = btoa(unescape(encodeURIComponent(payload)));
   try {
     let sha;
-    try { const ex = await githubRequest('GET','data.json'); sha=ex.sha; } catch(e){}
+    let prevContent = null;
+    try {
+      const ex = await githubRequest('GET','data.json');
+      sha = ex.sha;
+      prevContent = ex.content; // base64 of current (pre-save) data — used for backup
+    } catch(e){}
+
+    // Backup: keep the previous data.json as data.json.bak before overwriting
+    if (prevContent) {
+      try {
+        let bakSha;
+        try { const b = await githubRequest('GET','data.json.bak'); bakSha=b.sha; } catch(e){}
+        const bakBody = { message:'backup before '+new Date().toISOString(), content: prevContent.replace(/\n/g,'') };
+        if (bakSha) bakBody.sha = bakSha;
+        await githubRequest('PUT','data.json.bak',bakBody);
+      } catch(e) { /* backup is best-effort, never blocks the main save */ }
+    }
+
     const body = { message:'update '+new Date().toISOString(), content };
     if (sha) body.sha = sha;
     await githubRequest('PUT','data.json',body);
