@@ -111,7 +111,8 @@ function typeColor(t) { return {fixed:'#94a3b8',debt:'#ef4444',needs:'#22c55e',w
 function typeLightColor(t) { return {fixed:'#f8fafc',debt:'#fef2f2',needs:'#f0fdf4',wants:'#eff6ff',savings:'#f5f3ff',provision:'#fffbeb'}[t]||'#f8fafc'; }
 
 function getTx(id) { return md().transactions.find(x=>x.id===id); }
-function removeTx(id) { md().transactions = md().transactions.filter(x=>x.id!==id); render(); autoSave(); }
+function removeTx(id) {
+  if(!confirm('Remover esta transacao?')) return; md().transactions = md().transactions.filter(x=>x.id!==id); render(); autoSave(); }
 function addTx() {
   const today = new Date().toISOString().slice(0,10);
   md().transactions.unshift({id:nextId++,date:today,cat:md().budget[0]?.id||10,desc:'',amount:0});
