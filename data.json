@@ -481,19 +481,31 @@
       {
         "id": 2,
         "name": "Saude",
-        "balance": 20,
+        "balance": 0,
         "monthlyContribution": 20,
         "note": "Dentista, vitaminas, remedios, oculos, fisio",
-        "history": [],
+        "history": [
+          {
+            "date": "2026-06-05",
+            "amount": 20,
+            "desc": ""
+          }
+        ],
         "lastContribution": "2026-06"
       },
       {
         "id": 3,
         "name": "Casa & Assinaturas",
-        "balance": 15,
+        "balance": 0,
         "monthlyContribution": 15,
         "note": "Costco membership, utensilios, manutencao do apt",
-        "history": [],
+        "history": [
+          {
+            "date": "2026-06-05",
+            "amount": 15,
+            "desc": ""
+          }
+        ],
         "lastContribution": "2026-06"
       },
       {
