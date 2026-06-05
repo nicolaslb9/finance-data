@@ -1130,22 +1130,46 @@ function renderHistory() {
   const el = document.getElementById('history-trend');
   if (!el) return;
 
-  // Collect months that have data, sorted chronologically, take last 6
   const monthKeys = Object.keys(data).map(Number).sort((a,b)=>a-b);
-  const recent = monthKeys.slice(-6);
-  if (recent.length < 2) {
+  if (monthKeys.length < 2) {
     el.innerHTML = '<div class="empty">Histórico aparecerá conforme você usar o app em meses diferentes.</div>';
     return;
   }
 
-  // Spending per category per month (needs + wants + the variable stuff that matters)
-  // Use the current month's budget categories as the reference set
+  // Selected months persisted in a global; default = last 6 (or all if fewer)
+  if (!window._historyMonths) {
+    window._historyMonths = monthKeys.slice(-6);
+  }
+  // Keep only still-valid months
+  window._historyMonths = window._historyMonths.filter(m => monthKeys.includes(m));
+  if (window._historyMonths.length === 0) window._historyMonths = monthKeys.slice(-6);
+
+  const selected = window._historyMonths.slice().sort((a,b)=>a-b);
+
+  // ── Month selector chips ──
+  let h = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center">';
+  h += '<span style="font-size:11px;color:var(--text3);margin-right:2px">Comparar meses:</span>';
+  monthKeys.forEach(mk => {
+    const on = selected.includes(mk);
+    h += `<button onclick="toggleHistoryMonth(${mk})" style="
+      font-size:11px;padding:4px 10px;border-radius:14px;cursor:pointer;white-space:nowrap;
+      border:1px solid ${on?'var(--accent)':'var(--border2)'};
+      background:${on?'var(--accent)':'transparent'};
+      color:${on?'#fff':'var(--text2)'};font-weight:${on?'600':'400'};transition:all .12s">
+      ${MONTHS[mk]}</button>`;
+  });
+  h += '</div>';
+
+  if (selected.length < 1) {
+    el.innerHTML = h + '<div class="empty">Selecione ao menos um mês acima.</div>';
+    return;
+  }
+
   const cats = md().budget.filter(b => ['needs','wants','savings'].includes(b.type));
 
-  // Build a table: rows = categories, cols = months
-  let h = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
+  h += '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
   h += '<thead><tr><th style="text-align:left;padding:6px 8px;color:var(--text3);font-weight:600;position:sticky;left:0;background:var(--bg)">Categoria</th>';
-  recent.forEach(mk => {
+  selected.forEach(mk => {
     h += `<th style="text-align:right;padding:6px 8px;color:var(--text3);font-weight:600;white-space:nowrap">${MONTHS[mk].slice(0,3)}</th>`;
   });
   h += '</tr></thead><tbody>';
@@ -1154,12 +1178,11 @@ function renderHistory() {
     const em = CAT_EMOJI[cat.id] || '';
     h += `<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px;white-space:nowrap;position:sticky;left:0;background:var(--bg)">${em?`<span class="emo">${em}</span> `:''}${esc(cat.name)}</td>`;
     let prev = null;
-    recent.forEach(mk => {
+    selected.forEach(mk => {
       const month = data[mk];
       const spent = (month && month.transactions)
         ? month.transactions.filter(t => t.cat === cat.id).reduce((s,t)=>s+(+t.amount||0),0)
         : 0;
-      // Color: red if up vs previous month, green if down
       let color = 'var(--text2)';
       if (prev !== null && spent > 0 && prev > 0) {
         if (spent > prev * 1.1) color = 'var(--red)';
@@ -1171,19 +1194,24 @@ function renderHistory() {
     h += '</tr>';
   });
 
-  // Total row
   h += `<tr style="border-top:2px solid var(--border2);font-weight:700"><td style="text-align:left;padding:6px 8px;position:sticky;left:0;background:var(--bg)">Total gasto</td>`;
-  recent.forEach(mk => {
+  selected.forEach(mk => {
     const month = data[mk];
     const total = (month && month.transactions)
       ? month.transactions.reduce((s,t)=>s+(+t.amount||0),0)
       : 0;
     h += `<td style="text-align:right;padding:6px 8px;font-family:'Geist Mono',monospace;white-space:nowrap">${total>0?fmt(total):'—'}</td>`;
   });
-  h += '</tr>';
-
-  h += '</tbody></table></div>';
-  h += '<div style="font-size:10px;color:var(--text3);margin-top:8px;font-style:italic">🔴 gasto subiu &gt;10% vs mês anterior · 🟢 caiu &gt;10%</div>';
+  h += '</tr></tbody></table></div>';
+  h += '<div style="font-size:10px;color:var(--text3);margin-top:8px;font-style:italic">🔴 gasto subiu &gt;10% vs mês anterior selecionado · 🟢 caiu &gt;10%</div>';
 
   el.innerHTML = h;
+}
+
+function toggleHistoryMonth(mk) {
+  if (!window._historyMonths) window._historyMonths = [];
+  const i = window._historyMonths.indexOf(mk);
+  if (i >= 0) window._historyMonths.splice(i, 1);
+  else window._historyMonths.push(mk);
+  renderHistory();
 }
