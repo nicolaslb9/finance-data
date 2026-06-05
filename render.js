@@ -1136,21 +1136,27 @@ function renderHistory() {
     return;
   }
 
-  // Selected months persisted in a global; default = last 6 (or all if fewer)
-  if (!window._historyMonths) {
-    window._historyMonths = monthKeys.slice(-6);
-  }
-  // Keep only still-valid months
+  // ── Selected months (default last 6) ──
+  if (!window._historyMonths) window._historyMonths = monthKeys.slice(-6);
   window._historyMonths = window._historyMonths.filter(m => monthKeys.includes(m));
   if (window._historyMonths.length === 0) window._historyMonths = monthKeys.slice(-6);
+  const selMonths = window._historyMonths.slice().sort((a,b)=>a-b);
 
-  const selected = window._historyMonths.slice().sort((a,b)=>a-b);
+  // ── All comparable categories (reference = current month budget) ──
+  const allCats = md().budget.filter(b => ['needs','wants','savings'].includes(b.type));
+  const allCatIds = allCats.map(c => c.id);
+
+  // ── Selected categories (default = all) ──
+  if (!window._historyCats) window._historyCats = allCatIds.slice();
+  window._historyCats = window._historyCats.filter(id => allCatIds.includes(id));
+  if (window._historyCats.length === 0 && !window._historyCatsCleared) window._historyCats = allCatIds.slice();
+  const selCats = allCats.filter(c => window._historyCats.includes(c.id));
 
   // ── Month selector chips ──
-  let h = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center">';
-  h += '<span style="font-size:11px;color:var(--text3);margin-right:2px">Comparar meses:</span>';
+  let h = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center">';
+  h += '<span style="font-size:11px;color:var(--text3);margin-right:2px">Meses:</span>';
   monthKeys.forEach(mk => {
-    const on = selected.includes(mk);
+    const on = selMonths.includes(mk);
     h += `<button onclick="toggleHistoryMonth(${mk})" style="
       font-size:11px;padding:4px 10px;border-radius:14px;cursor:pointer;white-space:nowrap;
       border:1px solid ${on?'var(--accent)':'var(--border2)'};
@@ -1160,25 +1166,40 @@ function renderHistory() {
   });
   h += '</div>';
 
-  if (selected.length < 1) {
-    el.innerHTML = h + '<div class="empty">Selecione ao menos um mês acima.</div>';
-    return;
-  }
+  // ── Category selector chips ──
+  h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center">';
+  h += '<span style="font-size:11px;color:var(--text3);margin-right:2px">Categorias:</span>';
+  allCats.forEach(cat => {
+    const on = window._historyCats.includes(cat.id);
+    const em = CAT_EMOJI[cat.id] || '';
+    h += `<button onclick="toggleHistoryCat(${cat.id})" style="
+      font-size:11px;padding:4px 9px;border-radius:14px;cursor:pointer;white-space:nowrap;
+      border:1px solid ${on?'var(--accent)':'var(--border2)'};
+      background:${on?'var(--accent)':'transparent'};
+      color:${on?'#fff':'var(--text2)'};font-weight:${on?'600':'400'};transition:all .12s">
+      ${em?`<span class="emo">${em}</span> `:''}${esc(cat.name)}</button>`;
+  });
+  // All / Clear shortcuts
+  h += `<button onclick="historyCatsAll()" style="font-size:10px;padding:4px 8px;border-radius:14px;cursor:pointer;border:1px dashed var(--border2);background:transparent;color:var(--text3)">Todas</button>`;
+  h += `<button onclick="historyCatsClear()" style="font-size:10px;padding:4px 8px;border-radius:14px;cursor:pointer;border:1px dashed var(--border2);background:transparent;color:var(--text3)">Limpar</button>`;
+  h += '</div>';
 
-  const cats = md().budget.filter(b => ['needs','wants','savings'].includes(b.type));
+  if (selMonths.length < 1) { el.innerHTML = h + '<div class="empty">Selecione ao menos um mês.</div>'; return; }
+  if (selCats.length < 1)   { el.innerHTML = h + '<div class="empty">Selecione ao menos uma categoria.</div>'; return; }
 
+  // ── Table ──
   h += '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
   h += '<thead><tr><th style="text-align:left;padding:6px 8px;color:var(--text3);font-weight:600;position:sticky;left:0;background:var(--bg)">Categoria</th>';
-  selected.forEach(mk => {
+  selMonths.forEach(mk => {
     h += `<th style="text-align:right;padding:6px 8px;color:var(--text3);font-weight:600;white-space:nowrap">${MONTHS[mk].slice(0,3)}</th>`;
   });
   h += '</tr></thead><tbody>';
 
-  cats.forEach(cat => {
+  selCats.forEach(cat => {
     const em = CAT_EMOJI[cat.id] || '';
     h += `<tr style="border-top:1px solid var(--border)"><td style="text-align:left;padding:6px 8px;white-space:nowrap;position:sticky;left:0;background:var(--bg)">${em?`<span class="emo">${em}</span> `:''}${esc(cat.name)}</td>`;
     let prev = null;
-    selected.forEach(mk => {
+    selMonths.forEach(mk => {
       const month = data[mk];
       const spent = (month && month.transactions)
         ? month.transactions.filter(t => t.cat === cat.id).reduce((s,t)=>s+(+t.amount||0),0)
@@ -1194,11 +1215,12 @@ function renderHistory() {
     h += '</tr>';
   });
 
-  h += `<tr style="border-top:2px solid var(--border2);font-weight:700"><td style="text-align:left;padding:6px 8px;position:sticky;left:0;background:var(--bg)">Total gasto</td>`;
-  selected.forEach(mk => {
+  // Total row (only selected categories)
+  h += `<tr style="border-top:2px solid var(--border2);font-weight:700"><td style="text-align:left;padding:6px 8px;position:sticky;left:0;background:var(--bg)">Total (selecionadas)</td>`;
+  selMonths.forEach(mk => {
     const month = data[mk];
     const total = (month && month.transactions)
-      ? month.transactions.reduce((s,t)=>s+(+t.amount||0),0)
+      ? month.transactions.filter(t => window._historyCats.includes(t.cat)).reduce((s,t)=>s+(+t.amount||0),0)
       : 0;
     h += `<td style="text-align:right;padding:6px 8px;font-family:'Geist Mono',monospace;white-space:nowrap">${total>0?fmt(total):'—'}</td>`;
   });
@@ -1213,5 +1235,27 @@ function toggleHistoryMonth(mk) {
   const i = window._historyMonths.indexOf(mk);
   if (i >= 0) window._historyMonths.splice(i, 1);
   else window._historyMonths.push(mk);
+  renderHistory();
+}
+
+function toggleHistoryCat(id) {
+  if (!window._historyCats) window._historyCats = [];
+  const i = window._historyCats.indexOf(id);
+  if (i >= 0) window._historyCats.splice(i, 1);
+  else window._historyCats.push(id);
+  window._historyCatsCleared = (window._historyCats.length === 0);
+  renderHistory();
+}
+
+function historyCatsAll() {
+  const allCatIds = md().budget.filter(b => ['needs','wants','savings'].includes(b.type)).map(c=>c.id);
+  window._historyCats = allCatIds.slice();
+  window._historyCatsCleared = false;
+  renderHistory();
+}
+
+function historyCatsClear() {
+  window._historyCats = [];
+  window._historyCatsCleared = true;
   renderHistory();
 }
