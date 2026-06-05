@@ -105,12 +105,14 @@ async function saveToGithub() {
     await githubRequest('PUT','data.json',body);
     const now = new Date();
     localStorage.setItem('last_save_time', now.toISOString());
+    window._unsavedChanges = false;
     setSyncStatus('salvo ✓', 'saved');
     localStorage.setItem('finance_data',JSON.stringify(data));
     localStorage.setItem('finance_savings',JSON.stringify(savings));
     updateSaveButton('saved', now);
   } catch(e) {
-    setSyncStatus('erro ao salvar','error');
+    window._unsavedChanges = true;
+    setSyncStatus('⚠ não salvo na nuvem','error');
     updateSaveButton('error');
   }
 }
@@ -270,3 +272,13 @@ tryAutoLoad();
 // ===== UI helpers (FAB) =====
 
 // Show FAB only on mobile and only on transactions tab
+
+
+// Warn before leaving if there are unsaved cloud changes
+window.addEventListener('beforeunload', (e) => {
+  if (window._unsavedChanges) {
+    e.preventDefault();
+    e.returnValue = '';
+    return '';
+  }
+});
