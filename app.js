@@ -100,7 +100,6 @@ function changeMonth() {
 }
 
 // COMPUTED
-function totalIncome() { return md().income.reduce((s,i)=>s+(+i.amount||0),0); }
 function spentForCat(id) { return md().transactions.filter(t=>t.cat===id).reduce((s,t)=>s+(+t.amount||0),0); }
 function totalByType(type) { return md().budget.filter(b=>b.type===type).reduce((s,b)=>s+(+b.budget||0),0); }
 function spentByType(type) { return md().budget.filter(b=>b.type===type).reduce((s,b)=>s+spentForCat(b.id),0); }
@@ -270,10 +269,6 @@ function renderIncomeList() {
   const lbl = document.getElementById('income-total-label');
   if (lbl) lbl.textContent = fmt(total) + ' total';
 }
-
-function getIncome(id) { return md().income.find(x=>x.id===id); }
-function removeIncome(id) { md().income = md().income.filter(x=>x.id!==id); render(); autoSave(); }
-function addIncome() { md().income.push({id:nextId++,label:'Nova renda',amount:0}); render(); autoSave(); }
 
 function renderBudgetSummaryChart() {
   destroyChart('budget-summary');
@@ -584,13 +579,6 @@ function renderBudgetOverview() {
   syncBudgetMonthSelect();
 }
 
-function syncBudgetMonthSelect() {
-  const sel = document.getElementById('budget-month-sel');
-  if (!sel) return;
-  const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  sel.innerHTML = MONTHS_SHORT.map((m,i)=>`<option value="${i}"${i===currentMonth?' selected':''}>${m} 2026</option>`).join('');
-}
-
 function renderBudgetList() {
   const TYPE_ORDER = {debt:0, fixed:1, savings:2, needs:3, provision:4, wants:5};
   const sorted = [...md().budget].sort((a,b) => (TYPE_ORDER[a.type]??9) - (TYPE_ORDER[b.type]??9));
@@ -615,10 +603,6 @@ function renderBudgetList() {
   });
   document.getElementById('budget-list').innerHTML = h;
 }
-
-function getBudget(id) { return md().budget.find(x=>x.id===id); }
-function removeBudget(id) { md().budget = md().budget.filter(x=>x.id!==id); render(); renderBudgetOverview(); autoSave(); }
-function addBudgetItem() { md().budget.push({id:nextId++,name:'Nova categoria',type:'needs',budget:0}); render(); renderBudgetOverview(); autoSave(); }
 
 function renderTxTimeline() {
   destroyChart('tx-timeline');
@@ -736,41 +720,6 @@ function renderWalletPie() {
 }
 
 // Sum of all deposits made to a linked savings category across ALL months
-function depositsForLink(linkId) {
-  if (!linkId) return 0;
-  let total = 0;
-  for (const mk in data) {
-    const month = data[mk];
-    if (!month.transactions) continue;
-    for (const tx of month.transactions) {
-      if (tx.cat === linkId) total += (+tx.amount || 0);
-    }
-  }
-  return total;
-}
-
-// Effective wallet balance = starting balance + linked deposits
-function walletBalance(w) {
-  // Base value (manually set / starting) + auto deposits from linked budget category
-  const base = (+w.startingBalance || 0);
-  const deposits = w.linkId ? depositsForLink(w.linkId) : 0;
-  return base + deposits;
-}
-
-// When user manually edits the displayed balance, adjust the base so the
-// new total matches what they typed (keeping the auto deposits intact)
-function setWalletManual(id, newValue) {
-  const w = savings.wallets.find(x => x.id === id);
-  if (!w) return;
-  const deposits = w.linkId ? depositsForLink(w.linkId) : 0;
-  w.startingBalance = (+newValue || 0) - deposits; // base absorbs the difference
-  w.amount = (+newValue || 0);
-  renderWallets();
-  renderWalletPie();
-  renderSavingsMetrics();
-  autoSave();
-}
-
 function renderWallets() {
   let h = '';
   const colors = ['#3b82f6','#8b5cf6','#22c55e','#f59e0b','#ef4444','#06b6d4','#ec4899','#14b8a6','#f97316','#84cc16','#a78bfa'];
@@ -801,8 +750,6 @@ function renderWallets() {
   const lbl = document.getElementById('wallet-total-label');
   if(lbl) lbl.textContent = savings.wallets.length + ' contas';
 }
-function addWallet() { savings.wallets.push({id:nextId++,name:'Nova conta',amount:0}); renderWallets(); autoSave(); }
-
 function getCurrentPhase() {
   const now = new Date();
   const y = now.getFullYear(), m = now.getMonth();
@@ -1107,8 +1054,6 @@ function renderGoals() {
   });
   document.getElementById('goals-list').innerHTML = h;
 }
-function addGoal() { savings.goals.push({id:nextId++,name:'Nova meta',target:1000,saved:0,monthly:100,priority:5}); renderGoals(); renderSavingsMetrics(); autoSave(); }
-
 function showTab(name) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -1168,16 +1113,6 @@ let sinkingFunds = [
   {id:5,name:'Presentes & Datas',icon:'🎁',balance:0,monthlyContribution:15,note:'Aniversários, Natal, datas especiais, jantares de comemoração',history:[]},
 ];
 
-function syncProvisionBudget() {
-  // Only auto-create if it doesn't exist — user can edit the budget value per month freely
-  const total = totalSinkingMonthly();
-  const provItem = md().budget.find(b => b.type === 'provision');
-  if (!provItem && total > 0) {
-    md().budget.push({id:60, name:'Sinking Funds', type:'provision', budget: total});
-  }
-}
-
-// ── Called every new month: add contributions ────────────────────────────────
 function renderProvisions() {
   const catsEl  = document.getElementById('sf-categories');
   const metEl   = document.getElementById('sf-metrics');
@@ -1731,27 +1666,6 @@ function walletLabel(id, name) {
 }
 
 // ── Generic rename helper for titles (avoids emoji-in-input bug) ─────────────
-function renameBudget(id) {
-  const b = getBudget(id);
-  if (!b) return;
-  const v = prompt('Renomear categoria (pode usar emoji):', b.name);
-  if (v !== null && v.trim()) { b.name = v.trim(); render(); autoSave(); }
-}
-
-function renameWallet(id) {
-  const w = savings.wallets.find(x => x.id === id);
-  if (!w) return;
-  const v = prompt('Renomear conta (pode usar emoji):', w.name);
-  if (v !== null && v.trim()) { w.name = v.trim(); renderWallets(); renderWalletPie(); autoSave(); }
-}
-
-function renameGoal(id) {
-  const g = savings.goals.find(x => x.id === id);
-  if (!g) return;
-  const v = prompt('Renomear meta (pode usar emoji):', g.name);
-  if (v !== null && v.trim()) { g.name = v.trim(); renderGoals(); autoSave(); }
-}
-
 function withEmoji(str) {
   const s = esc(str);
   // Match emoji (incl. flags, ZWJ sequences, variation selectors)
