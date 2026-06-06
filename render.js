@@ -1166,22 +1166,38 @@ function renderHistory() {
   });
   h += '</div>';
 
-  // ── Category selector chips ──
-  h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center">';
-  h += '<span style="font-size:11px;color:var(--text3);margin-right:2px">Categorias:</span>';
-  allCats.forEach(cat => {
-    const on = window._historyCats.includes(cat.id);
-    const em = CAT_EMOJI[cat.id] || '';
-    h += `<button onclick="toggleHistoryCat(${cat.id})" style="
-      font-size:11px;padding:4px 9px;border-radius:14px;cursor:pointer;white-space:nowrap;
-      border:1px solid ${on?'var(--accent)':'var(--border2)'};
-      background:${on?'var(--accent)':'transparent'};
-      color:${on?'#fff':'var(--text2)'};font-weight:${on?'600':'400'};transition:all .12s">
-      ${em?`<span class="emo">${em}</span> `:''}${esc(cat.name)}</button>`;
-  });
-  // All / Clear shortcuts
-  h += `<button onclick="historyCatsAll()" style="font-size:10px;padding:4px 8px;border-radius:14px;cursor:pointer;border:1px dashed var(--border2);background:transparent;color:var(--text3)">Todas</button>`;
-  h += `<button onclick="historyCatsClear()" style="font-size:10px;padding:4px 8px;border-radius:14px;cursor:pointer;border:1px dashed var(--border2);background:transparent;color:var(--text3)">Limpar</button>`;
+  // ── Category selector — compact dropdown ──
+  const totalCats = allCats.length;
+  const selCount = window._historyCats.length;
+  const open = !!window._historyCatsOpen;
+  h += '<div style="margin-bottom:12px;position:relative">';
+  h += `<button onclick="toggleHistoryCatPanel()" style="
+    font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--border2);background:var(--bg3);color:var(--text2);
+    display:inline-flex;align-items:center;gap:8px">
+    <span>Categorias <strong style="color:var(--accent)">${selCount}/${totalCats}</strong></span>
+    <span style="font-size:10px;transform:rotate(${open?'180':'0'}deg);transition:transform .15s">▾</span>
+  </button>`;
+
+  if (open) {
+    h += `<div style="margin-top:8px;padding:10px;border:1px solid var(--border2);border-radius:10px;background:var(--bg);box-shadow:0 4px 12px rgba(0,0,0,0.06)">`;
+    // Quick actions
+    h += `<div style="display:flex;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)">
+      <button onclick="historyCatsAll()" style="font-size:11px;padding:3px 10px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--accent);font-weight:500">Selecionar todas</button>
+      <button onclick="historyCatsClear()" style="font-size:11px;padding:3px 10px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text3)">Limpar</button>
+    </div>`;
+    // Checkbox rows in a responsive grid
+    h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:4px">';
+    allCats.forEach(cat => {
+      const on = window._historyCats.includes(cat.id);
+      const em = CAT_EMOJI[cat.id] || '';
+      h += `<label style="display:flex;align-items:center;gap:7px;padding:5px 6px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--text2)" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
+        <input type="checkbox" ${on?'checked':''} onchange="toggleHistoryCat(${cat.id})" style="cursor:pointer;accent-color:var(--accent)">
+        ${em?`<span class="emo">${em}</span>`:''}<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(cat.name)}</span>
+      </label>`;
+    });
+    h += '</div></div>';
+  }
   h += '</div>';
 
   if (selMonths.length < 1) { el.innerHTML = h + '<div class="empty">Selecione ao menos um mês.</div>'; return; }
@@ -1247,15 +1263,22 @@ function toggleHistoryCat(id) {
   renderHistory();
 }
 
+function toggleHistoryCatPanel() {
+  window._historyCatsOpen = !window._historyCatsOpen;
+  renderHistory();
+}
+
 function historyCatsAll() {
   const allCatIds = md().budget.filter(b => ['needs','wants','savings'].includes(b.type)).map(c=>c.id);
   window._historyCats = allCatIds.slice();
   window._historyCatsCleared = false;
+  window._historyCatsOpen = true;
   renderHistory();
 }
 
 function historyCatsClear() {
   window._historyCats = [];
   window._historyCatsCleared = true;
+  window._historyCatsOpen = true;
   renderHistory();
 }
