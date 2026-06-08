@@ -168,7 +168,7 @@
           "id": 1003,
           "date": "2026-06-08",
           "cat": 43,
-          "desc": "",
+          "desc": "cabelo nicolas",
           "amount": 45
         },
         {
@@ -448,13 +448,6 @@
         "startingBalance": 300
       },
       {
-        "id": 52,
-        "linkId": 52,
-        "name": "TFSA",
-        "amount": 3934,
-        "startingBalance": 3934
-      },
-      {
         "id": 1002,
         "linkId": 1002,
         "name": "Baby Fund",
@@ -476,17 +469,24 @@
         "startingBalance": 0
       },
       {
+        "id": 1000,
+        "name": "College",
+        "amount": 700,
+        "startingBalance": 700
+      },
+      {
+        "id": 52,
+        "linkId": 52,
+        "name": "TFSA",
+        "amount": 3934,
+        "startingBalance": 3934
+      },
+      {
         "id": 900,
         "linkId": null,
         "name": "Canada Life RRP (Juliana)",
         "amount": 5463,
         "startingBalance": 5463
-      },
-      {
-        "id": 1000,
-        "name": "College",
-        "amount": 700,
-        "startingBalance": 700
       }
     ],
     "goals": [
