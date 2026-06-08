@@ -436,15 +436,22 @@ function renderTxList() {
 
 function renderSavingsMetrics() {
   const total = savings.wallets.reduce((s,w)=>s+(+w.amount||0),0);
-  const investGoals = savings.goals.filter(g=>['TFSA','RRP','Aposentadoria','Canada Life'].some(k=>g.name.includes(k)));
   const retirementTotal = savings.wallets.filter(w=>['TFSA','Canada Life','Aposentadoria','RRP'].some(k=>w.name.includes(k))).reduce((s,w)=>s+(+w.amount||0),0);
   const urgentGoals = savings.goals.filter(g=>g.monthly>0);
   const monthlyAllocated = urgentGoals.reduce((s,g)=>s+(+g.monthly||0),0);
   const income = (savings._income_total)||8511;
   const savePct = income>0?Math.round(monthlyAllocated/income*100):0;
+
+  // Wealthsimple Cash = wallets que ficam na cash account
+  const wsCashIds = [50, 51, 1002, 1006, 1010, 1000];
+  const wsCashTotal = savings.wallets
+    .filter(w => wsCashIds.includes(w.id))
+    .reduce((s,w)=>s+(+w.amount||0),0);
+
   document.getElementById('savings-metrics').innerHTML = `
     <div class="metric"><div class="lbl">Total guardado</div><div class="val" style="color:var(--green)">${fmt(total)}</div><div class="sub">em todas as contas</div></div>
     <div class="metric"><div class="lbl">Para aposentadoria</div><div class="val" style="color:#7c3aed">${fmt(retirementTotal)}</div><div class="sub">TFSA + Canada Life</div></div>
+    <div class="metric"><div class="lbl">Wealthsimple Cash</div><div class="val" style="color:#0ea5e9">${fmt(wsCashTotal)}</div><div class="sub">Emergency · Japan · Baby · BR · Dental · College</div></div>
     <div class="metric"><div class="lbl">Alocado/mês</div><div class="val">${fmt(monthlyAllocated)}</div><div class="sub">${savePct}% da renda</div></div>
     <div class="metric"><div class="lbl">Metas ativas</div><div class="val">${savings.goals.length}</div><div class="sub">${savings.goals.filter(g=>{const p=g.target>0?g.saved/g.target:0;return p>=1;}).length} concluídas</div></div>
   `;
