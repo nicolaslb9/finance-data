@@ -165,7 +165,7 @@
         {
           "id": 2001,
           "name": "Airbnb",
-          "type": "needs",
+          "type": "wants",
           "budget": 0
         }
       ],
