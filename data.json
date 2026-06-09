@@ -437,7 +437,7 @@
         {
           "id": 2002,
           "name": "Airbnb",
-          "type": "needs",
+          "type": "wants",
           "budget": 150
         }
       ],
