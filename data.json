@@ -166,7 +166,7 @@
           "id": 2001,
           "name": "Airbnb",
           "type": "wants",
-          "budget": 0
+          "budget": 150
         }
       ],
       "transactions": [
