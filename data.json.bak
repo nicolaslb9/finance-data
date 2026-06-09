@@ -390,7 +390,7 @@
           "id": 1002,
           "name": "Baby Fund",
           "type": "savings",
-          "budget": 0
+          "budget": 30
         },
         {
           "id": 1006,
