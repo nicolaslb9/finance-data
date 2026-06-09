@@ -60,7 +60,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v39'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v40'; // bump to force localStorage refresh
 
 function init() {
   // If app version changed, wipe localStorage so GitHub data takes over
@@ -79,11 +79,8 @@ function init() {
   if (sc) { try { cfg = JSON.parse(sc); loadCfgUI(); } catch(e){} }
   if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
 
-  // Sync the month selector + label to currentMonth on boot
-  const msel = document.getElementById('month-sel');
-  if (msel) msel.value = currentMonth;
-  const mlabel = document.getElementById('month-label');
-  if (mlabel) mlabel.textContent = MONTHS[currentMonth].slice(0,3) + ' 2026';
+  // Populate + sync all month selectors on boot
+  syncMonthSelectors();
 
   // Sync sinkingFunds from savings — if empty, seed from defaults
   if (savings.sinkingFunds && savings.sinkingFunds.length) {
@@ -98,15 +95,26 @@ function init() {
 }
 
 function md() { return data[currentMonth]; }
-function changeMonth() {
-  const sel = document.getElementById('month-sel');
+function changeMonth(srcEl) {
+  // Read from whichever selector triggered it (or the overview one as fallback)
+  const sel = srcEl || document.getElementById('month-sel');
   if (!sel) return;
   currentMonth = parseInt(sel.value);
   if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
-  const lbl = document.getElementById('month-label');
-  if (lbl) lbl.textContent = MONTHS[currentMonth].slice(0,3) + ' 2026';
+  syncMonthSelectors();
   render();
   autoSave();
+}
+
+// Populate every .month-selector with options and keep them all in sync
+function syncMonthSelectors() {
+  const opts = MONTHS.map((m,i)=>`<option value="${i}"${i===currentMonth?' selected':''}>${m.slice(0,3)} 2026</option>`).join('');
+  document.querySelectorAll('.month-selector').forEach(sel => {
+    sel.innerHTML = opts;
+    sel.value = currentMonth;
+  });
+  const lbl = document.getElementById('month-label');
+  if (lbl) lbl.textContent = MONTHS[currentMonth].slice(0,3) + ' 2026';
 }
 
 // COMPUTED
