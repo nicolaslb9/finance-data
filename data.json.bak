@@ -73,10 +73,16 @@
           "budget": 110
         },
         {
-          "id": 1000,
-          "name": "College",
+          "id": 1001,
+          "name": "Terapia",
           "type": "fixed",
           "budget": 400
+        },
+        {
+          "id": 1000,
+          "name": "College",
+          "type": "savings",
+          "budget": 0
         },
         {
           "id": 30,
@@ -155,12 +161,6 @@
           "name": "Allowance Juliana",
           "type": "wants",
           "budget": 300
-        },
-        {
-          "id": 1000,
-          "name": "Nova categoria",
-          "type": "needs",
-          "budget": 0
         }
       ],
       "transactions": [
@@ -169,7 +169,7 @@
           "date": "2026-06-09",
           "cat": 30,
           "desc": "",
-          "amount": 0
+          "amount": 38.9
         },
         {
           "id": 1003,
@@ -353,7 +353,7 @@
         {
           "id": 1000,
           "name": "Terapia",
-          "type": "fixed",
+          "type": "savings",
           "budget": 400
         },
         {
