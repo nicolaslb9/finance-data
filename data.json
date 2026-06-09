@@ -168,7 +168,7 @@
           "id": 1000,
           "date": "2026-06-09",
           "cat": 30,
-          "desc": "Save on",
+          "desc": "",
           "amount": 38.9
         },
         {
@@ -433,6 +433,12 @@
           "name": "Allowance Juliana",
           "type": "wants",
           "budget": 300
+        },
+        {
+          "id": 1000,
+          "name": "Nova categoria",
+          "type": "needs",
+          "budget": 0
         }
       ],
       "transactions": []
