@@ -161,12 +161,6 @@
           "name": "Allowance Juliana",
           "type": "wants",
           "budget": 300
-        },
-        {
-          "id": 2001,
-          "name": "Airbnb",
-          "type": "wants",
-          "budget": 150
         }
       ],
       "transactions": [
