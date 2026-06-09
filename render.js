@@ -343,18 +343,28 @@ function renderBudgetList() {
     const sp = spentForCat(b.id);
     const bal = (+b.budget||0) - sp;
     const over = bal < 0;
-    h += `<div class="tbl-row">
-      <div style="display:flex;align-items:center;gap:4px;min-width:0">
-        <span style="flex:1;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(b.name)}">${catLabel(b.id, b.name)}</span>
-        <button class="rename-btn" onclick="renameBudget(${b.id})" title="Renomear">⋯</button>
+    const balColor = over?'var(--red)':bal>0?'var(--green)':'var(--text3)';
+    h += `<div style="padding:10px 4px;border-bottom:1px solid var(--border)">
+      <!-- Row 1: name + rename + delete -->
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px">
+        <span style="flex:1;font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${catLabel(b.id, b.name)}</span>
+        <button class="rename-btn" onclick="renameBudget(${b.id})" title="Renomear" style="flex-shrink:0">⋯</button>
+        <button class="del-btn" onclick="removeBudget(${b.id})" style="flex-shrink:0">×</button>
       </div>
-      <select onchange="getBudget(${b.id}).type=this.value;render();autoSave()">
-        ${['fixed','debt','needs','wants','savings'].map(t=>`<option value="${t}"${b.type===t?' selected':''}>${typeLabel(t)}</option>`).join('')}
-      </select>
-      <input type="number" value="${b.budget}" min="0" onchange="getBudget(${b.id}).budget=+this.value;render();autoSave()">
-      <span class="budget-spent-col" style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--text2)">${fmt(sp)}</span>
-      <span class="budget-bal-col" style="font-family:'Geist Mono',monospace;font-size:12px;color:${over?'var(--red)':bal>0?'var(--green)':'var(--text3)'}">${over?'-':''}${fmt(Math.abs(bal))}</span>
-      <button class="del-btn" onclick="removeBudget(${b.id})">×</button>
+      <!-- Row 2: type select + budget input + spent + balance -->
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <select onchange="getBudget(${b.id}).type=this.value;render();autoSave()" style="font-size:11px;padding:3px 6px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);flex-shrink:0">
+          ${['fixed','debt','needs','wants','savings'].map(t=>`<option value="${t}"${b.type===t?' selected':''}>${typeLabel(t)}</option>`).join('')}
+        </select>
+        <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:2px 6px;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text3)">$</span>
+          <input type="number" value="${b.budget}" min="0" style="width:64px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--text)" onchange="getBudget(${b.id}).budget=+this.value;render();autoSave()">
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;color:var(--text3)">gasto <span style="font-family:'Geist Mono',monospace;font-weight:500;color:var(--text2)">${fmt(sp)}</span></span>
+          <span style="font-size:11px;color:var(--text3)">saldo <span style="font-family:'Geist Mono',monospace;font-weight:600;color:${balColor}">${over?'-':''}${fmt(Math.abs(bal))}</span></span>
+        </div>
+      </div>
     </div>`;
   });
   document.getElementById('budget-list').innerHTML = h;
@@ -420,15 +430,29 @@ function renderTxList() {
   }
   sorted.forEach(tx => {
     const cat = md().budget.find(b=>b.id===tx.cat)||{name:'—',type:'needs'};
-    h += `<div class="tbl-row">
-      <input type="date" value="${tx.date}" onchange="getTx(${tx.id}).date=this.value;render();autoSave()">
-      <select onchange="getTx(${tx.id}).cat=+this.value;render();autoSave()">
-        ${md().budget.map(b=>`<option value="${b.id}"${b.id===tx.cat?' selected':''}>${esc(b.name)}</option>`).join('')}
-      </select>
-      <input type="text" class="tx-desc-col" value="${esc(tx.desc)}" placeholder="Descrição" onchange="getTx(${tx.id}).desc=this.value;autoSave()">
-      <input type="number" value="${tx.amount}" min="0" step="0.01" onchange="getTx(${tx.id}).amount=+this.value;render();autoSave()">
-      <span class="tx-type-col"><span class="badge badge-${cat.type}">${typeLabel(cat.type)}</span></span>
-      <button class="del-btn" onclick="removeTx(${tx.id})">×</button>
+    const em = CAT_EMOJI[tx.cat] || '';
+    const d = new Date(tx.date+'T12:00:00');
+    const dateStr = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+    h += `<div style="padding:10px 4px;border-bottom:1px solid var(--border)">
+      <!-- Row 1: date badge + category select + delete -->
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">
+        <span style="font-size:11px;font-weight:600;color:var(--text3);white-space:nowrap;min-width:48px">${dateStr}</span>
+        <select onchange="getTx(${tx.id}).cat=+this.value;render();autoSave()" style="flex:1;font-size:12px;padding:4px 6px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);min-width:0">
+          ${md().budget.map(b=>`<option value="${b.id}"${b.id===tx.cat?' selected':''}>${esc(b.name)}</option>`).join('')}
+        </select>
+        <span class="badge badge-${cat.type}" style="flex-shrink:0;font-size:10px">${typeLabel(cat.type)}</span>
+        <button class="del-btn" onclick="removeTx(${tx.id})" style="flex-shrink:0">×</button>
+      </div>
+      <!-- Row 2: description + amount + date input -->
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="text" value="${esc(tx.desc)}" placeholder="Descrição" style="flex:1;font-size:12px;min-width:0" onchange="getTx(${tx.id}).desc=this.value;autoSave()">
+        <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:2px 7px;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text3)">$</span>
+          <input type="number" value="${tx.amount}" min="0" step="0.01" style="width:64px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--text)" onchange="getTx(${tx.id}).amount=+this.value;render();autoSave()">
+        </div>
+        <input type="date" value="${tx.date}" style="font-size:11px;width:36px;opacity:0;position:absolute" onchange="getTx(${tx.id}).date=this.value;render();autoSave()" id="date-${tx.id}">
+        <button onclick="document.getElementById('date-${tx.id}').showPicker?document.getElementById('date-${tx.id}').showPicker():document.getElementById('date-${tx.id}').click()" style="font-size:13px;background:none;border:none;cursor:pointer;color:var(--text3);padding:2px 4px" title="Mudar data">📅</button>
+      </div>
     </div>`;
   });
   document.getElementById('tx-list').innerHTML = h;
