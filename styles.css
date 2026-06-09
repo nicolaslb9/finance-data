@@ -248,16 +248,44 @@ select { cursor: pointer; }
   /* ── Charts shorter on mobile ── */
   .chart-wrap { height: 160px !important; }
 
-  /* ── Budget table: hide less important cols, readable ── */
-  .budget-tbl .tbl-header,
-  .budget-tbl .tbl-row { grid-template-columns: 1fr 70px 28px; }
-  .budget-spent-col, .budget-bal-col, .budget-type-col { display: none; }
-  .budget-tbl select { display: none; }
+  /* ── Budget table: 2-line flex layout (mobile only) ── */
+  .budget-tbl .tbl-header { display: none; }
+  .budget-tbl .tbl-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    padding: 10px 2px;
+  }
+  /* Row 1: name takes full width, pushing rename/delete to the right */
+  .budget-tbl .tbl-row > div:first-child { flex: 1 1 100%; order: 1; }
+  /* type select */
+  .budget-tbl .tbl-row > select { flex: 0 0 auto; order: 2; font-size: 11px; padding: 4px 6px; }
+  /* budget value input */
+  .budget-tbl .tbl-row > input { flex: 0 0 80px; order: 3; }
+  /* spent + balance pushed together at the end of row 2 */
+  .budget-spent-col { order: 4; margin-left: auto; }
+  .budget-bal-col { order: 5; }
+  /* delete moves to row 1 visually via absolute-ish: keep inline but small */
+  .budget-tbl .tbl-row > .del-btn { order: 2; flex: 0 0 auto; }
 
-  /* ── Transactions table ── */
-  .tx-tbl .tbl-header,
-  .tx-tbl .tbl-row { grid-template-columns: 80px 1fr 72px 28px; }
-  .tx-desc-col, .tx-type-col { display: none; }
+  /* ── Transactions table: 2-line flex layout (mobile only) ── */
+  .tx-tbl .tbl-header { display: none; }
+  .tx-tbl .tbl-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    padding: 10px 2px;
+  }
+  /* Row 1: date + category select + type + delete */
+  .tx-tbl .tbl-row > input[type="date"] { flex: 0 0 auto; order: 1; font-size: 12px; }
+  .tx-tbl .tbl-row > select { flex: 1 1 auto; order: 2; min-width: 0; font-size: 12px; }
+  .tx-type-col { order: 3; flex: 0 0 auto; display: inline-flex; }
+  .tx-tbl .tbl-row > .del-btn { order: 4; flex: 0 0 auto; }
+  /* Row 2: description + amount */
+  .tx-desc-col { flex: 1 1 100%; order: 5; display: block; font-size: 12px; }
+  .tx-tbl .tbl-row > input[type="number"] { flex: 0 0 90px; order: 6; margin-left: auto; }
 
   /* ── Buttons: larger tap targets ── */
   .btn { padding: 9px 14px; font-size: 13px; min-height: 40px; }
