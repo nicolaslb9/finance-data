@@ -444,7 +444,7 @@
           "id": 2002,
           "name": "Airbnb",
           "type": "needs",
-          "budget": 0
+          "budget": 150
         }
       ],
       "transactions": []
