@@ -14,7 +14,17 @@ function syncBudgetMonthSelect() {
 
 function getBudget(id) { return md().budget.find(x=>x.id===id); }
 function removeBudget(id) { const b=getBudget(id); if(!confirm(`Remover a categoria "${b?b.name:''}"?`)) return; md().budget = md().budget.filter(x=>x.id!==id); render(); renderBudgetOverview(); autoSave(); }
-function addBudgetItem() { md().budget.push({id:nextId++,name:'Nova categoria',type:'needs',budget:0}); render(); renderBudgetOverview(); autoSave(); }
+function addBudgetItem() {
+  // Generate a unique ID higher than any existing budget id (across all months) to avoid collisions
+  let maxId = 0;
+  for (const mk in data) {
+    (data[mk].budget||[]).forEach(b => { if (+b.id > maxId) maxId = +b.id; });
+  }
+  const newId = Math.max(maxId, nextId, 2000) + 1;
+  nextId = newId + 1;
+  md().budget.push({id:newId,name:'Nova categoria',type:'needs',budget:0});
+  render(); renderBudgetOverview(); autoSave();
+}
 
 function syncProvisionBudget() {
   // Only auto-create if it doesn't exist — user can edit the budget value per month freely
