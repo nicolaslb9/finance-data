@@ -334,7 +334,7 @@
           "id": 1000,
           "date": "2026-06-10",
           "cat": 21,
-          "desc": "save on",
+          "desc": "",
           "amount": 54.12
         },
         {
@@ -355,7 +355,7 @@
           "id": 1002,
           "date": "2026-06-08",
           "cat": 44,
-          "desc": "pelicula iphone",
+          "desc": "",
           "amount": 76.16
         },
         {
