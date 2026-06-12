@@ -324,27 +324,6 @@
       ],
       "transactions": [
         {
-          "id": 1001,
-          "date": "2026-06-10",
-          "cat": 21,
-          "desc": "amazon salada",
-          "amount": 66.62
-        },
-        {
-          "id": 1000,
-          "date": "2026-06-10",
-          "cat": 21,
-          "desc": "save on",
-          "amount": 54.12
-        },
-        {
-          "id": 1000,
-          "date": "2026-06-09",
-          "cat": 30,
-          "desc": "",
-          "amount": 38.9
-        },
-        {
           "id": 1003,
           "date": "2026-06-08",
           "cat": 43,
@@ -357,34 +336,6 @@
           "cat": 44,
           "desc": "pelicula iphone",
           "amount": 76.16
-        },
-        {
-          "id": 1001,
-          "date": "2026-06-08",
-          "cat": 42,
-          "desc": "microsoft subscription",
-          "amount": 29.11
-        },
-        {
-          "id": 1000,
-          "date": "2026-06-08",
-          "cat": 44,
-          "desc": "fone de ouvido",
-          "amount": 80.87
-        },
-        {
-          "id": 1001,
-          "date": "2026-06-07",
-          "cat": 40,
-          "desc": "tim hortons",
-          "amount": 19.47
-        },
-        {
-          "id": 1001,
-          "date": "2026-06-07",
-          "cat": 30,
-          "desc": "costco",
-          "amount": 74.43
         },
         {
           "id": 1004,
@@ -408,13 +359,6 @@
           "amount": 4.47
         },
         {
-          "id": 1001,
-          "date": "2026-06-06",
-          "cat": 31,
-          "desc": "",
-          "amount": 40
-        },
-        {
           "id": 1003,
           "date": "2026-06-05",
           "cat": 30,
@@ -429,25 +373,11 @@
           "amount": 83.44
         },
         {
-          "id": 1001,
-          "date": "2026-06-04",
-          "cat": 30,
-          "desc": "",
-          "amount": 27.65
-        },
-        {
           "id": 1002,
           "date": "2026-06-03",
           "cat": 60,
           "desc": "Pelicula Iphone",
           "amount": 10.07
-        },
-        {
-          "id": 1001,
-          "date": "2026-06-03",
-          "cat": 30,
-          "desc": "Amazon - Salada",
-          "amount": 11.98
         }
       ]
     },
