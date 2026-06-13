@@ -261,16 +261,20 @@ function loadWeeklyReport() {
 // ── Local push notification scheduling ─────────────────────────────────────
 async function tryAutoLoad() {
   if (!cfg.user || !cfg.token) {
+    // No cloud sync — local-only mode, saves allowed immediately
+    window._loadComplete = true;
     setSyncStatus('sem configuração', '');
     return;
   }
-  // Already have credentials — silent connect, no user action needed
+  // Have credentials — load cloud data FIRST (source of truth) before allowing any save
   setSyncStatus('conectando…', 'saving');
   try {
-    await loadFromGithub();
-    // loadFromGithub already calls setSyncStatus('sincronizado ✓','saved')
+    await loadFromGithub();   // sets window._loadComplete = true on success
   } catch(e) {
-    setSyncStatus('erro ao conectar', 'error');
+    // Load failed — DO NOT allow saves (would overwrite good cloud data with stale local).
+    // Keep _loadComplete false; user sees error and can retry.
+    window._loadComplete = false;
+    setSyncStatus('⚠ erro ao conectar — não editando', 'error');
   }
 }
 
