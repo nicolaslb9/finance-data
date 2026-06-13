@@ -845,8 +845,8 @@
         "id": 51,
         "linkId": 51,
         "name": "Japan Trip",
-        "amount": 600,
-        "startingBalance": 600
+        "amount": 300,
+        "startingBalance": 300
       },
       {
         "id": 1002,
