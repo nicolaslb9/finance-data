@@ -58,12 +58,16 @@ async function loadFromGithub() {
   try {
     const file = await githubRequest('GET','data.json');
     const json = JSON.parse(atob(file.content.replace(/\n/g,'')));
+    // GitHub is the source of truth on load — replace local state entirely
     if (json.data) data = json.data;
     if (json.savings) savings = json.savings;
-    // Always pull sinkingFunds from the savings object
     if (savings.sinkingFunds && savings.sinkingFunds.length) sinkingFunds = savings.sinkingFunds;
     localStorage.setItem('finance_data',JSON.stringify(data));
     localStorage.setItem('finance_savings',JSON.stringify(savings));
+    // Mark load complete — saves are now allowed
+    window._loadComplete = true;
+    if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
+    syncMonthSelectors();
     render();
     setSyncStatus('sincronizado ✓','saved');
     const cfgStatusEl = document.getElementById('cfg-status');
@@ -138,6 +142,11 @@ function updateSaveButton(state, time) {
 }
 
 function autoSave() {
+  // GUARD: never save before the initial GitHub load finished —
+  // prevents stale localStorage from overwriting good cloud data (data-loss bug)
+  if (cfg.user && cfg.token && !window._loadComplete) {
+    return;
+  }
   localStorage.setItem('finance_data',JSON.stringify(data));
   localStorage.setItem('finance_savings',JSON.stringify(savings));
   if (cfg.user&&cfg.token) {
