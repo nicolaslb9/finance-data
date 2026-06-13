@@ -60,9 +60,11 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v40'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v41'; // bump to force localStorage refresh
 
 function init() {
+  // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
+  window._loadComplete = false;
   // If app version changed, wipe localStorage so GitHub data takes over
   const storedVersion = localStorage.getItem('app_version');
   if (storedVersion !== APP_VERSION) {
