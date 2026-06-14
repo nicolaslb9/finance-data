@@ -872,8 +872,8 @@
       {
         "id": 1000,
         "name": "College",
-        "amount": 700,
-        "startingBalance": 700
+        "amount": 0,
+        "startingBalance": 0
       },
       {
         "id": 52,
