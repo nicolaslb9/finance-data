@@ -325,6 +325,13 @@
       "transactions": [
         {
           "id": 1000,
+          "date": "2026-06-15",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
+          "id": 1000,
           "date": "2026-06-13",
           "cat": 30,
           "desc": "pizza q nao caiu",
