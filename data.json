@@ -327,8 +327,8 @@
           "id": 1001,
           "date": "2026-06-15",
           "cat": 60,
-          "desc": "",
-          "amount": 0
+          "desc": "estacionamento",
+          "amount": 5.05
         },
         {
           "id": 1000,
