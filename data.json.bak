@@ -324,11 +324,18 @@
       ],
       "transactions": [
         {
+          "id": 3007,
+          "date": "2026-06-15",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3005,
           "date": "2026-06-15",
           "cat": 30,
           "desc": "save on",
-          "amount": 0
+          "amount": 7.19
         },
         {
           "id": 3003,
