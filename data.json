@@ -324,11 +324,18 @@
       ],
       "transactions": [
         {
+          "id": 3005,
+          "date": "2026-06-15",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3003,
           "date": "2026-06-15",
           "cat": 40,
           "desc": "liquor store",
-          "amount": 0
+          "amount": 19.91
         },
         {
           "id": 3001,
