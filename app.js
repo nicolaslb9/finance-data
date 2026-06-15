@@ -60,7 +60,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v41'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v42'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
@@ -135,7 +135,14 @@ function removeTx(id) {
   if(!confirm('Remover esta transacao?')) return; md().transactions = md().transactions.filter(x=>x.id!==id); render(); autoSave(); }
 function addTx() {
   const today = new Date().toISOString().slice(0,10);
-  md().transactions.unshift({id:nextId++,date:today,cat:md().budget[0]?.id||10,desc:'',amount:0});
+  // Collision-proof ID: higher than any existing transaction id across ALL months
+  let maxId = 0;
+  for (const mk in data) {
+    (data[mk].transactions||[]).forEach(t => { if (+t.id > maxId) maxId = +t.id; });
+  }
+  const newId = Math.max(maxId, nextId, 3000) + 1;
+  nextId = newId + 1;
+  md().transactions.unshift({id:newId,date:today,cat:md().budget[0]?.id||10,desc:'',amount:0});
   render(); autoSave(); showTab('transactions');
 }
 
