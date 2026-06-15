@@ -392,7 +392,7 @@ function renderTxTimeline() {
 }
 
 function renderTopCats() {
-  const cats = md().budget.map(b => ({...b, spent: spentForCat(b.id)})).filter(b=>b.spent>0).sort((a,b)=>b.spent-a.spent).slice(0,5);
+  const cats = md().budget.map(b => ({...b, spent: spentForCat(b.id)})).filter(b=>b.spent>0).sort((a,b)=>b.spent-a.spent);
   const maxSpent = cats[0]?.spent || 1;
   let h = '';
   if (cats.length === 0) { h = '<div class="empty">Sem gastos ainda</div>'; }
