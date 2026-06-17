@@ -711,7 +711,7 @@
           "id": 52,
           "name": "TFSA",
           "type": "savings",
-          "budget": 300
+          "budget": 500
         },
         {
           "id": 1002,
@@ -759,7 +759,7 @@
           "id": 44,
           "name": "Allowance Juliana",
           "type": "wants",
-          "budget": 250
+          "budget": 300
         },
         {
           "id": 2002,
