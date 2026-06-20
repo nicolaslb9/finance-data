@@ -845,7 +845,15 @@
           "budget": 150
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 3037,
+          "date": "2026-06-20",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        }
+      ]
     },
     "7": {
       "income": [
