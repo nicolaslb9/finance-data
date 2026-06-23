@@ -324,11 +324,18 @@
       ],
       "transactions": [
         {
+          "id": 3042,
+          "date": "2026-06-23",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3040,
           "date": "2026-06-20",
           "cat": 40,
           "desc": "ice cream",
-          "amount": 0
+          "amount": 20.4
         },
         {
           "id": 3038,
