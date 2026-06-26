@@ -862,7 +862,7 @@
         {
           "id": 1000,
           "name": "Terapia",
-          "type": "savings",
+          "type": "fixed",
           "budget": 325
         },
         {
@@ -939,13 +939,13 @@
         },
         {
           "id": 2002,
-          "name": "🏞️ Airbnb",
+          "name": "\ud83c\udfde\ufe0f Airbnb",
           "type": "wants",
           "budget": 225
         },
         {
           "id": 3066,
-          "name": "🎓 College",
+          "name": "\ud83c\udf93 College",
           "type": "needs",
           "budget": 100
         }
