@@ -947,7 +947,7 @@
           "id": 3066,
           "name": "🎓 College",
           "type": "needs",
-          "budget": 0
+          "budget": 100
         }
       ],
       "transactions": [
