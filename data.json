@@ -939,14 +939,14 @@
         },
         {
           "id": 2002,
-          "name": "\ud83c\udfde\ufe0f Airbnb",
+          "name": "🏞️ Airbnb",
           "type": "wants",
           "budget": 225.68
         },
         {
           "id": 3066,
-          "name": "College",
-          "type": "savings",
+          "name": "🎓 College",
+          "type": "needs",
           "budget": 100
         }
       ],
