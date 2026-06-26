@@ -60,7 +60,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v43'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v44'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
@@ -395,7 +395,7 @@ const CAT_EMOJI = {
   // Debt
   20: '🚗', 21: '📱',
   // Fixed
-  10: '🏠', 11: '⚡', 12: '📡', 13: '🛡️', 14: '🛡️', 15: '📲', 1000: '🎓', 1001: '🧠',
+  10: '🏠', 11: '⚡', 12: '📡', 13: '🛡️', 14: '🛡️', 15: '📲', 1000: '🎓', 1001: '🧠', 3066: '🎓',
   // Needs
   30: '🛒', 31: '⛽', 32: '❤️', 33: '🏡',
   // Savings
