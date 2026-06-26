@@ -942,6 +942,12 @@
           "name": "🏞️ Airbnb",
           "type": "wants",
           "budget": 225.68
+        },
+        {
+          "id": 3066,
+          "name": "🎓 College",
+          "type": "needs",
+          "budget": 0
         }
       ],
       "transactions": [
