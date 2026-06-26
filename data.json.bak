@@ -324,6 +324,13 @@
       ],
       "transactions": [
         {
+          "id": 3065,
+          "date": "2026-06-26",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3064,
           "date": "2026-06-26",
           "cat": 44,
@@ -939,13 +946,13 @@
         },
         {
           "id": 2002,
-          "name": "🏞️ Airbnb",
+          "name": "ðï¸ Airbnb",
           "type": "wants",
           "budget": 225
         },
         {
           "id": 3066,
-          "name": "🎓 College",
+          "name": "ð College",
           "type": "needs",
           "budget": 100
         }
