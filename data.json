@@ -324,6 +324,13 @@
       ],
       "transactions": [
         {
+          "id": 3075,
+          "date": "2026-06-28",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3074,
           "date": "2026-06-28",
           "cat": 60,
@@ -987,7 +994,7 @@
         },
         {
           "id": 3066,
-          "name": "Ã° College",
+          "name": "ÃÂ° College",
           "type": "needs",
           "budget": 100
         }
