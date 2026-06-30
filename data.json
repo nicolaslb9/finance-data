@@ -918,7 +918,7 @@
         {
           "id": 1000,
           "name": "Terapia",
-          "type": "savings",
+          "type": "fixed",
           "budget": 400
         },
         {
