@@ -1256,7 +1256,7 @@
         "startingBalance": 0
       },
       {
-        "id": 1000,
+        "id": 1011,
         "name": "Sinking Funds",
         "amount": 0,
         "startingBalance": 0
@@ -1276,9 +1276,11 @@
         "startingBalance": 5481
       },
       {
-        "id": 1000,
-        "name": "Nova conta",
-        "amount": 0
+        "id": 3066,
+        "linkId": 3066,
+        "name": "College",
+        "amount": 0,
+        "startingBalance": 0
       }
     ],
     "goals": [
@@ -1346,7 +1348,7 @@
         "note": "Manutencao, estacionamento e gastos variaveis do carro",
         "history": [],
         "lastContribution": null,
-        "icon": "ÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂ"
+        "icon": "\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u00b0\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u009f\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u009a\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u0097"
       },
       {
         "id": 5,
