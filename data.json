@@ -967,7 +967,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 150
+          "budget": 146.67000000000002
         },
         {
           "id": 40,
@@ -1311,7 +1311,7 @@
         "id": 2,
         "name": "Saude",
         "balance": 25,
-        "monthlyContribution": 23.33,
+        "monthlyContribution": 20,
         "note": "Dentista, vitaminas, remedios, oculos, fisio",
         "history": [
           {
