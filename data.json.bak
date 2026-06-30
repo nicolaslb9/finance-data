@@ -979,7 +979,7 @@
           "id": 42,
           "name": "Subscriptions",
           "type": "wants",
-          "budget": 110
+          "budget": 90
         },
         {
           "id": 43,
