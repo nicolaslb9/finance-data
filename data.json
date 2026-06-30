@@ -1305,7 +1305,13 @@
         "note": "Earlobe repair Juliana (~$2,000) + clareamento Nicolas (~$900). Verificar Sun Life."
       }
     ],
-    "sinkingFunds": [
+    "sinkingFunds": [],
+    "sinkingPool": {
+      "monthlyContribution": 150,
+      "carryover": 0,
+      "expenses": {}
+    },
+    "_oldSinkingFunds_backup": [
       {
         "id": 1,
         "name": "Carro & Estacionamento",
@@ -1314,7 +1320,7 @@
         "note": "Manutencao, estacionamento e gastos variaveis do carro",
         "history": [],
         "lastContribution": null,
-        "icon": "Ã°ÂÂÂ"
+        "icon": "\u00c3\u00b0\u00c2\u009f\u00c2\u009a\u00c2\u0097"
       },
       {
         "id": 5,
