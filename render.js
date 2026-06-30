@@ -443,7 +443,7 @@ function renderSavingsMetrics() {
   const savePct = income>0?Math.round(monthlyAllocated/income*100):0;
 
   // Wealthsimple Cash = wallets que ficam na cash account
-  const wsCashIds = [50, 51, 1002, 1006, 1010, 1000];
+  const wsCashIds = [50, 51, 1002, 1006, 1010, 1000, 3066];
   const wsCashTotal = savings.wallets
     .filter(w => wsCashIds.includes(w.id))
     .reduce((s,w)=>s+(+w.amount||0),0);
