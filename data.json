@@ -1295,39 +1295,39 @@
       {
         "id": 1,
         "name": "Carro & Estacionamento",
-        "balance": 160,
+        "balance": 80,
         "monthlyContribution": 80,
         "note": "Manutencao, estacionamento e gastos variaveis do carro",
         "history": [],
-        "lastContribution": "2026-06",
-        "icon": "🚗"
+        "lastContribution": null,
+        "icon": "\ud83d\ude97"
       },
       {
         "id": 5,
         "name": "Presentes & Datas",
-        "balance": 60,
+        "balance": 30,
         "monthlyContribution": 30,
         "note": "Aniversarios, Natal, datas especiais, jantares de comemoracao",
         "history": [],
-        "lastContribution": "2026-06"
+        "lastContribution": null
       },
       {
         "id": 2,
         "name": "Saude",
-        "balance": 40,
+        "balance": 20,
         "monthlyContribution": 20,
         "note": "Dentista, vitaminas, remedios, oculos, fisio",
         "history": [],
-        "lastContribution": "2026-06"
+        "lastContribution": null
       },
       {
         "id": 3,
         "name": "Casa & Assinaturas",
-        "balance": 40,
+        "balance": 20,
         "monthlyContribution": 20,
         "note": "Costco membership, utensilios, manutencao do apt",
         "history": [],
-        "lastContribution": "2026-06"
+        "lastContribution": null
       }
     ]
   }
