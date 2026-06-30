@@ -1295,7 +1295,7 @@
       {
         "id": 1,
         "name": "Carro",
-        "balance": 25,
+        "balance": 75,
         "monthlyContribution": 50,
         "note": "Car wash, troca de oleo, mecanica, pneus, multas",
         "history": [
@@ -1310,7 +1310,7 @@
       {
         "id": 2,
         "name": "Saude",
-        "balance": 25,
+        "balance": 45,
         "monthlyContribution": 20,
         "note": "Dentista, vitaminas, remedios, oculos, fisio",
         "history": [
@@ -1325,7 +1325,7 @@
       {
         "id": 3,
         "name": "Casa & Assinaturas",
-        "balance": 25,
+        "balance": 45,
         "monthlyContribution": 20,
         "note": "Costco membership, utensilios, manutencao do apt",
         "history": [
@@ -1340,7 +1340,7 @@
       {
         "id": 5,
         "name": "Presentes & Datas",
-        "balance": 25,
+        "balance": 55,
         "monthlyContribution": 30,
         "note": "Aniversarios, Natal, datas especiais, jantares de comemoracao",
         "history": [
@@ -1355,11 +1355,11 @@
       {
         "id": 6,
         "name": "Estacionamento",
-        "balance": 0,
+        "balance": 30,
         "monthlyContribution": 30,
         "note": "Provisao mensal para estacionamento",
         "history": [],
-        "lastContribution": null
+        "lastContribution": "2026-06"
       }
     ]
   }
