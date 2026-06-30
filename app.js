@@ -60,7 +60,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v45'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v46'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
@@ -417,7 +417,6 @@ const SF_EMOJI = {
   2: '🏥',  // Saude
   3: '🏠',  // Casa & Assinaturas
   5: '🎁',  // Presentes & Datas,
-  6: '🅿️',  // Estacionamento
 };
 
 function sfLabel(id, name) {
