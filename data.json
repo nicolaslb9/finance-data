@@ -1351,6 +1351,15 @@
           }
         ],
         "lastContribution": "2026-06"
+      },
+      {
+        "id": 6,
+        "name": "Estacionamento",
+        "balance": 0,
+        "monthlyContribution": 30,
+        "note": "Provisao mensal para estacionamento",
+        "history": [],
+        "lastContribution": null
       }
     ]
   }
