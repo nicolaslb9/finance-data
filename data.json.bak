@@ -1295,7 +1295,7 @@
       {
         "id": 1,
         "name": "Carro",
-        "balance": 0,
+        "balance": 25,
         "monthlyContribution": 25,
         "note": "Car wash, troca de oleo, mecanica, pneus, multas",
         "history": [
@@ -1310,7 +1310,7 @@
       {
         "id": 2,
         "name": "Saude",
-        "balance": 0,
+        "balance": 25,
         "monthlyContribution": 25,
         "note": "Dentista, vitaminas, remedios, oculos, fisio",
         "history": [
@@ -1325,7 +1325,7 @@
       {
         "id": 3,
         "name": "Casa & Assinaturas",
-        "balance": 0,
+        "balance": 25,
         "monthlyContribution": 25,
         "note": "Costco membership, utensilios, manutencao do apt",
         "history": [
@@ -1340,7 +1340,7 @@
       {
         "id": 5,
         "name": "Presentes & Datas",
-        "balance": 0,
+        "balance": 25,
         "monthlyContribution": 25,
         "note": "Aniversarios, Natal, datas especiais, jantares de comemoracao",
         "history": [
