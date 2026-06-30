@@ -1,6 +1,6 @@
 
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-let currentMonth = 5;
+let currentMonth = new Date().getMonth();  // abre no mês atual real (Jan=0 ... Dez=11)
 let nextId = 1000;
 let charts = {};
 
@@ -60,7 +60,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v47'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v48'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
