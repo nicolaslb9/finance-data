@@ -1012,7 +1012,7 @@
           "date": "2026-06-30",
           "cat": 3066,
           "desc": "",
-          "amount": 0
+          "amount": 70
         },
         {
           "id": 3082,
@@ -1279,7 +1279,7 @@
         "id": 3066,
         "linkId": 3066,
         "name": "College",
-        "amount": 0,
+        "amount": 70,
         "startingBalance": 0
       }
     ],
