@@ -802,143 +802,136 @@ function renderGoals() {
   document.getElementById('goals-list').innerHTML = h;
 }
 function renderProvisions() {
-  const catsEl  = document.getElementById('sf-categories');
-  const metEl   = document.getElementById('sf-metrics');
-  const barEl   = document.getElementById('sf-contribute-bar');
-  if (!catsEl) return;
+  const el = document.getElementById('sf-pool');
+  if (!el) return;
 
-  loadSinkingFunds();
-
-  if (!sinkingFunds || !sinkingFunds.length) {
-    catsEl.innerHTML = '<div class="empty">Nenhuma categoria. Clique em "+ Nova categoria".</div>';
-    return;
+  // Ensure pool exists
+  if (!savings.sinkingPool) {
+    savings.sinkingPool = { monthlyContribution: 150, carryover: 0, expenses: {} };
   }
+  const pool = savings.sinkingPool;
+  const mk = String(currentMonth);
+  const monthExpenses = pool.expenses[mk] || [];
 
-  const totalBal    = sinkingFunds.reduce((s, f) => s + (+f.balance || 0), 0);
-  const totalAlloc  = sinkingFunds.reduce((s, f) => s + (+f.monthlyContribution || 0), 0);
-  const unalloc     = 0; // no fixed cap — total is whatever you allocate
-  const curMonth    = new Date().toISOString().slice(0, 7);
-  const contributed = sinkingFunds.every(f => f.lastContribution === curMonth);
+  // Month math
+  const entrou = +pool.monthlyContribution || 0;
+  const saiu = monthExpenses.reduce((s,e)=>s+(+e.amount||0), 0);
+  const sobrouMes = entrou - saiu;
 
-  // ── Metrics ──
-  if (metEl) metEl.innerHTML = `
-    <div class="metric">
-      <div class="lbl">Saldo acumulado</div>
-      <div class="val" style="color:var(--green)">${fmt(totalBal)}</div>
-      <div class="sub">disponível para usar</div>
-    </div>
-    <div class="metric">
-      <div class="lbl">Total/mês</div>
-      <div class="val" style="color:#f59e0b">$${totalAlloc}</div>
-      <div class="sub">soma das categorias</div>
-    </div>
-    <div class="metric">
-      <div class="lbl">Este mês</div>
-      <div class="val" style="font-size:18px">${contributed ? '✅' : '⏳'}</div>
-      <div class="sub">${contributed ? 'contribuição feita' : 'pendente'}</div>
-    </div>
-  `;
+  // Carryover = sum of leftovers from ALL previous months (chronological)
+  // Caixinha total = carryover acumulado + sobra do mês atual
+  let carryoverAccum = +pool.carryover || 0;
+  const prevMonths = Object.keys(pool.expenses).map(Number).filter(m => m < currentMonth);
+  // (carryover field holds manual base; we add each prior month's leftover)
+  prevMonths.forEach(pm => {
+    const exp = (pool.expenses[String(pm)]||[]).reduce((s,e)=>s+(+e.amount||0),0);
+    carryoverAccum += (entrou - exp);
+  });
+  const caixinha = carryoverAccum + sobrouMes;
 
-  // ── Contribute bar ──
-  if (barEl) {
-    barEl.innerHTML = `
-    <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:12px">
-
-      <!-- Top row: total editor + contribute button -->
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:13px;color:var(--text2);font-weight:500">Total este mês:</span>
-          <div style="display:flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:4px 10px">
-            <span style="font-size:13px;color:var(--text3)">$</span>
-            <input type="number" id="sf-total-input" value="${totalAlloc}" min="0" step="10"
-              style="width:70px;border:none;background:transparent;font-size:15px;font-weight:700;color:var(--accent);font-family:'Geist Mono',monospace;text-align:center;outline:none"
-              onchange="sfSetTotal(+this.value)"
-              title="Altere o total mensal — redistribui proporcionalmente">
-          </div>
-          <span style="font-size:11px;color:var(--text3)">${contributed ? '<span style="color:var(--green)">✓ adicionado este mês</span>' : 'pendente'}</span>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="sfAddMonthlyAll()" style="white-space:nowrap">
-          + Adicionar $${totalAlloc} do mês
-        </button>
-      </div>
-
-      <!-- Per-category quick edit row -->
-      <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--bg4)">
-        <span style="font-size:11px;color:var(--text3);align-self:center;white-space:nowrap">Por categoria:</span>
-        ${sinkingFunds.map(f => `
-          <div style="display:flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px 8px">
-            <span class="emo" style="font-size:12px">${SF_EMOJI[f.id] || '📦'}</span>
-            <span style="font-size:11px;color:var(--text2)">${esc(f.name)}</span>
-            <span style="font-size:11px;color:var(--text3)">$</span>
-            <input type="number" value="${f.monthlyContribution}" min="0" step="5"
-              style="width:44px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--accent);font-family:'Geist Mono',monospace;text-align:center;outline:none"
-              onchange="sfEditContribDirect(${f.id}, +this.value)">
-          </div>
-        `).join('')}
-      </div>
-    </div>`;
-  }
-
-  // ── Category cards ──
-  const COLORS = ['#ef4444','#3b82f6','#22c55e','#a855f7'];
   let h = '';
 
-  sinkingFunds.forEach((f, i) => {
-    const color   = COLORS[i % COLORS.length];
-    const bal     = +f.balance || 0;
-    const contrib = +f.monthlyContribution || 0;
-    const hist    = f.history || [];
-    const pct     = contrib > 0 ? Math.min(100, bal / (contrib * 3) * 100) : 0; // fill bar vs 3-month target
+  // ── Top metrics: entrou / saiu / sobrou (mês corrente) ──
+  h += '<div class="metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">';
+  h += `<div class="metric"><div class="lbl">Entrou este mês</div><div class="val" style="color:var(--green)">${fmt(entrou)}</div><div class="sub">aporte mensal</div></div>`;
+  h += `<div class="metric"><div class="lbl">Saiu este mês</div><div class="val" style="color:${saiu>0?'var(--red)':'var(--text2)'}">${fmt(saiu)}</div><div class="sub">${monthExpenses.length} gasto(s)</div></div>`;
+  h += `<div class="metric"><div class="lbl">Sobrou este mês</div><div class="val" style="color:${sobrouMes>=0?'var(--green)':'var(--red)'}">${fmt(sobrouMes)}</div><div class="sub">entrou − saiu</div></div>`;
+  h += '</div>';
 
-    h += `
-    <div class="card" style="margin-bottom:10px">
-
-      <!-- Header row: icon + name + balance + delete -->
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <span class="emo" style="font-size:22px;line-height:1;flex-shrink:0">${SF_EMOJI[f.id] || '📦'}</span>
-        <div style="flex:1">
-          <div style="font-size:15px;font-weight:600;color:var(--text)">${esc(f.name)}</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(f.note || '')}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:20px;font-weight:700;font-family:'Geist Mono',monospace;color:${color}">${fmt(bal)}</div>
-          <div style="font-size:11px;color:var(--text3)">+${fmt(contrib)}/mês</div>
-        </div>
-        <button class="rename-btn" onclick="renameSinkingFund(${f.id})" title="Renomear">⋯</button>
-        <button class="del-btn" onclick="sfDeleteCategory(${f.id})">✕</button>
+  // ── Caixinha total (destaque) ──
+  h += `<div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02));border:1px solid rgba(16,185,129,0.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:600">🐷 Caixinha disponível</div>
+        <div style="font-size:28px;font-weight:700;color:var(--green);font-family:'Geist Mono',monospace;margin-top:2px">${fmt(caixinha)}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">sobra acumulada de meses anteriores + sobra deste mês</div>
       </div>
-
-      <!-- Progress bar (vs 3-month accumulation target) -->
-      <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:12px">
-        <div style="height:100%;width:${pct.toFixed(0)}%;background:${color};border-radius:3px;transition:width .4s"></div>
+      <div style="text-align:right;font-size:12px;color:var(--text3)">
+        <div>Acumulado anterior: <strong style="color:var(--text2)">${fmt(carryoverAccum)}</strong></div>
+        <div>+ Sobra do mês: <strong style="color:var(--text2)">${fmt(sobrouMes)}</strong></div>
       </div>
+    </div>
+  </div>`;
 
-      <!-- Action buttons -->
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-sm btn-primary" onclick="sfUse(${f.id})" ${bal <= 0 ? 'disabled style="opacity:.5"' : ''}>
-          Registrar gasto
-        </button>
-        <button class="btn btn-sm" onclick="sfEditContrib(${f.id})" style="color:var(--text3)">
-          Editar $${contrib}/mês
-        </button>
-      </div>
+  // ── Aporte mensal editável ──
+  h += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:13px;color:var(--text2)">
+    <span>Aporte mensal:</span>
+    <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:3px 10px">
+      <span style="color:var(--text3)">$</span>
+      <input type="number" value="${entrou}" min="0" style="width:70px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--text)" onchange="sfSetMonthly(+this.value)">
+    </div>
+  </div>`;
 
-      <!-- History -->
-      ${hist.length ? `
-      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
-        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px">Histórico</div>
-        ${hist.slice(0, 5).map(h => `
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bg4);font-size:12px">
-            <span style="color:var(--text2)">${h.date}${h.desc ? ' · ' + esc(h.desc) : ''}</span>
-            <span style="color:var(--red);font-family:'Geist Mono',monospace;font-weight:600">−${fmt(h.amount)}</span>
-          </div>
-        `).join('')}
-      </div>` : ''}
-
+  // ── Lista de gastos do mês (extrato) ──
+  h += `<div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <h3 style="font-size:15px;font-weight:600">Gastos da caixinha — ${MONTHS[currentMonth]}</h3>
+      <button class="btn btn-sm btn-primary" onclick="sfAddExpense()">+ Registrar gasto</button>
     </div>`;
-  });
 
-  catsEl.innerHTML = h;
+  if (monthExpenses.length === 0) {
+    h += `<div class="empty" style="padding:24px 0">Nenhum gasto este mês ainda.<br><span style="font-size:11px;color:var(--text3)">Ex: manutenção do carro, presente, consulta, assinatura…</span></div>`;
+  } else {
+    // sorted by date desc
+    const sorted = [...monthExpenses].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    sorted.forEach(e => {
+      const d = e.date ? new Date(e.date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}) : '—';
+      h += `<div style="display:flex;align-items:center;gap:8px;padding:9px 2px;border-top:1px solid var(--border)">
+        <input type="date" value="${e.date||''}" style="font-size:11px;width:120px;color:var(--text3)" onchange="sfEditExpense(${e.id},'date',this.value)">
+        <input type="text" value="${esc(e.desc||'')}" placeholder="Descrição (ex: troca de óleo)" style="flex:1;font-size:13px;min-width:0" onchange="sfEditExpense(${e.id},'desc',this.value)">
+        <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:2px 7px">
+          <span style="font-size:11px;color:var(--text3)">$</span>
+          <input type="number" value="${e.amount}" min="0" step="0.01" style="width:64px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--text)" onchange="sfEditExpense(${e.id},'amount',+this.value)">
+        </div>
+        <button class="del-btn" onclick="sfRemoveExpense(${e.id})">×</button>
+      </div>`;
+    });
+  }
+  h += '</div>';
+
+  // ── Exemplos do que pode sair daqui ──
+  h += `<div style="margin-top:14px;padding:14px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:12.5px;color:#92400e;line-height:1.6">
+    <strong>💡 Como usar:</strong> entram $${entrou} por mês na caixinha. Você vai tirando conforme gasta com coisas previsíveis mas irregulares — por exemplo: <strong>🚗 carro</strong> (manutenção, estacionamento), <strong>🏥 saúde</strong>, <strong>🎁 presentes & datas</strong>, <strong>🏠 casa & assinaturas</strong>. O que sobrar no fim do mês acumula na caixinha para o próximo. Se não sobrar, tudo bem.
+  </div>`;
+
+  el.innerHTML = h;
+}
+
+// ── Pool management functions ──
+function sfSetMonthly(val) {
+  if (!savings.sinkingPool) savings.sinkingPool = {monthlyContribution:150,carryover:0,expenses:{}};
+  savings.sinkingPool.monthlyContribution = Math.max(0, +val||0);
+  // keep budget provision line in sync
+  const prov = md().budget.find(b=>b.id===60);
+  if (prov) prov.budget = savings.sinkingPool.monthlyContribution;
+  render(); autoSave();
+}
+
+function sfAddExpense() {
+  if (!savings.sinkingPool) savings.sinkingPool = {monthlyContribution:150,carryover:0,expenses:{}};
+  const mk = String(currentMonth);
+  if (!savings.sinkingPool.expenses[mk]) savings.sinkingPool.expenses[mk] = [];
+  // collision-proof id across all months
+  let maxId = 0;
+  Object.values(savings.sinkingPool.expenses).forEach(arr => arr.forEach(e => { if(+e.id>maxId) maxId=+e.id; }));
+  const newId = Math.max(maxId, 5000) + 1;
+  const today = new Date().toISOString().slice(0,10);
+  savings.sinkingPool.expenses[mk].unshift({id:newId, date:today, desc:'', amount:0});
+  render(); autoSave();
+}
+
+function sfEditExpense(id, field, value) {
+  const mk = String(currentMonth);
+  const arr = savings.sinkingPool.expenses[mk] || [];
+  const e = arr.find(x=>x.id===id);
+  if (e) { e[field] = value; render(); autoSave(); }
+}
+
+function sfRemoveExpense(id) {
+  if (!confirm('Remover este gasto da caixinha?')) return;
+  const mk = String(currentMonth);
+  savings.sinkingPool.expenses[mk] = (savings.sinkingPool.expenses[mk]||[]).filter(x=>x.id!==id);
+  render(); autoSave();
 }
 
 function renderCarDebt() {
