@@ -967,7 +967,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 146.67000000000002
+          "budget": 143.34
         },
         {
           "id": 40,
@@ -1326,7 +1326,7 @@
         "id": 3,
         "name": "Casa & Assinaturas",
         "balance": 25,
-        "monthlyContribution": 23.33,
+        "monthlyContribution": 20,
         "note": "Costco membership, utensilios, manutencao do apt",
         "history": [
           {
