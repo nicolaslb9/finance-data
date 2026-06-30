@@ -60,7 +60,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v46'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v47'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
@@ -207,7 +207,7 @@ function resetData() {
 // ============ SINKING FUNDS / PROVISIONS ============
 
 let sinkingFunds = [
-  {id:1,name:'Carro',icon:'🚗',balance:0,monthlyContribution:50,note:'Car wash, troca de óleo, mecânica, pneus, multas',history:[]},
+  {id:1,name:'Carro & Estacionamento',icon:'🚗',balance:0,monthlyContribution:80,note:'Manutencao, estacionamento e gastos variaveis do carro',history:[]},
   {id:2,name:'Saúde',icon:'🏥',balance:0,monthlyContribution:20,note:'Dentista, vitaminas, remédios, óculos, fisio',history:[]},
   {id:3,name:'Casa & Assinaturas',icon:'🏠',balance:0,monthlyContribution:15,note:'Costco membership, utensílios, manutenção do apt',history:[]},
   {id:5,name:'Presentes & Datas',icon:'🎁',balance:0,monthlyContribution:15,note:'Aniversários, Natal, datas especiais, jantares de comemoração',history:[]},
