@@ -961,7 +961,7 @@
           "id": 1010,
           "name": "Earlobe + Dental",
           "type": "savings",
-          "budget": 150
+          "budget": 100
         },
         {
           "id": 60,
@@ -1294,10 +1294,10 @@
     "sinkingFunds": [
       {
         "id": 1,
-        "name": "Carro & Estacionamento",
-        "balance": 80,
-        "monthlyContribution": 80,
-        "note": "Manutencao, estacionamento e gastos variaveis do carro",
+        "name": "Carro",
+        "balance": 50,
+        "monthlyContribution": 50,
+        "note": "Car wash, troca de oleo, mecanica, pneus, multas",
         "history": [],
         "lastContribution": "2026-06"
       },
@@ -1307,6 +1307,15 @@
         "balance": 30,
         "monthlyContribution": 30,
         "note": "Aniversarios, Natal, datas especiais, jantares de comemoracao",
+        "history": [],
+        "lastContribution": "2026-06"
+      },
+      {
+        "id": 6,
+        "name": "Estacionamento",
+        "balance": 30,
+        "monthlyContribution": 30,
+        "note": "Provisao mensal para estacionamento",
         "history": [],
         "lastContribution": "2026-06"
       },
