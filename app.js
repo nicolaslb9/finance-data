@@ -60,7 +60,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v50'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v51'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
@@ -80,6 +80,7 @@ function init() {
   const sc = localStorage.getItem('finance_cfg');
   if (sc) { try { cfg = JSON.parse(sc); loadCfgUI(); } catch(e){} }
   if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
+  if (!savings.sinkingPool) savings.sinkingPool = { monthlyContribution: 150, carryover: 0, expenses: {} };
 
   // Populate + sync all month selectors on boot
   syncMonthSelectors();
