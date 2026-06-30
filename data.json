@@ -967,7 +967,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 140
+          "budget": 150
         },
         {
           "id": 40,
@@ -1341,7 +1341,7 @@
         "id": 5,
         "name": "Presentes & Datas",
         "balance": 25,
-        "monthlyContribution": 20,
+        "monthlyContribution": 30,
         "note": "Aniversarios, Natal, datas especiais, jantares de comemoracao",
         "history": [
           {
