@@ -15,6 +15,9 @@ function saveSinkingFunds() {
 }
 
 function totalSinkingMonthly() {
+  // New model: single pool monthly contribution
+  if (savings && savings.sinkingPool) return +savings.sinkingPool.monthlyContribution || 0;
+  // Fallback to old per-category model if pool not set
   return (sinkingFunds||[]).reduce((s,f)=>s+(+f.monthlyContribution||0),0);
 }
 
