@@ -918,7 +918,7 @@
         {
           "id": 1000,
           "name": "Terapia",
-          "type": "fixed",
+          "type": "savings",
           "budget": 400
         },
         {
@@ -967,7 +967,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 100
+          "budget": 130
         },
         {
           "id": 40,
@@ -1296,7 +1296,7 @@
         "id": 1,
         "name": "Carro",
         "balance": 25,
-        "monthlyContribution": 25,
+        "monthlyContribution": 33,
         "note": "Car wash, troca de oleo, mecanica, pneus, multas",
         "history": [
           {
@@ -1311,7 +1311,7 @@
         "id": 2,
         "name": "Saude",
         "balance": 25,
-        "monthlyContribution": 25,
+        "monthlyContribution": 33,
         "note": "Dentista, vitaminas, remedios, oculos, fisio",
         "history": [
           {
@@ -1326,7 +1326,7 @@
         "id": 3,
         "name": "Casa & Assinaturas",
         "balance": 25,
-        "monthlyContribution": 25,
+        "monthlyContribution": 33,
         "note": "Costco membership, utensilios, manutencao do apt",
         "history": [
           {
@@ -1341,7 +1341,7 @@
         "id": 5,
         "name": "Presentes & Datas",
         "balance": 25,
-        "monthlyContribution": 25,
+        "monthlyContribution": 31,
         "note": "Aniversarios, Natal, datas especiais, jantares de comemoracao",
         "history": [
           {
@@ -1351,15 +1351,6 @@
           }
         ],
         "lastContribution": "2026-06"
-      },
-      {
-        "id": 6,
-        "name": "Estacionamento",
-        "balance": 0,
-        "monthlyContribution": 30,
-        "note": "Provisao mensal para estacionamento",
-        "history": [],
-        "lastContribution": null
       }
     ]
   }
