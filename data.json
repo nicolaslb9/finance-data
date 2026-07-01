@@ -1302,10 +1302,10 @@
       {
         "id": 51,
         "name": "Japan Trip",
-        "target": 3500,
+        "target": 3000,
         "saved": 0,
-        "monthly": 1000,
-        "note": "Voo e estadia pagos. Meta para gastos na viagem. Prazo: Setembro 2026."
+        "monthly": 0,
+        "note": "Sera completada de uma vez com dinheiro extra"
       },
       {
         "id": 52,
