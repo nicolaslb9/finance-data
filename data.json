@@ -1263,9 +1263,10 @@
         "startingBalance": 0
       },
       {
-        "id": 1011,
-        "name": "Sinking Funds",
-        "amount": 0,
+        "id": 3066,
+        "linkId": 3066,
+        "name": "College",
+        "amount": 70,
         "startingBalance": 0
       },
       {
@@ -1283,10 +1284,9 @@
         "startingBalance": 5481
       },
       {
-        "id": 3066,
-        "linkId": 3066,
-        "name": "College",
-        "amount": 70,
+        "id": 1011,
+        "name": "Sinking Funds",
+        "amount": 0,
         "startingBalance": 0
       }
     ],
@@ -1297,7 +1297,8 @@
         "target": 30096,
         "saved": 13440,
         "monthly": 300,
-        "note": "Meta: 6x gastos essenciais (fixo+dividas+necessidades = $5,016/mes). Atual: $7,919."
+        "note": "Meta: 6x gastos essenciais (fixo+dividas+necessidades = $5,016/mes). Atual: $7,919.",
+        "priority": 0
       },
       {
         "id": 51,
@@ -1305,15 +1306,8 @@
         "target": 3000,
         "saved": 0,
         "monthly": 0,
-        "note": "Sera completada de uma vez com dinheiro extra"
-      },
-      {
-        "id": 52,
-        "name": "TFSA",
-        "target": 1800000,
-        "saved": 4459,
-        "monthly": 300,
-        "note": "VGRO - crescimento de longo prazo. Limite anual $7,000. Aumentar apos as viagens."
+        "note": "Sera completada de uma vez com dinheiro extra",
+        "priority": 1
       },
       {
         "id": 1002,
@@ -1321,7 +1315,8 @@
         "target": 20000,
         "saved": 50,
         "monthly": 30,
-        "note": "Planejado para 2029. Daycare em Vancouver ~$1,500/mes. Comecar cedo."
+        "note": "Planejado para 2029. Daycare em Vancouver ~$1,500/mes. Comecar cedo.",
+        "priority": 2
       },
       {
         "id": 1006,
@@ -1329,7 +1324,8 @@
         "target": 4000,
         "saved": 200,
         "monthly": 100,
-        "note": "Viagem ao Brasil em Marco/2027. Aumentar para $667/mes apos o Japao."
+        "note": "Viagem ao Brasil em Marco/2027. Aumentar para $667/mes apos o Japao.",
+        "priority": 3
       },
       {
         "id": 1010,
@@ -1337,7 +1333,8 @@
         "target": 2900,
         "saved": 100,
         "monthly": 50,
-        "note": "Earlobe repair Juliana (~$2,000) + clareamento Nicolas (~$900). Verificar Sun Life."
+        "note": "Earlobe repair Juliana (~$2,000) + clareamento Nicolas (~$900). Verificar Sun Life.",
+        "priority": 4
       },
       {
         "id": 3066,
@@ -1345,8 +1342,17 @@
         "saved": 70,
         "target": 20000,
         "monthly": 0,
-        "priority": 7,
+        "priority": 5,
         "note": "Poupanca de longo prazo para faculdade no futuro"
+      },
+      {
+        "id": 52,
+        "name": "TFSA",
+        "target": 1800000,
+        "saved": 4459,
+        "monthly": 300,
+        "note": "VGRO - crescimento de longo prazo. Limite anual $7,000. Aumentar apos as viagens.",
+        "priority": 6
       },
       {
         "id": 900,
@@ -1354,7 +1360,7 @@
         "saved": 5481,
         "target": 0,
         "monthly": 0,
-        "priority": 8,
+        "priority": 7,
         "note": "RRSP da Juliana (5% + match do empregador) \u2014 cresce automaticamente, sem alvo fixo"
       },
       {
@@ -1363,7 +1369,7 @@
         "saved": 0,
         "target": 0,
         "monthly": 0,
-        "priority": 9,
+        "priority": 8,
         "note": "Caixinha: sobra das provisoes mensais vai para ca. Reserva flexivel, sem alvo fixo"
       }
     ],
