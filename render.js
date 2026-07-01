@@ -1,6 +1,9 @@
 // ===== N&J Budget — Render Module (all renderX functions) =====
 
 function render() {
+  try { renderNetWorth(); } catch(e){}
+  try { renderRegisteredRoom(); } catch(e){}
+  try { renderMonthComparison(); } catch(e){}
   renderMetrics();
   renderDonutChart();
   renderBars();
@@ -1221,4 +1224,129 @@ function historyCatsClear() {
   window._historyCatsCleared = true;
   window._historyCatsOpen = true;
   renderHistory();
+}
+
+
+// ═══════════ #1 PATRIMÔNIO LÍQUIDO ═══════════
+function renderNetWorth() {
+  const el = document.getElementById('networth-card');
+  if (!el) return;
+  const assets = savings.wallets.reduce((s,w)=>s+(+w.amount||0),0);
+  const carDebt = +savings.carDebt || 0;
+  const net = assets - carDebt;
+
+  el.innerHTML = `<div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(124,58,237,0.06), transparent);border:1px solid rgba(124,58,237,0.2)">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:600">💎 Patrimônio Líquido</div>
+        <div style="font-size:26px;font-weight:700;color:#7c3aed;font-family:'Geist Mono',monospace;margin-top:2px">${fmt(net)}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">ativos menos dívida do carro</div>
+      </div>
+      <div style="text-align:right;font-size:12px;color:var(--text3);line-height:1.7">
+        <div>Ativos: <strong style="color:var(--green)">${fmt(assets)}</strong></div>
+        <div>Dívida carro: <strong style="color:var(--red)">-<input type="number" value="${carDebt}" min="0" style="width:70px;border:none;border-bottom:1px dashed var(--border2);background:transparent;font-size:12px;font-weight:600;color:var(--red);text-align:right" onchange="savings.carDebt=+this.value;renderNetWorth();autoSave()"></strong></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════ #3 ESPAÇO REGISTRADO TFSA/RRSP ═══════════
+function renderRegisteredRoom() {
+  const el = document.getElementById('registered-room-card');
+  if (!el) return;
+  if (!savings.registeredRoom) savings.registeredRoom = {tfsaUsed:0,tfsaLimit:0,rrspUsed:0,rrspLimit:0};
+  const r = savings.registeredRoom;
+
+  function bar(label, used, limit, color) {
+    const pct = limit>0 ? Math.min(100, Math.round(used/limit*100)) : 0;
+    const left = Math.max(0, limit-used);
+    return `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+        <span style="font-weight:600;color:var(--text2)">${label}</span>
+        <span style="color:var(--text3)">${limit>0?pct+'%':'—'}</span>
+      </div>
+      <div style="height:7px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:5px">
+        <div style="height:100%;width:${pct}%;background:${color};border-radius:4px"></div>
+      </div>
+      <div style="display:flex;gap:10px;font-size:11px;color:var(--text3);flex-wrap:wrap">
+        <span>Usado: $<input type="number" value="${used}" min="0" style="width:64px;border:none;border-bottom:1px dashed var(--border2);background:transparent;font-size:11px;color:var(--text2)" onchange="savings.registeredRoom.${label==='TFSA'?'tfsaUsed':'rrspUsed'}=+this.value;renderRegisteredRoom();autoSave()"></span>
+        <span>Limite: $<input type="number" value="${limit}" min="0" style="width:70px;border:none;border-bottom:1px dashed var(--border2);background:transparent;font-size:11px;color:var(--text2)" onchange="savings.registeredRoom.${label==='TFSA'?'tfsaLimit':'rrspLimit'}=+this.value;renderRegisteredRoom();autoSave()"></span>
+        ${limit>0?`<span style="color:var(--green);font-weight:600">Disponível: ${fmt(left)}</span>`:''}
+      </div>
+    </div>`;
+  }
+
+  el.innerHTML = `<div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>🍁 Espaço registrado (TFSA / RRSP)</h3><span class="sub">preencha com os valores da CRA</span></div>
+    ${bar('TFSA', +r.tfsaUsed||0, +r.tfsaLimit||0, '#3b82f6')}
+    ${bar('RRSP', +r.rrspUsed||0, +r.rrspLimit||0, '#8b5cf6')}
+    <div style="font-size:10px;color:var(--text3);font-style:italic;margin-top:4px">Veja seu espaço exato no My CRA Account. Passar do limite gera multa de 1%/mês.</div>
+  </div>`;
+}
+
+// ═══════════ #5 COMPARAÇÃO MÊS A MÊS ═══════════
+function renderMonthComparison() {
+  const el = document.getElementById('month-comparison-card');
+  if (!el) return;
+
+  // Compare current month vs previous month with data
+  const monthsWithData = Object.keys(data).map(Number).filter(mk => (data[mk].transactions||[]).length>0).sort((a,b)=>a-b);
+  const curIdx = monthsWithData.indexOf(currentMonth);
+  const prevMonth = curIdx > 0 ? monthsWithData[curIdx-1] : (monthsWithData.filter(m=>m<currentMonth).pop());
+
+  if (prevMonth === undefined || prevMonth === null) {
+    el.innerHTML = '';
+    return;
+  }
+
+  function spentByType(mk) {
+    const m = data[mk];
+    const budgetMap = {};
+    (m.budget||[]).forEach(b => budgetMap[b.id]=b.type);
+    const totals = {};
+    (m.transactions||[]).forEach(t => {
+      const type = budgetMap[t.cat] || 'outros';
+      totals[type] = (totals[type]||0) + (+t.amount||0);
+    });
+    return totals;
+  }
+
+  const cur = spentByType(currentMonth);
+  const prev = spentByType(prevMonth);
+  const curTotal = Object.values(cur).reduce((s,v)=>s+v,0);
+  const prevTotal = Object.values(prev).reduce((s,v)=>s+v,0);
+  const diff = curTotal - prevTotal;
+  const diffPct = prevTotal>0 ? Math.round(diff/prevTotal*100) : 0;
+
+  const typeLabels = {debt:'Dívidas',fixed:'Fixos',needs:'Necessidades',wants:'Desejos',savings:'Poupança',provision:'Provisões',outros:'Outros'};
+  const allTypes = [...new Set([...Object.keys(cur), ...Object.keys(prev)])];
+
+  let rows = '';
+  allTypes.forEach(t => {
+    const c = cur[t]||0, p = prev[t]||0, d = c-p;
+    if (c===0 && p===0) return;
+    const color = d>0 ? 'var(--red)' : d<0 ? 'var(--green)' : 'var(--text3)';
+    const arrow = d>0 ? '↑' : d<0 ? '↓' : '=';
+    rows += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid var(--border);font-size:12px">
+      <span style="color:var(--text2)">${typeLabels[t]||t}</span>
+      <div style="display:flex;gap:12px;align-items:center">
+        <span style="color:var(--text3);font-family:'Geist Mono',monospace">${fmt(p)}</span>
+        <span style="color:var(--text3)">→</span>
+        <span style="font-family:'Geist Mono',monospace;font-weight:600">${fmt(c)}</span>
+        <span style="color:${color};font-size:11px;font-weight:600;min-width:52px;text-align:right">${arrow} ${fmt(Math.abs(d))}</span>
+      </div>
+    </div>`;
+  });
+
+  el.innerHTML = `<div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>📊 ${MONTHS[prevMonth].slice(0,3)} → ${MONTHS[currentMonth].slice(0,3)}</h3><span class="sub">comparação de gastos</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:8px 10px;background:var(--bg3);border-radius:8px">
+      <span style="font-size:12px;color:var(--text2);font-weight:600">Total gasto</span>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span style="font-family:'Geist Mono',monospace;font-weight:700;font-size:14px">${fmt(curTotal)}</span>
+        <span style="font-size:11px;font-weight:600;color:${diff>0?'var(--red)':'var(--green)'}">${diff>0?'↑':'↓'} ${fmt(Math.abs(diff))} (${diff>0?'+':''}${diffPct}%)</span>
+      </div>
+    </div>
+    ${rows}
+  </div>`;
 }
