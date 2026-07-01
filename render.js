@@ -641,31 +641,14 @@ function renderRetirementProjection() {
     <div style="text-align:center"><div style="font-size:10px;color:#166534;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Renda mensal aposentadoria</div><div style="font-size:16px;font-weight:700;color:#15803d;font-family:'Geist Mono',monospace">$6,000</div></div>
     <div style="text-align:center"><div style="font-size:10px;color:#166534;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Anos até aposentadoria</div><div style="font-size:16px;font-weight:700;color:#15803d;font-family:'Geist Mono',monospace">28 anos</div></div>
   </div>
-  <div style="margin-top:12px;padding:10px 12px;background:#eff6ff;border-radius:8px;border-left:3px solid #3b82f6">
-    <div style="font-size:12px;font-weight:600;color:#1e40af;margin-bottom:4px">💡 Sobre o VGRO e diversificação</div>
-    <div style="font-size:12px;color:#374151;line-height:1.6">VGRO (80% ações/20% renda fixa) é uma boa escolha para horizonte de 28 anos. Para reduzir risco gradualmente, considere migrar 20-30% para <strong>XBAL</strong> (60/40) após os 40 anos de vocês. O Canada Life RRP já funciona como âncora conservadora. Não há necessidade de mudança agora.</div>
-  </div>
-
-  <!-- CPP / OAS — Government pension -->
-  <div style="margin-top:12px;padding:14px 16px;background:#fefce8;border-radius:8px;border-left:3px solid #eab308">
-    <div style="font-size:13px;font-weight:700;color:#854d0e;margin-bottom:8px">🍁 Aposentadoria do governo canadense (CPP + OAS)</div>
-    <div style="font-size:12px;color:#374151;line-height:1.7">
-      Sim! Além dos seus investimentos, o governo paga dois benefícios:<br><br>
-      <strong>1. CPP (Canada Pension Plan)</strong> — vocês já contribuem via paycheck desde 2023. É proporcional ao quanto e por quantos anos vocês contribuem. O máximo (2026) é <strong>$1.507/mês</strong> aos 65 anos, mas a média real é <strong>~$925/mês</strong>. O CPP cobre cerca de 25% da renda pré-aposentadoria.<br><br>
-      <strong>2. OAS (Old Age Security)</strong> — pago a partir dos 65 anos a quem morou 10+ anos no Canadá. Não depende de contribuição (vem dos impostos gerais). Hoje é <strong>~$740/mês</strong>.<br><br>
-      <strong>Estimativa para vocês:</strong> contribuindo desde 2023 com renda de ~$62-67k, cada um acumula cerca de <strong>$30-38/mês de CPP por ano contribuído</strong>. Se continuarem até os 55 (≈32 anos de contribuição), poderiam chegar perto do máximo. Mas aposentando aos 55 (sem contribuir dos 55 aos 65) e começando a receber aos 65, uma estimativa realista é <strong>$900-1.200/mês de CPP cada</strong> + $740 de OAS cada = <strong>~$3.300-3.900/mês do governo para o casal</strong> (em dólares de hoje, a partir dos 65).
+  <div style="margin-top:12px;padding:12px 14px;background:#eff6ff;border-radius:8px;border-left:3px solid #3b82f6">
+    <div style="font-size:12px;font-weight:700;color:#1e40af;margin-bottom:8px">💡 Recomendações</div>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:12.5px;color:#374151;line-height:1.5">
+      <div>📈 <strong>VGRO</strong> (80/20) é bom para 28 anos. Após os 40, considere migrar parte para <strong>XBAL</strong> (60/40).</div>
+      <div>🍁 <strong>CPP + OAS</strong> do governo somam ~<strong>$3.300-3.900/mês</strong> para o casal a partir dos 65 (extra além dos seus investimentos).</div>
+      <div>🇧🇷 Acordo Brasil-Canadá (2014): o CPP acumulado pode ser recebido no Brasil se voltarem. Nada se perde.</div>
     </div>
-    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #fde68a">
-      <div style="font-size:12px;font-weight:600;color:#854d0e;margin-bottom:4px">🇧🇷 E se voltarem para o Brasil?</div>
-      <div style="font-size:12px;color:#374151;line-height:1.7">
-        Brasil e Canadá têm um <strong>Acordo de Previdência Social</strong> (em vigor desde 2014). Isso significa:<br>
-        • O <strong>CPP</strong> que vocês acumularam pode ser <strong>recebido morando no Brasil</strong> — o Canadá deposita o benefício proporcional ao que foi contribuído lá.<br>
-        • A <strong>OAS</strong> também pode ser paga no exterior, mas exige <strong>20 anos de residência no Canadá</strong> para manter o valor cheio fora do país (com menos de 20 anos, vira proporcional).<br>
-        • O acordo permite <strong>somar os períodos</strong> dos dois países: o tempo contribuído no Canadá conta para qualificar no INSS brasileiro e vice-versa — útil para atingir o tempo mínimo de aposentadoria em qualquer um dos dois.<br><br>
-        Na prática: o que vocês contribuíram aqui não se perde se voltarem. Cada país paga sua parte proporcional.
-      </div>
-    </div>
-    <div style="margin-top:8px;font-size:10px;color:#a16207;font-style:italic">Estimativas aproximadas. Para valores exatos, criem conta no My Service Canada Account — mostra seu CPP acumulado real.</div>
+    <div style="margin-top:8px;font-size:10px;color:#6b7280;font-style:italic">Estimativas. Veja seu CPP real no My Service Canada Account.</div>
   </div>`;
   retEl.innerHTML = h;
 }
