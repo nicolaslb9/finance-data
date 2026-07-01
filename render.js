@@ -680,10 +680,8 @@ function renderGoals() {
       <div class="prog-bar"><div class="prog-fill" style="width:${pct.toFixed(1)}%;background:${barColor}"></div></div>
       ${g.note?`<div style="font-size:11px;color:#6b7280;margin-bottom:6px;line-height:1.5">${esc(g.note)}</div>`:''}
       <div class="prog-meta">
-        <span>Meta: <input type="number" value="${g.target}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).target=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>
-        <span>Guardado: <input type="number" value="${g.saved}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).saved=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>
-        <span>Mensal: <input type="number" value="${g.monthly}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).monthly=+this.value;renderGoals();renderRecommendations();autoSave()"></span>
-        <span style="color:var(--accent);font-weight:500">≈ ${months} meses</span>
+        <span>Objetivo: <input type="number" value="${g.target}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).target=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>
+        <span>Tenho hoje: <input type="number" value="${g.saved}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).saved=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>
       </div>
     </div>`;
   });
