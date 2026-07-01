@@ -708,7 +708,7 @@ function renderRetirementProjection() {
 
 function renderGoals() {
   let h = '';
-  const priorityOrder = savings.goals.slice().sort((a,b)=>(a.priority||9)-(b.priority||9));
+  const priorityOrder = savings.goals.slice().sort((a,b)=>(a.priority??99)-(b.priority??99));
   priorityOrder.forEach(g => {
     const noTarget = !g.target || g.target <= 0;  // metas sem alvo fixo (RRSP, caixinha)
     const pct = g.target>0 ? clamp(g.saved/g.target*100,0,100) : 0;
