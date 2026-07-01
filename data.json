@@ -1338,6 +1338,33 @@
         "saved": 100,
         "monthly": 50,
         "note": "Earlobe repair Juliana (~$2,000) + clareamento Nicolas (~$900). Verificar Sun Life."
+      },
+      {
+        "id": 3066,
+        "name": "College",
+        "saved": 70,
+        "target": 20000,
+        "monthly": 0,
+        "priority": 7,
+        "note": "Poupanca de longo prazo para faculdade no futuro"
+      },
+      {
+        "id": 900,
+        "name": "Canada Life RRP (Juliana)",
+        "saved": 5481,
+        "target": 0,
+        "monthly": 0,
+        "priority": 8,
+        "note": "RRSP da Juliana (5% + match do empregador) \u2014 cresce automaticamente, sem alvo fixo"
+      },
+      {
+        "id": 1011,
+        "name": "Sinking Funds",
+        "saved": 0,
+        "target": 0,
+        "monthly": 0,
+        "priority": 9,
+        "note": "Caixinha: sobra das provisoes mensais vai para ca. Reserva flexivel, sem alvo fixo"
       }
     ],
     "sinkingFunds": [],
