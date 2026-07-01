@@ -650,6 +650,58 @@ function renderRetirementProjection() {
       <div>🇧🇷 Acordo Brasil-Canadá (2014): o CPP acumulado pode ser recebido no Brasil se voltarem. Nada se perde.</div>
     </div>
     <div style="margin-top:8px;font-size:10px;color:#6b7280;font-style:italic">Estimativas. Veja seu CPP real no My Service Canada Account.</div>
+  </div>
+
+  <!-- PLANO POR FAIXA ETÁRIA -->
+  <div style="margin-top:14px;padding:14px 16px;background:#faf5ff;border-radius:10px;border-left:3px solid #8b5cf6">
+    <div style="font-size:13px;font-weight:700;color:#6b21a8;margin-bottom:10px">🗓️ O que fazer em cada fase (vocês têm 27 e 30)</div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:12px;color:#374151;line-height:1.55">
+
+      <div style="padding-bottom:9px;border-bottom:1px solid #ede9fe">
+        <strong style="color:#6b21a8">Agora → 35 anos · Acumular no automático</strong><br>
+        • Maximizar o <strong>TFSA</strong> primeiro (limite 2026: $7.000/ano cada). Prioridade sobre RRSP enquanto a renda for média — retirada tax-free e sem afetar OAS no futuro.<br>
+        • Manter <strong>VGRO</strong> (80/20) — horizonte longo, deixa render.<br>
+        • Continuar o <strong>Canada Life RRP</strong> da Juliana (pega o match do empregador = dinheiro grátis).<br>
+        • Construir o fundo de emergência até $30.096.
+      </div>
+
+      <div style="padding-bottom:9px;border-bottom:1px solid #ede9fe">
+        <strong style="color:#6b21a8">35 → 45 anos · Otimizar impostos</strong><br>
+        • Quando a renda subir, começar a usar o <strong>RRSP</strong> nos anos de renda mais alta (reduz imposto hoje).<br>
+        • Se pensarem em casa própria: <strong>FHSA</strong> (First Home Savings Account) combina vantagens de RRSP + TFSA.<br>
+        • Revisar alocação: após os 40, considerar migrar 20-30% do VGRO para <strong>XBAL</strong> (60/40) — menos risco.
+      </div>
+
+      <div style="padding-bottom:9px;border-bottom:1px solid #ede9fe">
+        <strong style="color:#6b21a8">45 → 55 anos · Reta final da acumulação</strong><br>
+        • Maximizar aportes — são os anos de maior renda e maior poder de composição.<br>
+        • Reduzir risco gradualmente (mais renda fixa conforme se aproxima dos 55).<br>
+        • Confirmar tempo de residência no Canadá: <strong>20 anos</strong> garantem OAS cheia mesmo morando fora depois.
+      </div>
+
+      <div>
+        <strong style="color:#6b21a8">55+ · Aposentadoria e retiradas</strong><br>
+        • Aposentando aos 55: viver do TFSA/investimentos até os benefícios do governo começarem.<br>
+        • CPP pode começar dos 60 aos 70 (quanto mais tarde, maior o valor). OAS aos 65.<br>
+        • Converter <strong>RRSP → RRIF até os 71 anos</strong> (obrigatório). Fazer retiradas pequenas cedo evita imposto alto depois.<br>
+        • Após os 65, <strong>dividir renda de pensão</strong> com o cônjuge reduz imposto do casal.
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTAÇÃO A JUNTAR AGORA -->
+  <div style="margin-top:12px;padding:14px 16px;background:#f0fdf4;border-radius:10px;border-left:3px solid #22c55e">
+    <div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:10px">📂 Documentação para juntar desde já</div>
+    <div style="font-size:12px;color:#374151;line-height:1.7">
+      Guardar isso agora evita dor de cabeça daqui a décadas (especialmente pela saída fiscal do Brasil):<br><br>
+      • <strong>Registros de contribuição CPP</strong> — criar conta no <strong>My Service Canada Account</strong> e salvar o extrato anual. Comprova quanto vocês acumularam.<br>
+      • <strong>Notice of Assessment (NOA)</strong> da CRA de cada ano — guardar todos. Provam renda e espaço de contribuição de RRSP/TFSA.<br>
+      • <strong>Comprovantes de residência no Canadá</strong> (contas, contratos de aluguel, registros de entrada/saída) — contam para os 20 anos que garantem OAS cheia no exterior.<br>
+      • <strong>Extratos anuais de TFSA, RRSP e Canada Life</strong> — histórico de aportes e crescimento.<br>
+      • <strong>Documentos da saída fiscal do Brasil</strong> — a Declaração de Saída Definitiva e o comprovante. Importantes se um dia acionarem o acordo Brasil-Canadá.<br>
+      • <strong>Tempo de contribuição no INSS (Brasil)</strong>, se houver — o acordo permite somar os períodos dos dois países.
+    </div>
+    <div style="margin-top:8px;font-size:10px;color:#16a34a;font-style:italic">Dica: crie uma pasta digital "Aposentadoria" e salve um PDF por ano de cada item.</div>
   </div>`;
   retEl.innerHTML = h;
 }
