@@ -562,10 +562,11 @@ function renderRecommendations() {
     recs.push({icon:'💨', color:'#15803d', text:`Você tem ${fmt(slack)} de folga não alocada — ótimo colchão para imprevistos.`});
   }
 
-  let h = '<div style="display:flex;flex-direction:column;gap:11px">';
-  recs.forEach(r => {
-    h += `<div style="display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--text2)">
-      <span style="font-size:15px;flex-shrink:0">${r.icon}</span>
+  // Mostra só as 3 recomendações mais relevantes (compacto)
+  let h = '<div style="display:flex;flex-direction:column;gap:8px">';
+  recs.slice(0,3).forEach(r => {
+    h += `<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.45;color:var(--text2)">
+      <span style="font-size:13px;flex-shrink:0">${r.icon}</span>
       <span>${r.text}</span>
     </div>`;
   });
