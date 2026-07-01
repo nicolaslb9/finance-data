@@ -657,6 +657,7 @@ function renderGoals() {
   let h = '';
   const priorityOrder = savings.goals.slice().sort((a,b)=>(a.priority||9)-(b.priority||9));
   priorityOrder.forEach(g => {
+    const noTarget = !g.target || g.target <= 0;  // metas sem alvo fixo (RRSP, caixinha)
     const pct = g.target>0 ? clamp(g.saved/g.target*100,0,100) : 0;
     const left = Math.max(0, g.target-g.saved);
     const months = g.monthly>0 ? Math.ceil(left/g.monthly) : '∞';
@@ -675,12 +676,12 @@ function renderGoals() {
           ${urgency}
           <button class="rename-btn" onclick="renameGoal(${g.id})" title="Renomear">⋯</button>
         </div>
-        <span class="prog-pct">${Math.round(pct)}%</span>
+        <span class="prog-pct">${noTarget ? '' : Math.round(pct)+'%'}</span>
       </div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${pct.toFixed(1)}%;background:${barColor}"></div></div>
+      ${noTarget ? '' : `<div class="prog-bar"><div class="prog-fill" style="width:${pct.toFixed(1)}%;background:${barColor}"></div></div>`}
       ${g.note?`<div style="font-size:11px;color:#6b7280;margin-bottom:6px;line-height:1.5">${esc(g.note)}</div>`:''}
       <div class="prog-meta">
-        <span>Objetivo: <input type="number" value="${g.target}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).target=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>
+        ${noTarget ? '<span style="color:var(--text3);font-size:11px">Sem alvo fixo · acumulando</span>' : `<span>Objetivo: <input type="number" value="${g.target}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).target=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>`}
         <span>Tenho hoje: <input type="number" value="${g.saved}" min="0" onchange="savings.goals.find(x=>x.id===${g.id}).saved=+this.value;renderGoals();renderSavingsMetrics();renderRetirementProjection();autoSave()"></span>
       </div>
     </div>`;
