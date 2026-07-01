@@ -506,171 +506,76 @@ function renderWallets() {
   if(lbl) lbl.textContent = savings.wallets.length + ' contas';
 }
 function renderRecommendations() {
-  const recPhaseEl = document.getElementById('rec-phase-label');
+  const el = document.getElementById('recommendations');
+  if (!el) return;
 
-  // Determine phase based on current date
-  const now = new Date();
-  const phase = (now.getFullYear() < 2026 || (now.getFullYear()===2026 && now.getMonth()<=8))
-    ? 'phase1'
-    : (now.getFullYear()===2026 || (now.getFullYear()===2027 && now.getMonth()<=2))
-    ? 'phase2' : 'phase3';
+  const m = md();
+  const income = (m.income||[]).reduce((s,i)=>s+(+i.amount||0),0) || 7856;
 
-  const phaseLabels = {
-    phase1: 'Fase 1 · Agora ate Set/2026',
-    phase2: 'Fase 2 · Out/2026 - Mar/2027',
-    phase3: 'Fase 3 · Abr/2027 em diante'
-  };
-  if (recPhaseEl) recPhaseEl.textContent = phaseLabels[phase];
+  // Budget totals by type
+  const byType = {};
+  (m.budget||[]).forEach(b => { byType[b.type] = (byType[b.type]||0) + (+b.budget||0); });
+  const savingsBudget = byType['savings'] || 0;
+  const essentials = (byType['fixed']||0) + (byType['debt']||0) + (byType['needs']||0);
+  const wants = byType['wants'] || 0;
+  const savingsPct = income>0 ? Math.round(savingsBudget/income*100) : 0;
+  const essentialsPct = income>0 ? Math.round(essentials/income*100) : 0;
 
-  // Real recommendations based on actual goals + planning conversations
-  // Phase 1: Japan sprint + base building
-  // Phase 2: Brazil + retirement ramp up
-  // Phase 3: Permanent regime
-  const plans = {
-    phase1: [
-      { id:51, label:'Japan Trip',        amount:1000, color:'#ef4444',
-        note:'Prioridade maxima — prazo Set 4, 2026. Faltam ~$3,200.' },
-      { id:50, label:'Emergency Savings', amount:300,  color:'#f59e0b',
-        note:'Construindo ate $33k (6x despesas). Atualmente $7,919.' },
-      { id:52, label:'TFSA',              amount:300,  color:'#3b82f6',
-        note:'VGRO — crescimento composto. Manter contribuicao mesmo nas fases de viagem.' },
-      { id:1006,label:'Brasil 2027',       amount:100,  color:'#22c55e',
-        note:'Comecar pequeno agora. Aumentar para $667/mes apos o Japao.' },
-      { id:1002,label:'Baby Fund',         amount:30,   color:'#ec4899',
-        note:'2029 — 3 anos de runway. Comecar cedo, aumentar gradualmente.' },
-      { id:1010,label:'Earlobe + Dental',  amount:50,   color:'#06b6d4',
-        note:'Juliana ~$2,000 + Nicolas ~$900. Prazo 2027. Verificar Sun Life.' },
-    ],
-    phase2: [
-      { id:1006,label:'Brasil 2027',       amount:667,  color:'#ef4444',
-        note:'Aumentar apos Japao — meta $4,000 ate Marco/2027.' },
-      { id:50, label:'Emergency Savings', amount:400,  color:'#f59e0b',
-        note:'Continuar construindo ate $33k.' },
-      { id:52, label:'TFSA',              amount:400,  color:'#3b82f6',
-        note:'Aumentar contribuicao — maximizar limite anual ($7,000/ano).' },
-      { id:1002,label:'Baby Fund',         amount:200,  color:'#ec4899',
-        note:'Aumentar — 2029 se aproxima. Meta $20,000.' },
-      { id:1010,label:'Earlobe + Dental',  amount:200,  color:'#06b6d4',
-        note:'Prazo se aproxima — reforcar contribuicao.' },
-    ],
-    phase3: [
-      { id:52, label:'TFSA',              amount:600,  color:'#3b82f6',
-        note:'Maximizar — $7,000/ano. Principal veiculo de aposentadoria.' },
-      { id:50, label:'Emergency Savings', amount:300,  color:'#f59e0b',
-        note:'Fase final ate $33k. Depois redirecionar para aposentadoria.' },
-      { id:1002,label:'Baby Fund',         amount:400,  color:'#ec4899',
-        note:'Sprint final — 2029 chegando. Meta $20,000.' },
-      { id:900, label:'Canada Life RRP',  amount:517,  color:'#8b5cf6',
-        note:'Auto-descontado do salario da Juliana. 5% + empresa dobra = $517/mes.' },
-    ]
-  };
+  const recs = [];
 
-  const items = plans[phase] || plans.phase1;
-  const total = items.reduce((s,x)=>s+x.amount,0);
+  // 1. Savings rate vs 20% benchmark
+  if (savingsPct >= 20) {
+    recs.push({icon:'✅', color:'#15803d', text:`Sua taxa de poupança é <strong>${savingsPct}%</strong> da renda — acima da meta de 20%. Muito bom.`});
+  } else if (savingsPct >= 15) {
+    recs.push({icon:'📈', color:'#a16207', text:`Você poupa <strong>${savingsPct}%</strong> da renda. Está perto da meta de 20% — se conseguir apertar um pouco os desejos, chega lá.`});
+  } else {
+    recs.push({icon:'⚠️', color:'#b91c1c', text:`Sua taxa de poupança é <strong>${savingsPct}%</strong>, abaixo da meta de 20%. Veja se dá pra remanejar algo dos desejos.`});
+  }
 
-  let h = '';
-  items.forEach(item => {
-    const em = WALLET_EMOJI[item.id] || '';
-    h += `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);gap:12px">
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px">
-          ${em ? `<span class="emo" style="font-size:14px">${em}</span>` : ''}
-          <span>${esc(item.label)}</span>
-        </div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4">${esc(item.note)}</div>
-      </div>
-      <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:${item.color};white-space:nowrap;flex-shrink:0">${fmt(item.amount)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mes</span></span>
+  // 2. Pay yourself first
+  recs.push({icon:'🎯', color:'#1e40af', text:`Mova os <strong>${fmt(savingsBudget)}</strong> de savings para as contas <strong>no começo do mês</strong>, assim que o salário cair — antes que vire gasto.`});
+
+  // 3. Emergency fund progress
+  const emGoal = savings.goals.find(g=>g.id===50);
+  if (emGoal) {
+    const target = emGoal.target || 30096;
+    const saved = emGoal.saved || 0;
+    const pct = Math.round(saved/target*100);
+    if (pct < 100) {
+      recs.push({icon:'🛡️', color:'#7c3aed', text:`Fundo de emergência em <strong>${pct}%</strong> (${fmt(saved)} de ${fmt(target)}). Priorize completá-lo — é sua rede de segurança.`});
+    } else {
+      recs.push({icon:'🛡️', color:'#15803d', text:`Fundo de emergência completo (${fmt(saved)})! Pode redirecionar esse fluxo para TFSA/aposentadoria.`});
+    }
+  }
+
+  // 4. Essentials weight
+  if (essentialsPct > 60) {
+    recs.push({icon:'🏠', color:'#a16207', text:`Seus essenciais são <strong>${essentialsPct}%</strong> da renda (aluguel de Vancouver pesa). É estrutural, não descontrole — a folga vem de otimizar aos poucos.`});
+  }
+
+  // 5. Slack / unallocated
+  const totalBudget = essentials + wants + savingsBudget + (byType['provision']||0);
+  const slack = income - totalBudget;
+  if (slack < 50) {
+    recs.push({icon:'💨', color:'#b45309', text:`Seu orçamento está quase 100% alocado (folga de ${fmt(slack)}). Deixe $100-150 livres para imprevistos.`});
+  } else {
+    recs.push({icon:'💨', color:'#15803d', text:`Você tem ${fmt(slack)} de folga não alocada — ótimo colchão para imprevistos.`});
+  }
+
+  let h = '<div style="display:flex;flex-direction:column;gap:11px">';
+  recs.forEach(r => {
+    h += `<div style="display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--text2)">
+      <span style="font-size:15px;flex-shrink:0">${r.icon}</span>
+      <span>${r.text}</span>
     </div>`;
   });
-  h += `<div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:2px solid var(--border)">
-    <span style="font-size:12px;font-weight:600;color:var(--text)">Total savings/mes</span>
-    <span style="font-family:'Geist Mono',monospace;font-size:14px;font-weight:700;color:var(--accent)">${fmt(total)}</span>
-  </div>`;
-
-  const recEl = document.getElementById('recommendations');
-  if (recEl) recEl.innerHTML = h;
+  h += '</div>';
+  el.innerHTML = h;
 }
 
 function renderPhasesPlan() {
-  const phasesEl = document.getElementById('phases-plan');
-  if(!phasesEl) return;
-  const phase = getCurrentPhase();
-
-  const phases = [
-    {
-      id: 'phase1',
-      label: 'Fase 1',
-      period: 'Agora → Set/2026',
-      goal: 'Japan Trip + fundamentos',
-      color: '#ef4444', bg: '#fef2f2', border: '#fecaca',
-      items: [
-        { id:51,  label:'Japan Trip',       amount:1000, note:'Prioridade maxima — prazo Set 4' },
-        { id:50,  label:'Emergency Savings',amount:300,  note:'Construindo ate $30,096' },
-        { id:52,  label:'TFSA',             amount:300,  note:'Manter sempre — VGRO' },
-        { id:1006,label:'Brasil 2027',      amount:100,  note:'Comecar pequeno agora' },
-        { id:1002,label:'Baby Fund',        amount:30,   note:'Inicio — 2029 ainda longe' },
-        { id:1010,label:'Earlobe + Dental', amount:50,   note:'Prazo 2027' },
-      ]
-    },
-    {
-      id: 'phase2',
-      label: 'Fase 2',
-      period: 'Out/2026 → Mar/2027',
-      goal: 'Brasil + acelerar aposentadoria',
-      color: '#f59e0b', bg: '#fffbeb', border: '#fde68a',
-      items: [
-        { id:1006,label:'Brasil 2027',      amount:667,  note:'Aumentar — meta $4k ate Mar/27' },
-        { id:50,  label:'Emergency Savings',amount:400,  note:'Continuacao' },
-        { id:52,  label:'TFSA',             amount:400,  note:'Aumentar contribuicao' },
-        { id:1002,label:'Baby Fund',        amount:200,  note:'Aumentar — 2029 se aproxima' },
-        { id:1010,label:'Earlobe + Dental', amount:200,  note:'Prazo chegando' },
-      ]
-    },
-    {
-      id: 'phase3',
-      label: 'Fase 3',
-      period: 'Abr/2027 em diante',
-      goal: 'Regime permanente — aposentadoria',
-      color: '#22c55e', bg: '#f0fdf4', border: '#bbf7d0',
-      items: [
-        { id:52,  label:'TFSA',             amount:600,  note:'Maximizar $7k/ano' },
-        { id:50,  label:'Emergency Savings',amount:300,  note:'Sprint final ate $30,096' },
-        { id:1002,label:'Baby Fund',        amount:400,  note:'2029 — sprint final' },
-        { id:900, label:'Canada Life RRP',  amount:517,  note:'Auto-descontado salario Juliana' },
-      ]
-    },
-  ];
-
-  let h = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">`;
-
-  phases.forEach(p => {
-    const isActive = p.id === phase;
-    const total = p.items.reduce((s,x)=>s+x.amount,0);
-
-    h += `<div style="background:${p.bg};border:${isActive?'2px':'1px'} solid ${isActive?p.color:p.border};border-radius:10px;padding:14px;position:relative">
-      ${isActive ? `<span style="position:absolute;top:-9px;right:12px;background:${p.color};color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em">ATUAL</span>` : ''}
-      <div style="font-size:11px;font-weight:700;color:${p.color};text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">${p.label}</div>
-      <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:2px">${p.period}</div>
-      <div style="font-size:11px;color:#6b7280;margin-bottom:10px;font-style:italic">${p.goal}</div>
-      ${p.items.map(x => {
-        const em = WALLET_EMOJI[x.id] || '';
-        return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.05);gap:6px">
-          <div style="font-size:11px;color:#374151;display:flex;align-items:center;gap:4px;min-width:0">
-            ${em ? `<span class="emo" style="font-size:12px;flex-shrink:0">${em}</span>` : ''}
-            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.label)}</span>
-          </div>
-          <span style="font-size:11px;font-weight:700;color:${p.color};white-space:nowrap;font-family:'Geist Mono',monospace">${fmt(x.amount)}</span>
-        </div>`;
-      }).join('')}
-      <div style="margin-top:8px;padding-top:6px;border-top:1px solid ${p.border};display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:11px;color:#6b7280">Total/mes</span>
-        <span style="font-size:13px;font-weight:700;color:${p.color};font-family:'Geist Mono',monospace">${fmt(total)}</span>
-      </div>
-    </div>`;
-  });
-
-  h += '</div>';
-  phasesEl.innerHTML = h;
+  // Removido — substituído por recomendações baseadas no orçamento
+  return;
 }
 
 function renderRetirementProjection() {
