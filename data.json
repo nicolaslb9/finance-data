@@ -1417,6 +1417,13 @@
         "history": [],
         "lastContribution": null
       }
-    ]
+    ],
+    "registeredRoom": {
+      "tfsaUsed": 0,
+      "tfsaLimit": 0,
+      "rrspUsed": 0,
+      "rrspLimit": 0
+    },
+    "carDebt": 16197
   }
 }
