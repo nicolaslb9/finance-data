@@ -1330,7 +1330,7 @@
       {
         "id": 1010,
         "name": "Earlobe + Dental",
-        "target": 2900,
+        "target": 3000,
         "saved": 100,
         "monthly": 50,
         "note": "Earlobe repair Juliana (~$2,000) + clareamento Nicolas (~$900). Verificar Sun Life.",
@@ -1340,7 +1340,7 @@
         "id": 3066,
         "name": "College",
         "saved": 70,
-        "target": 20000,
+        "target": 6000,
         "monthly": 0,
         "priority": 5,
         "note": "Poupanca de longo prazo para faculdade no futuro"
@@ -1357,7 +1357,7 @@
       {
         "id": 900,
         "name": "Canada Life RRP (Juliana)",
-        "saved": 5481,
+        "saved": 5482,
         "target": 0,
         "monthly": 0,
         "priority": 7,
@@ -1417,6 +1417,13 @@
         "history": [],
         "lastContribution": null
       }
-    ]
+    ],
+    "registeredRoom": {
+      "tfsaUsed": 0,
+      "tfsaLimit": 0,
+      "rrspUsed": 0,
+      "rrspLimit": 0
+    },
+    "carDebt": 16197
   }
 }
