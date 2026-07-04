@@ -967,7 +967,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 300
+          "budget": 150
         },
         {
           "id": 40,
@@ -1417,7 +1417,7 @@
     ],
     "sinkingFunds": [],
     "sinkingPool": {
-      "monthlyContribution": 300,
+      "monthlyContribution": 150,
       "carryover": 0,
       "expenses": {}
     },
