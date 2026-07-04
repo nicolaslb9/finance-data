@@ -757,7 +757,10 @@ function renderProvisions() {
   const monthExpenses = pool.expenses[mk] || [];
 
   // Month math
-  const entrou = +pool.monthlyContribution || 0;
+  // Aporte do mês: usa override por mês se existir, senão o valor global
+  const entrou = (pool.monthlyByMonth && pool.monthlyByMonth[mk] != null)
+    ? +pool.monthlyByMonth[mk]
+    : (+pool.monthlyContribution || 0);
   const saiu = monthExpenses.reduce((s,e)=>s+(+e.amount||0), 0);
   const sobrouMes = entrou - saiu;
 
@@ -842,11 +845,14 @@ function renderProvisions() {
 
 // ── Pool management functions ──
 function sfSetMonthly(val) {
-  if (!savings.sinkingPool) savings.sinkingPool = {monthlyContribution:150,carryover:0,expenses:{}};
-  savings.sinkingPool.monthlyContribution = Math.max(0, +val||0);
+  if (!savings.sinkingPool) savings.sinkingPool = {monthlyContribution:150,carryover:0,expenses:{},monthlyByMonth:{}};
+  if (!savings.sinkingPool.monthlyByMonth) savings.sinkingPool.monthlyByMonth = {};
+  const v = Math.max(0, +val||0);
+  // Salva como override do mês atual (cada mês pode ter seu valor)
+  savings.sinkingPool.monthlyByMonth[String(currentMonth)] = v;
   // keep budget provision line in sync
   const prov = md().budget.find(b=>b.id===60);
-  if (prov) prov.budget = savings.sinkingPool.monthlyContribution;
+  if (prov) prov.budget = v;
   render(); autoSave();
 }
 
