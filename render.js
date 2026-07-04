@@ -822,9 +822,19 @@ function renderProvisions() {
     const sorted = [...monthExpenses].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
     sorted.forEach(e => {
       const d = e.date ? new Date(e.date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}) : '—';
-      h += `<div style="display:flex;align-items:center;gap:8px;padding:9px 2px;border-top:1px solid var(--border)">
-        <input type="date" value="${e.date||''}" style="font-size:11px;width:120px;color:var(--text3)" onchange="sfEditExpense(${e.id},'date',this.value)">
-        <input type="text" value="${esc(e.desc||'')}" placeholder="Descrição (ex: troca de óleo)" style="flex:1;font-size:13px;min-width:0" onchange="sfEditExpense(${e.id},'desc',this.value)">
+      const cats = [
+        ['','— categoria —'],
+        ['casa','🏠 Casa (utilidades, itens)'],
+        ['carro','🚗 Carro (manutenção, estacionamento)'],
+        ['saude','🏥 Saúde (suplemento, remédio, consulta)'],
+        ['presentes','🎁 Presentes & Datas'],
+        ['outro','📦 Outro']
+      ];
+      const catOpts = cats.map(([v,l])=>`<option value="${v}"${(e.cat||'')===v?' selected':''}>${l}</option>`).join('');
+      h += `<div style="display:flex;align-items:center;gap:8px;padding:9px 2px;border-top:1px solid var(--border);flex-wrap:wrap">
+        <input type="date" value="${e.date||''}" style="font-size:11px;width:110px;color:var(--text3)" onchange="sfEditExpense(${e.id},'date',this.value)">
+        <select style="font-size:12px;padding:3px 6px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2)" onchange="sfEditExpense(${e.id},'cat',this.value)">${catOpts}</select>
+        <input type="text" value="${esc(e.desc||'')}" placeholder="Descrição (opcional)" style="flex:1;font-size:13px;min-width:80px" onchange="sfEditExpense(${e.id},'desc',this.value)">
         <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:2px 7px">
           <span style="font-size:11px;color:var(--text3)">$</span>
           <input type="number" value="${e.amount}" min="0" step="0.01" style="width:64px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--text)" onchange="sfEditExpense(${e.id},'amount',+this.value)">
