@@ -853,7 +853,7 @@ function sfSetMonthly(val) {
   // keep budget provision line in sync
   const prov = md().budget.find(b=>b.id===60);
   if (prov) prov.budget = v;
-  render(); autoSave();
+  renderProvisions(); render(); autoSave();
 }
 
 function sfAddExpense() {
@@ -866,21 +866,21 @@ function sfAddExpense() {
   const newId = Math.max(maxId, 5000) + 1;
   const today = new Date().toISOString().slice(0,10);
   savings.sinkingPool.expenses[mk].unshift({id:newId, date:today, desc:'', amount:0});
-  render(); autoSave();
+  renderProvisions(); render(); autoSave();
 }
 
 function sfEditExpense(id, field, value) {
   const mk = String(currentMonth);
   const arr = savings.sinkingPool.expenses[mk] || [];
   const e = arr.find(x=>x.id===id);
-  if (e) { e[field] = value; render(); autoSave(); }
+  if (e) { e[field] = value; renderProvisions(); render(); autoSave(); }
 }
 
 function sfRemoveExpense(id) {
   if (!confirm('Remover este gasto da caixinha?')) return;
   const mk = String(currentMonth);
   savings.sinkingPool.expenses[mk] = (savings.sinkingPool.expenses[mk]||[]).filter(x=>x.id!==id);
-  render(); autoSave();
+  renderProvisions(); render(); autoSave();
 }
 
 function renderCarDebt() {
