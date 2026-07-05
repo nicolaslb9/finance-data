@@ -60,7 +60,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v72'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v73'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
@@ -216,7 +216,7 @@ let sinkingFunds = [
 
 function getCarLoan() {
   return {
-    balance: 16533.66,
+    balance: 16060,
     annualRate: 0.0949,
     biweeklyPayment: 294.24,
     remainingPayments: 63,
