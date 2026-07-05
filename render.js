@@ -1,6 +1,7 @@
 // ===== N&J Budget — Render Module (all renderX functions) =====
 
 function render() {
+  try { renderBrlTracker(); } catch(e){}
   try { renderNetWorth(); } catch(e){}
   try { renderRegisteredRoom(); } catch(e){}
   try { renderMonthComparison(); } catch(e){}
@@ -1364,5 +1365,43 @@ function renderMonthComparison() {
       </div>
     </div>
     ${rows}
+  </div>`;
+}
+
+
+// ═══════════ CONTROLE R$ (dinheiro em reais vindo do Brasil) ═══════════
+function renderBrlTracker() {
+  const el = document.getElementById('brl-tracker');
+  if (!el) return;
+  if (!savings.brlTracker) savings.brlTracker = {brl:0, note:'', rate:0};
+  const t = savings.brlTracker;
+  const rate = +t.rate || 0;
+  const brl = +t.brl || 0;
+  const estCad = rate>0 ? brl*rate : 0;
+
+  el.innerHTML = `<div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(34,197,94,0.06), rgba(250,204,21,0.05));border:1px solid rgba(34,197,94,0.2)">
+    <div class="card-header"><h3>🇧🇷➡️🇨🇦 Controle R$ → C$</h3><span class="sub">dinheiro em reais que estou convertendo</span></div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+      <div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Tenho em reais (R$)</div>
+        <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:4px 10px">
+          <span style="font-size:12px;color:var(--text3)">R$</span>
+          <input type="number" value="${brl}" min="0" style="width:100px;border:none;background:transparent;font-size:16px;font-weight:700;color:var(--text)" onchange="savings.brlTracker.brl=+this.value;renderBrlTracker();autoSave()">
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Cotação (C$ por R$1)</div>
+        <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:4px 10px">
+          <input type="number" value="${rate}" min="0" step="0.001" style="width:70px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--text)" onchange="savings.brlTracker.rate=+this.value;renderBrlTracker();autoSave()">
+        </div>
+      </div>
+      ${rate>0?`<div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">≈ em dólares</div>
+        <div style="font-size:20px;font-weight:700;color:var(--green);font-family:'Geist Mono',monospace">${fmt(estCad)}</div>
+      </div>`:''}
+    </div>
+    <div style="margin-top:10px">
+      <input type="text" value="${esc(t.note||'')}" placeholder="Nota (ex: presente da mãe, aguardando Wise...)" style="width:100%;font-size:12px;padding:6px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3)" onchange="savings.brlTracker.note=this.value;autoSave()">
+    </div>
   </div>`;
 }
