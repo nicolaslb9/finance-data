@@ -1509,7 +1509,7 @@
     },
     "carDebt": 16197,
     "brlTracker": {
-      "brl": 5000,
+      "brl": 50000,
       "note": "",
       "rate": 0
     }
