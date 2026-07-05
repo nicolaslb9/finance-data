@@ -81,6 +81,16 @@ async function loadFromGithub() {
 
 async function saveToGithub() {
   if (!cfg.user||!cfg.token) { showTab('settings'); return; }
+  // PROTEÇÃO ANTI-PERDA: nunca salvar se os dados estão vazios (evita zerar o arquivo)
+  if (!data || Object.keys(data).length === 0) {
+    console.error('saveToGithub abortado: data vazio — protegendo contra perda');
+    setSyncStatus('⚠ dados vazios, save bloqueado','error');
+    return;
+  }
+  if (!window._loadComplete) {
+    console.warn('saveToGithub abortado: load ainda não completou');
+    return;
+  }
   setSyncStatus('salvando…','saving');
   const payload = JSON.stringify({data,savings},null,2);
   const content = btoa(unescape(encodeURIComponent(payload)));
