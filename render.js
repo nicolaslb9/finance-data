@@ -1373,35 +1373,45 @@ function renderMonthComparison() {
 function renderBrlTracker() {
   const el = document.getElementById('brl-tracker');
   if (!el) return;
-  if (!savings.brlTracker) savings.brlTracker = {brl:0, note:'', rate:0};
+  if (!savings.brlTracker) savings.brlTracker = {metaBrl:50000, trazidoBrl:0, cadRecebido:0, note:''};
   const t = savings.brlTracker;
-  const rate = +t.rate || 0;
-  const brl = +t.brl || 0;
-  const estCad = rate>0 ? brl*rate : 0;
+  const meta = +t.metaBrl || 0;
+  const trazido = +t.trazidoBrl || 0;
+  const cad = +t.cadRecebido || 0;
+  const faltaBrl = Math.max(0, meta - trazido);
+  const pct = meta>0 ? Math.round(trazido/meta*100) : 0;
 
   el.innerHTML = `<div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(34,197,94,0.06), rgba(250,204,21,0.05));border:1px solid rgba(34,197,94,0.2)">
-    <div class="card-header"><h3>🇧🇷➡️🇨🇦 Controle R$ → C$</h3><span class="sub">dinheiro em reais que estou convertendo</span></div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+    <div class="card-header"><h3>🇧🇷➡️🇨🇦 Dinheiro do Brasil</h3><span class="sub">controle do que já trouxe</span></div>
+    <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px">
       <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Tenho em reais (R$)</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Meta (R$)</div>
+        <div style="font-size:20px;font-weight:700;color:var(--text2);font-family:'Geist Mono',monospace">R$ ${meta.toLocaleString('pt-BR')}</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Já trouxe (R$)</div>
         <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:4px 10px">
           <span style="font-size:12px;color:var(--text3)">R$</span>
-          <input type="number" value="${brl}" min="0" style="width:100px;border:none;background:transparent;font-size:16px;font-weight:700;color:var(--text)" onchange="savings.brlTracker.brl=+this.value;renderBrlTracker();autoSave()">
+          <input type="number" value="${trazido}" min="0" style="width:100px;border:none;background:transparent;font-size:16px;font-weight:700;color:var(--green)" onchange="savings.brlTracker.trazidoBrl=+this.value;renderBrlTracker();autoSave()">
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Cotação (C$ por R$1)</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Tenho em dólares (C$)</div>
         <div style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:4px 10px">
-          <input type="number" value="${rate}" min="0" step="0.001" style="width:70px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--text)" onchange="savings.brlTracker.rate=+this.value;renderBrlTracker();autoSave()">
+          <span style="font-size:12px;color:var(--text3)">C$</span>
+          <input type="number" value="${cad}" min="0" style="width:90px;border:none;background:transparent;font-size:16px;font-weight:700;color:#0ea5e9" onchange="savings.brlTracker.cadRecebido=+this.value;renderBrlTracker();autoSave()">
         </div>
       </div>
-      ${rate>0?`<div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:3px">≈ em dólares</div>
-        <div style="font-size:20px;font-weight:700;color:var(--green);font-family:'Geist Mono',monospace">${fmt(estCad)}</div>
-      </div>`:''}
+    </div>
+    <div style="height:8px;background:var(--bg4);border-radius:5px;overflow:hidden;margin-bottom:6px">
+      <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#22c55e,#eab308);border-radius:5px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)">
+      <span>${pct}% trazido</span>
+      <span>Falta trazer: R$ ${faltaBrl.toLocaleString('pt-BR')}</span>
     </div>
     <div style="margin-top:10px">
-      <input type="text" value="${esc(t.note||'')}" placeholder="Nota (ex: presente da mãe, aguardando Wise...)" style="width:100%;font-size:12px;padding:6px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3)" onchange="savings.brlTracker.note=this.value;autoSave()">
+      <input type="text" value="${esc(t.note||'')}" placeholder="Nota (ex: presente da mãe, aguardando próxima remessa...)" style="width:100%;font-size:12px;padding:6px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3)" onchange="savings.brlTracker.note=this.value;autoSave()">
     </div>
   </div>`;
 }
