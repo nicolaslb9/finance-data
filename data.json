@@ -1008,9 +1008,16 @@
       ],
       "transactions": [
         {
+          "id": 3105,
+          "date": "2026-07-06",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3103,
           "date": "2026-07-06",
-          "cat": 43,
+          "cat": 44,
           "desc": "shampoo",
           "amount": 10.9
         },
