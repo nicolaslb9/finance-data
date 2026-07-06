@@ -1008,11 +1008,18 @@
       ],
       "transactions": [
         {
+          "id": 3111,
+          "date": "2026-07-06",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3109,
           "date": "2026-07-06",
           "cat": 40,
           "desc": "pne jogo de merrrda",
-          "amount": 0
+          "amount": 20.53
         },
         {
           "id": 3107,
