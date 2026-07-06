@@ -159,6 +159,11 @@ function updateSaveButton(state, time) {
 }
 
 function autoSave() {
+  // Proteção dupla anti-perda: nunca autossalvar dados vazios
+  if (!data || Object.keys(data).length === 0) {
+    console.error('autoSave bloqueado: data vazio');
+    return;
+  }
   // GUARD: never save before the initial GitHub load finished —
   // prevents stale localStorage from overwriting good cloud data (data-loss bug)
   if (cfg.user && cfg.token && !window._loadComplete) {
