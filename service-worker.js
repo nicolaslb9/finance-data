@@ -1,5 +1,5 @@
 // Bump this version to force all clients to update immediately
-const CACHE_VERSION = 'finance-v9';
+const CACHE_VERSION = 'finance-v10';
 
 self.addEventListener('install', e => {
   // Skip waiting so new SW activates immediately
