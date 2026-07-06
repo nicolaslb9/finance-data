@@ -66,10 +66,17 @@ async function loadFromGithub() {
     localStorage.setItem('finance_savings',JSON.stringify(savings));
     // Mark load complete — saves are now allowed
     window._loadComplete = true;
-    if (!data[currentMonth]) data[currentMonth] = defaultMonthData();
+    // DIAGNÓSTICO: nunca criar mês vazio se o load trouxe dados — apenas se realmente não existir
+    const loadedKeys = Object.keys(data);
+    console.log('[LOAD] meses carregados:', loadedKeys, '| currentMonth:', currentMonth, '| tx no mês atual:', (data[currentMonth]?.transactions||[]).length);
+    if (!data[currentMonth]) {
+      console.warn('[LOAD] mês', currentMonth, 'não existe nos dados — criando vazio');
+      data[currentMonth] = defaultMonthData();
+    }
     syncMonthSelectors();
     render();
-    setSyncStatus('sincronizado ✓','saved');
+    const txCount = (data[currentMonth]?.transactions||[]).length;
+    setSyncStatus('sincronizado ✓ ('+loadedKeys.length+' meses, '+txCount+' tx)','saved');
     const cfgStatusEl = document.getElementById('cfg-status');
     if (cfgStatusEl) cfgStatusEl.textContent='✓ Dados carregados do GitHub';
     showAutoConnectToast();
