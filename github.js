@@ -164,13 +164,16 @@ function autoSave() {
     console.error('autoSave bloqueado: data vazio');
     return;
   }
-  // GUARD: never save before the initial GitHub load finished —
-  // prevents stale localStorage from overwriting good cloud data (data-loss bug)
-  if (cfg.user && cfg.token && !window._loadComplete) {
-    return;
-  }
+  // Sempre persiste localmente primeiro — nunca perder uma edição do usuário
+  // mesmo que o load inicial da nuvem ainda não tenha terminado.
   localStorage.setItem('finance_data',JSON.stringify(data));
   localStorage.setItem('finance_savings',JSON.stringify(savings));
+  // GUARD: só envia para o GitHub depois que o load inicial terminou —
+  // evita sobrescrever dados bons na nuvem com cache local desatualizado
+  if (cfg.user && cfg.token && !window._loadComplete) {
+    setSyncStatus('aguardando conexão…','error');
+    return;
+  }
   if (cfg.user&&cfg.token) {
     setSyncStatus('salvando…','saving');
     clearTimeout(saveTimer);
@@ -306,10 +309,6 @@ async function tryAutoLoad() {
     setSyncStatus('⚠ erro ao conectar — não editando', 'error');
   }
 }
-
-init();
-tryAutoLoad();
-
 
 // ===== UI helpers (FAB) =====
 
