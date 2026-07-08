@@ -1011,7 +1011,7 @@
           "id": 3117,
           "date": "2026-07-08",
           "cat": 44,
-          "desc": "",
+          "desc": "condicionador juliana",
           "amount": 0
         },
         {
@@ -1424,7 +1424,7 @@
       },
       {
         "id": 1000,
-        "name": "Nova conta",
+        "name": "Savings BMO - Divida do Carro",
         "amount": 0
       }
     ],
