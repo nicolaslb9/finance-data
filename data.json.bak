@@ -1540,7 +1540,7 @@
     "brlTracker": {
       "metaBrl": 50000,
       "trazidoBrl": 15000,
-      "cadRecebido": 3950,
+      "cadRecebido": 3950.44,
       "note": ""
     }
   }
