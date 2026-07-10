@@ -1453,7 +1453,8 @@
       {
         "id": 1000,
         "name": "Savings BMO - Divida do Carro",
-        "amount": 0
+        "amount": 1320,
+        "startingBalance": 1320
       }
     ],
     "goals": [
