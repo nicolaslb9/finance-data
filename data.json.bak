@@ -1008,11 +1008,18 @@
       ],
       "transactions": [
         {
+          "id": 3138,
+          "date": "2026-07-11",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3136,
           "date": "2026-07-11",
           "cat": 40,
           "desc": "cafe e matcha",
-          "amount": 0
+          "amount": 16.9
         },
         {
           "id": 3134,
