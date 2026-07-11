@@ -1008,11 +1008,18 @@
       ],
       "transactions": [
         {
+          "id": 3132,
+          "date": "2026-07-11",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3130,
           "date": "2026-07-11",
           "cat": 40,
           "desc": "dollarama - festa",
-          "amount": 0
+          "amount": 31.99
         },
         {
           "id": 3128,
