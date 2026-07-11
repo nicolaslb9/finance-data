@@ -1008,11 +1008,18 @@
       ],
       "transactions": [
         {
+          "id": 3140,
+          "date": "2026-07-11",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3138,
           "date": "2026-07-11",
           "cat": 30,
           "desc": "costco",
-          "amount": 0
+          "amount": 86.72
         },
         {
           "id": 3136,
