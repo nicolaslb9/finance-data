@@ -1679,8 +1679,8 @@
         "id": 900,
         "linkId": null,
         "name": "Canada Life RRP (Juliana)",
-        "amount": 5920,
-        "startingBalance": 5920
+        "amount": 5481,
+        "startingBalance": 5481
       },
       {
         "id": 1011,
@@ -1690,7 +1690,7 @@
       },
       {
         "id": 1000,
-        "name": "Savings BMO - Divida do Carro",
+        "name": "Acumulado Carro",
         "amount": 3955,
         "startingBalance": 3955
       }
@@ -1815,7 +1815,7 @@
       "metaBrl": 50000,
       "trazidoBrl": 25000,
       "cadRecebido": 6585,
-      "note": "$3955 no BMO, $2630 no Japan"
+      "note": "$3955 no Acumulado Carro, $2630 no Japan"
     }
   }
 }
