@@ -1679,8 +1679,8 @@
         "id": 900,
         "linkId": null,
         "name": "Canada Life RRP (Juliana)",
-        "amount": 5481,
-        "startingBalance": 5481
+        "amount": 5920,
+        "startingBalance": 5920
       },
       {
         "id": 1011,
@@ -1690,7 +1690,7 @@
       },
       {
         "id": 1000,
-        "name": "Acumulado Carro",
+        "name": "Savings BMO - Divida do Carro",
         "amount": 3955,
         "startingBalance": 3955
       }
