@@ -1,6 +1,7 @@
 
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 let currentMonth = new Date().getMonth();  // abre no mês atual real (Jan=0 ... Dez=11)
+let txCatFilter = '';  // '' = todas as categorias (filtro da aba Gastos)
 let nextId = 1000;
 let charts = {};
 
@@ -60,7 +61,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v82'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v83'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
@@ -107,6 +108,12 @@ function changeMonth(srcEl) {
   syncMonthSelectors();
   render();
   autoSave();
+}
+
+// Filtro de categoria da aba Gastos — '' = mostra todas (comportamento padrão)
+function setTxCatFilter(val) {
+  txCatFilter = val;
+  renderTxList();
 }
 
 // Populate every .month-selector with options and keep them all in sync
