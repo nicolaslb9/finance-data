@@ -417,10 +417,22 @@ function renderTopCats() {
 }
 
 function renderTxList() {
-  const sorted = [...md().transactions].sort((a,b)=>b.date.localeCompare(a.date));
+  // Popula o select de filtro de categoria (opções do mês atual)
+  const filterEl = document.getElementById('tx-cat-filter');
+  if (filterEl) {
+    const opts = `<option value="">Todas as categorias</option>` +
+      md().budget.map(b=>`<option value="${b.id}"${String(b.id)===String(txCatFilter)?' selected':''}>${esc(b.name)}</option>`).join('');
+    if (filterEl.innerHTML !== opts) filterEl.innerHTML = opts;
+    filterEl.value = txCatFilter;
+  }
+
+  const all = [...md().transactions].sort((a,b)=>b.date.localeCompare(a.date));
+  const sorted = txCatFilter ? all.filter(tx=>String(tx.cat)===String(txCatFilter)) : all;
   let h = '';
   if (sorted.length === 0) {
-    h = '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h5"/></svg>Nenhum gasto ainda. Clique em "+ Adicionar gasto"</div>';
+    h = txCatFilter
+      ? '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h5"/></svg>Nenhum gasto nessa categoria neste mês</div>'
+      : '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h5"/></svg>Nenhum gasto ainda. Clique em "+ Adicionar gasto"</div>';
   }
   sorted.forEach(tx => {
     const cat = md().budget.find(b=>b.id===tx.cat)||{name:'—',type:'needs'};
@@ -435,6 +447,9 @@ function renderTxList() {
       <button class="del-btn" onclick="removeTx(${tx.id})">×</button>
     </div>`;
   });
+  const countEl = document.getElementById('tx-count');
+  if (countEl) countEl.textContent = txCatFilter ? `${sorted.length} de ${all.length} transações` : all.length + ' transações';
+
   document.getElementById('tx-list').innerHTML = h;
 }
 
