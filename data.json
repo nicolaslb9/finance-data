@@ -1008,11 +1008,18 @@
       ],
       "transactions": [
         {
+          "id": 3188,
+          "date": "2026-07-20",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3186,
           "date": "2026-07-20",
           "cat": 30,
           "desc": "molho de salada",
-          "amount": 0
+          "amount": 10.98
         },
         {
           "id": 3185,
