@@ -1628,13 +1628,13 @@
           "id": 30,
           "name": "Groceries",
           "type": "needs",
-          "budget": 800
+          "budget": 900
         },
         {
           "id": 31,
           "name": "Gas",
           "type": "needs",
-          "budget": 300
+          "budget": 250
         },
         {
           "id": 50,
