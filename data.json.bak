@@ -1676,7 +1676,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 300
+          "budget": 150
         },
         {
           "id": 40,
