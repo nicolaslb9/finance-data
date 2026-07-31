@@ -1797,8 +1797,8 @@
         "id": 1002,
         "linkId": 1002,
         "name": "Baby Fund",
-        "amount": 150,
-        "startingBalance": 50
+        "amount": 100,
+        "startingBalance": 0
       },
       {
         "id": 1006,
