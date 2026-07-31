@@ -1652,7 +1652,7 @@
           "id": 52,
           "name": "TFSA",
           "type": "savings",
-          "budget": 500
+          "budget": 400
         },
         {
           "id": 1002,
