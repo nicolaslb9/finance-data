@@ -1644,9 +1644,9 @@
         },
         {
           "id": 51,
-          "name": "Japan Trip",
+          "name": "College",
           "type": "savings",
-          "budget": 0
+          "budget": 100
         },
         {
           "id": 52,
@@ -1783,8 +1783,8 @@
         "id": 1006,
         "linkId": 1006,
         "name": "Brasil 2027",
-        "amount": 200,
-        "startingBalance": 0
+        "amount": 300,
+        "startingBalance": 100
       },
       {
         "id": 1010,
