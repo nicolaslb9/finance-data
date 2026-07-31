@@ -1804,8 +1804,8 @@
         "id": 1006,
         "linkId": 1006,
         "name": "Brasil 2027",
-        "amount": 400,
-        "startingBalance": 100
+        "amount": 300,
+        "startingBalance": 0
       },
       {
         "id": 1010,
