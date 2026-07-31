@@ -1709,7 +1709,7 @@
           "date": "2026-07-31",
           "cat": 51,
           "desc": "",
-          "amount": 0
+          "amount": 100
         },
         {
           "id": 3219,
@@ -1790,7 +1790,7 @@
         "id": 51,
         "linkId": 51,
         "name": "Japan Trip",
-        "amount": 3000,
+        "amount": 3100,
         "startingBalance": 3000
       },
       {
@@ -1818,8 +1818,8 @@
         "id": 3066,
         "linkId": 3066,
         "name": "College",
-        "amount": 70,
-        "startingBalance": 0
+        "amount": 170,
+        "startingBalance": 100
       },
       {
         "id": 52,
