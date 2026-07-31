@@ -1709,7 +1709,7 @@
           "date": "2026-07-31",
           "cat": 50,
           "desc": "",
-          "amount": 0
+          "amount": 2000
         },
         {
           "id": 3221,
@@ -1790,7 +1790,7 @@
         "id": 50,
         "linkId": 50,
         "name": "Emergency Savings",
-        "amount": 13455,
+        "amount": 15455,
         "startingBalance": 12955
       },
       {
