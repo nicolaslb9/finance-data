@@ -1716,7 +1716,7 @@
           "date": "2026-07-31",
           "cat": 1002,
           "desc": "",
-          "amount": 0
+          "amount": 50
         },
         {
           "id": 3214,
@@ -1783,7 +1783,7 @@
         "id": 1002,
         "linkId": 1002,
         "name": "Baby Fund",
-        "amount": 100,
+        "amount": 150,
         "startingBalance": 50
       },
       {
