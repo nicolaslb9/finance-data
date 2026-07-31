@@ -1703,7 +1703,15 @@
           "budget": 400
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 3205,
+          "date": "2026-07-31",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        }
+      ]
     }
   },
   "savings": {
