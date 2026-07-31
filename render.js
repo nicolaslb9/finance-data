@@ -426,7 +426,7 @@ function renderTxList() {
     filterEl.value = txCatFilter;
   }
 
-  const all = [...md().transactions].sort((a,b)=>b.date.localeCompare(a.date));
+  const all = [...md().transactions].sort((a,b)=>b.date.localeCompare(a.date) || (+b.id - +a.id));
   const sorted = txCatFilter ? all.filter(tx=>String(tx.cat)===String(txCatFilter)) : all;
   let h = '';
   if (sorted.length === 0) {
