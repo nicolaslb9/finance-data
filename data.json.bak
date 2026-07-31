@@ -1818,8 +1818,8 @@
         "id": 3066,
         "linkId": 3066,
         "name": "College",
-        "amount": 200,
-        "startingBalance": 130
+        "amount": 100,
+        "startingBalance": 30
       },
       {
         "id": 52,
