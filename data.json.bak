@@ -1705,6 +1705,13 @@
       ],
       "transactions": [
         {
+          "id": 3215,
+          "date": "2026-07-31",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3214,
           "date": "2026-07-31",
           "cat": 52,
@@ -1769,8 +1776,8 @@
         "id": 1002,
         "linkId": 1002,
         "name": "Baby Fund",
-        "amount": 50,
-        "startingBalance": 0
+        "amount": 100,
+        "startingBalance": 50
       },
       {
         "id": 1006,
