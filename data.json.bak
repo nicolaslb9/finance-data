@@ -1811,8 +1811,8 @@
         "id": 1010,
         "linkId": 1010,
         "name": "Earlobe + Dental",
-        "amount": 300,
-        "startingBalance": 100
+        "amount": 200,
+        "startingBalance": 0
       },
       {
         "id": 3066,
