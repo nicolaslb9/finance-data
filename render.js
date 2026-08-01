@@ -49,7 +49,7 @@ function renderMetrics() {
     <div class="metric">
       <div class="lbl">Disponível</div>
       <div class="val" style="color:${left>=0?'var(--green)':'var(--red)'}">${fmtSigned(left)}</div>
-      <div class="sub">${md().availableStart != null ? `de ${fmt(availBase)} disponível` : (left>=0?'dentro do limite':'acima do limite')}</div>
+      <div class="sub">${md().availableStart != null ? `de ${fmt(md().availableNow != null ? +md().availableNow : availBase)} disponível` : (left>=0?'dentro do limite':'acima do limite')}</div>
     </div>
     <div class="metric">
       <div class="lbl">Savings / mês</div>
