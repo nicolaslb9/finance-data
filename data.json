@@ -1823,7 +1823,8 @@
           "desc": "cabelo",
           "amount": 45
         }
-      ]
+      ],
+      "availableStart": 6170
     }
   },
   "savings": {
