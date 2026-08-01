@@ -1709,7 +1709,7 @@
           "date": "2026-07-31",
           "cat": 43,
           "desc": "estacionamento",
-          "amount": 0
+          "amount": 9
         },
         {
           "id": 3232,
@@ -1823,7 +1823,9 @@
           "desc": "cabelo",
           "amount": 45
         }
-      ]
+      ],
+      "availableStart": 9282.92,
+      "availableNow": 6170
     }
   },
   "savings": {
