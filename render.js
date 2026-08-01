@@ -31,7 +31,8 @@ function renderMetrics() {
   const inc = totalIncome();
   const spAll = md().budget.reduce((s,b)=>s+spentForCat(b.id),0);
   const budAll = md().budget.reduce((s,b)=>s+(+b.budget||0),0);
-  const left = inc - spAll;
+  const availBase = (md().availableStart != null) ? (+md().availableStart||0) : inc;
+  const left = availBase - spAll;
   const svBud = totalByType('savings');
   const pctSpent = budAll > 0 ? Math.round(spAll/budAll*100) : 0;
   document.getElementById('metrics').innerHTML = `
@@ -48,7 +49,7 @@ function renderMetrics() {
     <div class="metric">
       <div class="lbl">Disponível</div>
       <div class="val" style="color:${left>=0?'var(--green)':'var(--red)'}">${fmtSigned(left)}</div>
-      <div class="sub">${left>=0?'dentro do limite':'acima do limite'}</div>
+      <div class="sub">${md().availableStart != null ? `de ${fmt(availBase)} disponível` : (left>=0?'dentro do limite':'acima do limite')}</div>
     </div>
     <div class="metric">
       <div class="lbl">Savings / mês</div>
