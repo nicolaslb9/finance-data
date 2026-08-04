@@ -1676,7 +1676,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 200
+          "budget": 150
         },
         {
           "id": 40,
@@ -1722,7 +1722,7 @@
           "id": 3256,
           "date": "2026-08-03",
           "cat": 40,
-          "desc": "",
+          "desc": "zubu",
           "amount": 55.78
         },
         {
