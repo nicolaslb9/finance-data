@@ -1708,8 +1708,8 @@
           "id": 3267,
           "date": "2026-08-05",
           "cat": 60,
-          "desc": "",
-          "amount": 0
+          "desc": "estacionamento",
+          "amount": 1.8
         },
         {
           "id": 3265,
