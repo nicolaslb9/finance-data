@@ -2182,7 +2182,7 @@
           "id": 30,
           "name": "Groceries",
           "type": "needs",
-          "budget": 600
+          "budget": 625
         },
         {
           "id": 31,
