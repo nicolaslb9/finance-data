@@ -2194,7 +2194,7 @@
           "id": 50,
           "name": "Emergency Savings",
           "type": "savings",
-          "budget": 500
+          "budget": 1000
         },
         {
           "id": 51,
@@ -2254,7 +2254,7 @@
           "id": 44,
           "name": "Allowance Juliana",
           "type": "wants",
-          "budget": 300
+          "budget": 400
         }
       ],
       "transactions": []
