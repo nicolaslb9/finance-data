@@ -2099,6 +2099,165 @@
       ],
       "availableStart": 9282.92,
       "availableNow": 6170
+    },
+    "8": {
+      "income": [
+        {
+          "id": 1,
+          "label": "Income 1 (Juliana)",
+          "amount": 1768
+        },
+        {
+          "id": 2,
+          "label": "Income 2 (Nicolas)",
+          "amount": 2160
+        },
+        {
+          "id": 3,
+          "label": "Income 3 (Juliana)",
+          "amount": 1768
+        },
+        {
+          "id": 4,
+          "label": "Income 4 (Nicolas)",
+          "amount": 2160
+        }
+      ],
+      "budget": [
+        {
+          "id": 20,
+          "name": "Car Financing",
+          "type": "debt",
+          "budget": 592
+        },
+        {
+          "id": 21,
+          "name": "iPhone Financing",
+          "type": "debt",
+          "budget": 120
+        },
+        {
+          "id": 10,
+          "name": "Aluguel",
+          "type": "fixed",
+          "budget": 2310
+        },
+        {
+          "id": 11,
+          "name": "BC Hydro",
+          "type": "fixed",
+          "budget": 45
+        },
+        {
+          "id": 12,
+          "name": "Telus",
+          "type": "fixed",
+          "budget": 80
+        },
+        {
+          "id": 13,
+          "name": "Car Insurance",
+          "type": "fixed",
+          "budget": 327
+        },
+        {
+          "id": 14,
+          "name": "Home Insurance",
+          "type": "fixed",
+          "budget": 32
+        },
+        {
+          "id": 15,
+          "name": "Koodo Phone Plans",
+          "type": "fixed",
+          "budget": 110
+        },
+        {
+          "id": 1000,
+          "name": "Terapia",
+          "type": "fixed",
+          "budget": 400
+        },
+        {
+          "id": 30,
+          "name": "Groceries",
+          "type": "needs",
+          "budget": 800
+        },
+        {
+          "id": 31,
+          "name": "Gas",
+          "type": "needs",
+          "budget": 200
+        },
+        {
+          "id": 50,
+          "name": "Emergency Savings",
+          "type": "savings",
+          "budget": 300
+        },
+        {
+          "id": 51,
+          "name": "Japan Trip",
+          "type": "savings",
+          "budget": 1000
+        },
+        {
+          "id": 52,
+          "name": "TFSA",
+          "type": "savings",
+          "budget": 300
+        },
+        {
+          "id": 1002,
+          "name": "Baby Fund",
+          "type": "savings",
+          "budget": 30
+        },
+        {
+          "id": 1006,
+          "name": "Brasil 2027",
+          "type": "savings",
+          "budget": 100
+        },
+        {
+          "id": 1010,
+          "name": "Earlobe + Dental",
+          "type": "savings",
+          "budget": 50
+        },
+        {
+          "id": 60,
+          "name": "Sinking Funds",
+          "type": "provision",
+          "budget": 100
+        },
+        {
+          "id": 40,
+          "name": "Restaurante & Fun",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 42,
+          "name": "Subscriptions",
+          "type": "wants",
+          "budget": 108
+        },
+        {
+          "id": 43,
+          "name": "Allowance Nicolas",
+          "type": "wants",
+          "budget": 300
+        },
+        {
+          "id": 44,
+          "name": "Allowance Juliana",
+          "type": "wants",
+          "budget": 300
+        }
+      ],
+      "transactions": []
     }
   },
   "savings": {
