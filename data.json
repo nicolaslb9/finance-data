@@ -2271,7 +2271,7 @@
           "id": 50,
           "name": "Emergency Savings",
           "type": "savings",
-          "budget": 1000
+          "budget": 800
         },
         {
           "id": 51,
