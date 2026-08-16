@@ -2274,12 +2274,6 @@
           "budget": 800
         },
         {
-          "id": 51,
-          "name": "Japan Trip",
-          "type": "savings",
-          "budget": 0
-        },
-        {
           "id": 52,
           "name": "TFSA",
           "type": "savings",
@@ -2435,12 +2429,6 @@
         {
           "id": 50,
           "name": "Emergency Savings",
-          "type": "savings",
-          "budget": 0
-        },
-        {
-          "id": 51,
-          "name": "Japan Trip",
           "type": "savings",
           "budget": 0
         },
