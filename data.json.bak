@@ -1705,11 +1705,18 @@
       ],
       "transactions": [
         {
+          "id": 3320,
+          "date": "2026-08-16",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3318,
           "date": "2026-08-16",
           "cat": 44,
           "desc": "barrinha bby",
-          "amount": 0
+          "amount": 3.5
         },
         {
           "id": 3316,
