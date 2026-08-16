@@ -32,6 +32,7 @@ function defaultMonthData() {
       {id:1002,name:'Baby Fund',type:'savings',budget:30},
       {id:1006,name:'Brasil 2027',type:'savings',budget:100},
       {id:1010,name:'Earlobe + Dental',type:'savings',budget:50},
+      {id:3066,name:'College',type:'savings',budget:200},
       {id:60,name:'Sinking Funds',type:'provision',budget:100},
       {id:40,name:'Restaurante & Fun',type:'wants',budget:300},
       {id:42,name:'Subscriptions',type:'wants',budget:108},
@@ -61,7 +62,7 @@ let savings = {
 };
 let cfg = {user:'',repo:'finance-data',token:''};
 
-const APP_VERSION = '2026-06-v87'; // bump to force localStorage refresh
+const APP_VERSION = '2026-06-v88'; // bump to force localStorage refresh
 
 function init() {
   // Block all cloud saves until the initial GitHub load finishes (anti data-loss guard)
