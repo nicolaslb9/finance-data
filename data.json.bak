@@ -2332,6 +2332,12 @@
           "name": "Allowance Juliana",
           "type": "wants",
           "budget": 400
+        },
+        {
+          "id": 3067,
+          "name": "College",
+          "type": "needs",
+          "budget": 0
         }
       ],
       "transactions": []
