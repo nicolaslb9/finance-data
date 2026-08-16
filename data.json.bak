@@ -2337,7 +2337,7 @@
           "id": 3067,
           "name": "College",
           "type": "savings",
-          "budget": 0
+          "budget": 200
         }
       ],
       "transactions": []
