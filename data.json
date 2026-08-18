@@ -1705,11 +1705,18 @@
       ],
       "transactions": [
         {
+          "id": 3333,
+          "date": "2026-08-18",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3331,
           "date": "2026-08-18",
           "cat": 30,
           "desc": "molho de salada amazon",
-          "amount": 0
+          "amount": 10.98
         },
         {
           "id": 3329,
