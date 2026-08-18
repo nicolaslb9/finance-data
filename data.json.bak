@@ -1705,11 +1705,18 @@
       ],
       "transactions": [
         {
+          "id": 3331,
+          "date": "2026-08-18",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3329,
           "date": "2026-08-18",
           "cat": 60,
           "desc": "presente ana",
-          "amount": 0
+          "amount": 50
         },
         {
           "id": 3327,
