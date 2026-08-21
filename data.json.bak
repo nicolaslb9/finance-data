@@ -1705,11 +1705,18 @@
       ],
       "transactions": [
         {
+          "id": 3348,
+          "date": "2026-08-21",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3346,
           "date": "2026-08-21",
           "cat": 60,
           "desc": "suplemento omega 3",
-          "amount": 0
+          "amount": 18.89
         },
         {
           "id": 3344,
