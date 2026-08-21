@@ -1705,11 +1705,18 @@
       ],
       "transactions": [
         {
+          "id": 3338,
+          "date": "2026-08-21",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3336,
           "date": "2026-08-21",
           "cat": 60,
           "desc": "parking",
-          "amount": 0
+          "amount": 4.75
         },
         {
           "id": 3334,
