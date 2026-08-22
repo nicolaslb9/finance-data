@@ -2383,13 +2383,13 @@
           "id": 50,
           "name": "Emergency Savings",
           "type": "savings",
-          "budget": 0
+          "budget": 1000
         },
         {
           "id": 52,
           "name": "TFSA",
           "type": "savings",
-          "budget": 500
+          "budget": 100
         },
         {
           "id": 1002,
