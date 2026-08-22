@@ -2335,7 +2335,7 @@
           "id": 11,
           "name": "BC Hydro",
           "type": "fixed",
-          "budget": 120
+          "budget": 140
         },
         {
           "id": 12,
@@ -2389,7 +2389,7 @@
           "id": 52,
           "name": "TFSA",
           "type": "savings",
-          "budget": 100
+          "budget": 200
         },
         {
           "id": 1002,
