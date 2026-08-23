@@ -2444,6 +2444,12 @@
           "name": "College",
           "type": "savings",
           "budget": 200
+        },
+        {
+          "id": 3067,
+          "name": "Multa",
+          "type": "needs",
+          "budget": 0
         }
       ],
       "transactions": []
