@@ -2454,11 +2454,18 @@
       ],
       "transactions": [
         {
-          "id": 3361,
+          "id": 3363,
           "date": "2026-08-29",
           "cat": 20,
           "desc": "",
           "amount": 0
+        },
+        {
+          "id": 3361,
+          "date": "2026-08-29",
+          "cat": 1010,
+          "desc": "",
+          "amount": 100
         },
         {
           "id": 3359,
@@ -2678,7 +2685,7 @@
         "id": 1010,
         "linkId": 1010,
         "name": "Earlobe + Dental",
-        "amount": 200,
+        "amount": 300,
         "startingBalance": 0
       },
       {
