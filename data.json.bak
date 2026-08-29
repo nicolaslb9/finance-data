@@ -2458,7 +2458,7 @@
           "date": "2026-08-29",
           "cat": 3066,
           "desc": "",
-          "amount": 0
+          "amount": 100
         },
         {
           "id": 3361,
@@ -2692,7 +2692,7 @@
         "id": 3066,
         "linkId": 3066,
         "name": "College",
-        "amount": 270,
+        "amount": 370,
         "startingBalance": 200
       },
       {
