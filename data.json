@@ -2452,7 +2452,15 @@
           "budget": 0
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 3354,
+          "date": "2026-08-29",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        }
+      ]
     },
     "9": {
       "income": [
