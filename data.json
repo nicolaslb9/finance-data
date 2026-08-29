@@ -2458,7 +2458,7 @@
           "date": "2026-08-29",
           "cat": 1006,
           "desc": "",
-          "amount": 0.03
+          "amount": 100
         },
         {
           "id": 3357,
@@ -2664,7 +2664,7 @@
         "id": 1006,
         "linkId": 1006,
         "name": "Brasil 2027",
-        "amount": 300.03,
+        "amount": 400,
         "startingBalance": 0
       },
       {
