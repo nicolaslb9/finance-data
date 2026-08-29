@@ -2383,7 +2383,7 @@
           "id": 50,
           "name": "Emergency Savings",
           "type": "savings",
-          "budget": 350
+          "budget": 400
         },
         {
           "id": 52,
