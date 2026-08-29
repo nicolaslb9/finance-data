@@ -2449,7 +2449,7 @@
           "id": 3067,
           "name": "Multa",
           "type": "needs",
-          "budget": 70
+          "budget": 0
         }
       ],
       "transactions": []
