@@ -2458,7 +2458,7 @@
           "date": "2026-08-29",
           "cat": 52,
           "desc": "",
-          "amount": 0
+          "amount": 200
         }
       ]
     },
@@ -2664,8 +2664,8 @@
         "id": 52,
         "linkId": 52,
         "name": "TFSA",
-        "amount": 4939,
-        "startingBalance": 4039
+        "amount": 5151.94,
+        "startingBalance": 4051.9399999999996
       },
       {
         "id": 900,
