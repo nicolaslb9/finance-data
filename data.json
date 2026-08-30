@@ -2371,7 +2371,7 @@
           "id": 30,
           "name": "Groceries",
           "type": "needs",
-          "budget": 700
+          "budget": 600
         },
         {
           "id": 31,
