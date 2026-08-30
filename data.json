@@ -2454,10 +2454,17 @@
       ],
       "transactions": [
         {
+          "id": 3376,
+          "date": "2026-08-29",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3374,
           "date": "2026-08-29",
           "cat": 44,
-          "desc": "",
+          "desc": "sephora",
           "amount": 95.2
         },
         {
