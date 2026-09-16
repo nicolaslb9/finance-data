@@ -2727,8 +2727,8 @@
         "id": 50,
         "linkId": 50,
         "name": "Emergency Savings",
-        "amount": 13000,
-        "startingBalance": 10100
+        "amount": 13500,
+        "startingBalance": 10600
       },
       {
         "id": 51,
