@@ -2788,8 +2788,8 @@
       {
         "id": 1000,
         "name": "Acumulado Carro",
-        "amount": 9000,
-        "startingBalance": 9000
+        "amount": 10000,
+        "startingBalance": 10000
       }
     ],
     "goals": [
