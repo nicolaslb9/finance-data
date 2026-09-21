@@ -2863,6 +2863,12 @@
           "name": "Allowance Juliana",
           "type": "wants",
           "budget": 300
+        },
+        {
+          "id": 3425,
+          "name": "Academia Nicolas",
+          "type": "needs",
+          "budget": 0
         }
       ],
       "transactions": []
