@@ -2729,7 +2729,7 @@
         {
           "id": 3,
           "label": "Income 3 (Juliana)",
-          "amount": 840
+          "amount": 940
         },
         {
           "id": 4,
@@ -2760,7 +2760,7 @@
           "id": 11,
           "name": "BC Hydro",
           "type": "fixed",
-          "budget": 45
+          "budget": 0
         },
         {
           "id": 12,
