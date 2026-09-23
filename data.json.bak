@@ -2796,7 +2796,7 @@
           "id": 30,
           "name": "Groceries",
           "type": "needs",
-          "budget": 800
+          "budget": 750
         },
         {
           "id": 31,
@@ -2820,7 +2820,7 @@
           "id": 1002,
           "name": "Baby Fund",
           "type": "savings",
-          "budget": 50
+          "budget": 30
         },
         {
           "id": 1006,
