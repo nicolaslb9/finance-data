@@ -2734,7 +2734,7 @@
         {
           "id": 4,
           "label": "Income 4 (Nicolas)",
-          "amount": 188
+          "amount": 1885
         }
       ],
       "budget": [
@@ -2796,7 +2796,7 @@
           "id": 30,
           "name": "Groceries",
           "type": "needs",
-          "budget": 757
+          "budget": 650
         },
         {
           "id": 31,
