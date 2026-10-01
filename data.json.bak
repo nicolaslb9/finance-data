@@ -2871,7 +2871,15 @@
           "budget": 48
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 3424,
+          "date": "2026-10-01",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        }
+      ]
     }
   },
   "savings": {
