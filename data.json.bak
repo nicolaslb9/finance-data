@@ -2875,9 +2875,9 @@
         {
           "id": 3436,
           "date": "2026-10-01",
-          "cat": 20,
+          "cat": 1010,
           "desc": "",
-          "amount": 0
+          "amount": 100
         },
         {
           "id": 3434,
@@ -2958,7 +2958,7 @@
         "id": 1010,
         "linkId": 1010,
         "name": "Earlobe + Dental",
-        "amount": 300,
+        "amount": 400,
         "startingBalance": 0
       },
       {
