@@ -2873,11 +2873,18 @@
       ],
       "transactions": [
         {
+          "id": 3432,
+          "date": "2026-10-01",
+          "cat": 1002,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3430,
           "date": "2026-10-01",
           "cat": 52,
           "desc": "",
-          "amount": 0
+          "amount": 100
         },
         {
           "id": 3428,
@@ -2951,7 +2958,7 @@
         "id": 52,
         "linkId": 52,
         "name": "TFSA",
-        "amount": 5070,
+        "amount": 5170,
         "startingBalance": 3970
       },
       {
