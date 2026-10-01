@@ -2965,8 +2965,8 @@
         "id": 3066,
         "linkId": 3066,
         "name": "College",
-        "amount": 500,
-        "startingBalance": 330
+        "amount": 400,
+        "startingBalance": 230
       },
       {
         "id": 52,
