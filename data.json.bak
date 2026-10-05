@@ -2873,10 +2873,17 @@
       ],
       "transactions": [
         {
+          "id": 3443,
+          "date": "2026-10-05",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3441,
           "date": "2026-10-05",
           "cat": 3425,
-          "desc": "",
+          "desc": "livro help",
           "amount": 50.84
         },
         {
