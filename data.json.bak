@@ -2972,8 +2972,8 @@
         "id": 52,
         "linkId": 52,
         "name": "TFSA",
-        "amount": 5202.47,
-        "startingBalance": 4002.4700000000003
+        "amount": 5202,
+        "startingBalance": 4002
       },
       {
         "id": 900,
