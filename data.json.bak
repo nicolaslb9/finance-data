@@ -2873,11 +2873,18 @@
       ],
       "transactions": [
         {
+          "id": 3453,
+          "date": "2026-10-05",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3451,
           "date": "2026-10-05",
           "cat": 42,
           "desc": "claude",
-          "amount": 0
+          "amount": 31.36
         },
         {
           "id": 3449,
