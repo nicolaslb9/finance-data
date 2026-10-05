@@ -2873,11 +2873,18 @@
       ],
       "transactions": [
         {
+          "id": 3451,
+          "date": "2026-10-05",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3449,
           "date": "2026-10-05",
           "cat": 30,
           "desc": "costco membership",
-          "amount": 68.24
+          "amount": 68.25
         },
         {
           "id": 3447,
