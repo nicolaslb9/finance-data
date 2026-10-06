@@ -2873,6 +2873,13 @@
       ],
       "transactions": [
         {
+          "id": 3462,
+          "date": "2026-10-06",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3460,
           "date": "2026-10-06",
           "cat": 30,
@@ -2885,13 +2892,6 @@
           "cat": 44,
           "desc": "shampoo queda de cabelo",
           "amount": 59.02
-        },
-        {
-          "id": 3456,
-          "date": "2026-10-06",
-          "cat": 20,
-          "desc": "",
-          "amount": 0
         },
         {
           "id": 3455,
