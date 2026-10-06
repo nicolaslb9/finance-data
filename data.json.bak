@@ -2877,14 +2877,7 @@
           "date": "2026-10-06",
           "cat": 42,
           "desc": "amazon prime",
-          "amount": 0
-        },
-        {
-          "id": 3462,
-          "date": "2026-10-06",
-          "cat": 20,
-          "desc": "",
-          "amount": 0
+          "amount": 11.19
         },
         {
           "id": 3460,
