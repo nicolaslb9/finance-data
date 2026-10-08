@@ -2873,11 +2873,18 @@
       ],
       "transactions": [
         {
+          "id": 3475,
+          "date": "2026-10-07",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3473,
           "date": "2026-10-07",
           "cat": 60,
           "desc": "excedente terapia nicolas",
-          "amount": 0
+          "amount": 10.75
         },
         {
           "id": 3471,
