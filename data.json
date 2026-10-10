@@ -2873,11 +2873,18 @@
       ],
       "transactions": [
         {
+          "id": 3498,
+          "date": "2026-10-10",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3496,
           "date": "2026-10-10",
           "cat": 60,
           "desc": "lixeira casa, cabides",
-          "amount": 0
+          "amount": 72.78
         },
         {
           "id": 3494,
