@@ -2873,11 +2873,18 @@
       ],
       "transactions": [
         {
+          "id": 3509,
+          "date": "2026-10-12",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3507,
           "date": "2026-10-12",
           "cat": 30,
           "desc": "little brasil",
-          "amount": 0
+          "amount": 34.59
         },
         {
           "id": 3505,
