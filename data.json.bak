@@ -2873,10 +2873,17 @@
       ],
       "transactions": [
         {
+          "id": 3514,
+          "date": "2026-10-14",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3512,
           "date": "2026-10-14",
           "cat": 60,
-          "desc": "compass acocung",
+          "desc": "compass account",
           "amount": 3.5
         },
         {
