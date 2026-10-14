@@ -2873,9 +2873,16 @@
       ],
       "transactions": [
         {
+          "id": 3512,
+          "date": "2026-10-14",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3510,
           "date": "2026-10-14",
-          "cat": 30,
+          "cat": 60,
           "desc": "dollar tree",
           "amount": 7.84
         },
