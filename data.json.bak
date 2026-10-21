@@ -3471,19 +3471,19 @@
           "id": 52,
           "name": "TFSA",
           "type": "savings",
-          "budget": 300
+          "budget": 500
         },
         {
           "id": 1002,
           "name": "Baby Fund",
           "type": "savings",
-          "budget": 30
+          "budget": 100
         },
         {
           "id": 1006,
           "name": "Brasil 2027",
           "type": "savings",
-          "budget": 100
+          "budget": 101
         },
         {
           "id": 1010,
