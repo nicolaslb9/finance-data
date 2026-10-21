@@ -2873,11 +2873,18 @@
       ],
       "transactions": [
         {
+          "id": 3551,
+          "date": "2026-10-21",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3549,
           "date": "2026-10-21",
           "cat": 40,
           "desc": "mcdonalds after brun mars",
-          "amount": 0
+          "amount": 15.19
         },
         {
           "id": 3547,
