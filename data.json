@@ -3386,7 +3386,7 @@
         {
           "id": 3,
           "label": "Income 3 (Juliana)",
-          "amount": 1768
+          "amount": 1743
         },
         {
           "id": 4,
@@ -3471,7 +3471,7 @@
           "id": 52,
           "name": "TFSA",
           "type": "savings",
-          "budget": 500
+          "budget": 400
         },
         {
           "id": 1002,
