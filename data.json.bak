@@ -3513,7 +3513,7 @@
           "id": 42,
           "name": "Subscriptions",
           "type": "wants",
-          "budget": 108
+          "budget": 120
         },
         {
           "id": 43,
