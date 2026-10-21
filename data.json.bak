@@ -3501,13 +3501,13 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 100
+          "budget": 200
         },
         {
           "id": 40,
           "name": "Restaurante & Fun",
           "type": "wants",
-          "budget": 300
+          "budget": 400
         },
         {
           "id": 42,
