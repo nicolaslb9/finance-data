@@ -3466,7 +3466,7 @@
           "id": 31,
           "name": "Gas",
           "type": "needs",
-          "budget": 250
+          "budget": 300
         },
         {
           "id": 50,
