@@ -3541,7 +3541,7 @@
           "date": "2026-10-23",
           "cat": 3066,
           "desc": "",
-          "amount": 0
+          "amount": 50
         },
         {
           "id": 3568,
@@ -3781,7 +3781,7 @@
         "id": 3066,
         "linkId": 3066,
         "name": "College",
-        "amount": 400,
+        "amount": 450,
         "startingBalance": 230
       },
       {
@@ -3795,8 +3795,8 @@
         "id": 900,
         "linkId": null,
         "name": "Canada Life RRP (Juliana)",
-        "amount": 7662,
-        "startingBalance": 7662
+        "amount": 7505,
+        "startingBalance": 7505
       },
       {
         "id": 1011,
