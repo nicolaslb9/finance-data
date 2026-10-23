@@ -3460,7 +3460,7 @@
           "id": 30,
           "name": "Groceries",
           "type": "needs",
-          "budget": 800
+          "budget": 900
         },
         {
           "id": 31,
