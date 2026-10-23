@@ -3539,9 +3539,9 @@
         {
           "id": 3562,
           "date": "2026-10-23",
-          "cat": 20,
+          "cat": 52,
           "desc": "",
-          "amount": 0
+          "amount": 300
         },
         {
           "id": 3560,
@@ -3760,7 +3760,7 @@
         "id": 52,
         "linkId": 52,
         "name": "TFSA",
-        "amount": 5202,
+        "amount": 5502,
         "startingBalance": 4002
       },
       {
