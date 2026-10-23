@@ -3532,10 +3532,18 @@
           "id": 44,
           "name": "Allowance Juliana",
           "type": "wants",
-          "budget": 200
+          "budget": 300
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 3560,
+          "date": "2026-10-23",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        }
+      ]
     },
     "11": {
       "income": [
