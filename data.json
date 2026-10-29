@@ -3537,11 +3537,18 @@
       ],
       "transactions": [
         {
+          "id": 3573,
+          "date": "2026-10-28",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3571,
           "date": "2026-10-28",
           "cat": 40,
-          "desc": "",
-          "amount": 0
+          "desc": "sushi",
+          "amount": 37.34
         },
         {
           "id": 3570,
