@@ -3537,11 +3537,18 @@
       ],
       "transactions": [
         {
+          "id": 3575,
+          "date": "2026-10-28",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3573,
           "date": "2026-10-28",
           "cat": 42,
           "desc": "google drive yearly",
-          "amount": 0
+          "amount": 31.35
         },
         {
           "id": 3571,
