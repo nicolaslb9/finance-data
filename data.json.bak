@@ -3454,7 +3454,7 @@
           "id": 1000,
           "name": "Terapia",
           "type": "fixed",
-          "budget": 450
+          "budget": 250
         },
         {
           "id": 30,
