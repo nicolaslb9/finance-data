@@ -3460,13 +3460,13 @@
           "id": 30,
           "name": "Groceries",
           "type": "needs",
-          "budget": 866
+          "budget": 800
         },
         {
           "id": 31,
           "name": "Gas",
           "type": "needs",
-          "budget": 260
+          "budget": 300
         },
         {
           "id": 50,
