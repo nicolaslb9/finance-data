@@ -3424,7 +3424,7 @@
           "id": 11,
           "name": "BC Hydro",
           "type": "fixed",
-          "budget": 90
+          "budget": 0
         },
         {
           "id": 12,
