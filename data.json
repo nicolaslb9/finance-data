@@ -3537,11 +3537,18 @@
       ],
       "transactions": [
         {
+          "id": 3616,
+          "date": "2026-11-06",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3614,
           "date": "2026-11-06",
           "cat": 60,
           "desc": "health - remedio juliana",
-          "amount": 0
+          "amount": 16.26
         },
         {
           "id": 3612,
