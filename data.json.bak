@@ -3508,7 +3508,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 120
+          "budget": 150
         },
         {
           "id": 40,
@@ -3532,7 +3532,7 @@
           "id": 44,
           "name": "Allowance Juliana",
           "type": "wants",
-          "budget": 300
+          "budget": 250
         }
       ],
       "transactions": [
