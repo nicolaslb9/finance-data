@@ -3537,13 +3537,6 @@
       ],
       "transactions": [
         {
-          "id": 3622,
-          "date": "2026-11-06",
-          "cat": 1002,
-          "desc": "apple bill subscription",
-          "amount": 0
-        },
-        {
           "id": 3620,
           "date": "2026-11-06",
           "cat": 43,
