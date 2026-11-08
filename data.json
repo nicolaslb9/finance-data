@@ -3537,11 +3537,18 @@
       ],
       "transactions": [
         {
+          "id": 3634,
+          "date": "2026-11-08",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3632,
           "date": "2026-11-08",
           "cat": 30,
           "desc": "little brasil - bolo de milho",
-          "amount": 0
+          "amount": 19.9
         },
         {
           "id": 3631,
