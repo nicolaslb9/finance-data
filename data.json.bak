@@ -3537,11 +3537,18 @@
       ],
       "transactions": [
         {
+          "id": 3642,
+          "date": "2026-11-08",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3640,
           "date": "2026-11-08",
           "cat": 43,
           "desc": "banana republic",
-          "amount": 0
+          "amount": 80.92
         },
         {
           "id": 3638,
