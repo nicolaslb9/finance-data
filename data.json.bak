@@ -3537,11 +3537,18 @@
       ],
       "transactions": [
         {
+          "id": 3656,
+          "date": "2026-11-08",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3654,
           "date": "2026-11-08",
           "cat": 60,
           "desc": "amazon",
-          "amount": 0
+          "amount": 8.59
         },
         {
           "id": 3652,
