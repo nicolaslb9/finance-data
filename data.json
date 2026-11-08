@@ -3537,10 +3537,17 @@
       ],
       "transactions": [
         {
+          "id": 3652,
+          "date": "2026-11-08",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3650,
           "date": "2026-11-08",
           "cat": 60,
-          "desc": "",
+          "desc": "dollamara - organizadores",
           "amount": 50.22
         },
         {
