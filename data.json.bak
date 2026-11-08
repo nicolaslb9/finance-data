@@ -3540,14 +3540,14 @@
           "id": 3648,
           "date": "2026-11-08",
           "cat": 60,
-          "desc": "",
+          "desc": "pilha para detector de fumaca",
           "amount": 0
         },
         {
           "id": 3646,
           "date": "2026-11-08",
           "cat": 42,
-          "desc": "",
+          "desc": "claude",
           "amount": 31.36
         },
         {
