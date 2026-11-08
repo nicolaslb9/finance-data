@@ -3537,11 +3537,18 @@
       ],
       "transactions": [
         {
+          "id": 3636,
+          "date": "2026-11-08",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3634,
           "date": "2026-11-08",
           "cat": 60,
           "desc": "presente de natal do nathan",
-          "amount": 0
+          "amount": 39.2
         },
         {
           "id": 3632,
