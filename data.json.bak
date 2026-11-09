@@ -3537,6 +3537,13 @@
       ],
       "transactions": [
         {
+          "id": 3660,
+          "date": "2026-11-08",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3658,
           "date": "2026-11-08",
           "cat": 60,
@@ -3547,7 +3554,7 @@
           "id": 3656,
           "date": "2026-11-08",
           "cat": 60,
-          "desc": "amazon",
+          "desc": "amazon (brita, gillete)",
           "amount": 69.01
         },
         {
