@@ -3537,10 +3537,17 @@
       ],
       "transactions": [
         {
+          "id": 3684,
+          "date": "2026-11-14",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3682,
           "date": "2026-11-14",
           "cat": 60,
-          "desc": "",
+          "desc": "fio dental",
           "amount": 6.71
         },
         {
