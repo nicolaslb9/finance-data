@@ -4241,13 +4241,13 @@
           "id": 50,
           "name": "Emergency Savings",
           "type": "savings",
-          "budget": 100
+          "budget": 150
         },
         {
           "id": 52,
           "name": "TFSA",
           "type": "savings",
-          "budget": 0
+          "budget": 100
         },
         {
           "id": 1002,
