@@ -4235,7 +4235,7 @@
           "id": 31,
           "name": "Gas",
           "type": "needs",
-          "budget": 200
+          "budget": 234
         },
         {
           "id": 50,
@@ -4305,7 +4305,7 @@
         },
         {
           "id": 3426,
-          "name": "Novembro 🥀",
+          "name": "🥀 Novembro",
           "type": "debt",
           "budget": 0
         }
