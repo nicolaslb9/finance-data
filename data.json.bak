@@ -4265,13 +4265,13 @@
           "id": 1010,
           "name": "Earlobe + Dental",
           "type": "savings",
-          "budget": 0
+          "budget": 100
         },
         {
           "id": 3066,
           "name": "College",
           "type": "savings",
-          "budget": 0
+          "budget": 100
         },
         {
           "id": 60,
