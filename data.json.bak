@@ -3537,6 +3537,13 @@
       ],
       "transactions": [
         {
+          "id": 3733,
+          "date": "2026-11-20",
+          "cat": 43,
+          "desc": "fone nico",
+          "amount": 0
+        },
+        {
           "id": 3731,
           "date": "2026-11-20",
           "cat": 60,
