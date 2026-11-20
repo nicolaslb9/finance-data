@@ -4302,6 +4302,12 @@
           "name": "Allowance Juliana",
           "type": "wants",
           "budget": 300
+        },
+        {
+          "id": 3426,
+          "name": "Novembro 🥀",
+          "type": "needs",
+          "budget": 0
         }
       ],
       "transactions": []
