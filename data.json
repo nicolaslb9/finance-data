@@ -4241,7 +4241,7 @@
           "id": 50,
           "name": "Emergency Savings",
           "type": "savings",
-          "budget": 150
+          "budget": 200
         },
         {
           "id": 52,
@@ -4310,7 +4310,15 @@
           "budget": 650
         }
       ],
-      "transactions": []
+      "transactions": [
+        {
+          "id": 3721,
+          "date": "2026-11-20",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        }
+      ]
     }
   },
   "savings": {
