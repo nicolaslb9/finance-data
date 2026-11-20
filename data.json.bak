@@ -4229,7 +4229,7 @@
           "id": 30,
           "name": "Groceries",
           "type": "needs",
-          "budget": 800
+          "budget": 900
         },
         {
           "id": 31,
@@ -4271,7 +4271,7 @@
           "id": 3066,
           "name": "College",
           "type": "savings",
-          "budget": 200
+          "budget": 0
         },
         {
           "id": 60,
