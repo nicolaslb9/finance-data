@@ -4235,7 +4235,7 @@
           "id": 31,
           "name": "Gas",
           "type": "needs",
-          "budget": 200
+          "budget": 250
         },
         {
           "id": 50,
@@ -4277,7 +4277,7 @@
           "id": 60,
           "name": "Sinking Funds",
           "type": "provision",
-          "budget": 100
+          "budget": 200
         },
         {
           "id": 40,
