@@ -4282,13 +4282,13 @@
           "id": 52,
           "name": "TFSA",
           "type": "savings",
-          "budget": 0
+          "budget": 100
         },
         {
           "id": 1002,
           "name": "Baby Fund",
           "type": "savings",
-          "budget": 100
+          "budget": 50
         },
         {
           "id": 1006,
