@@ -4353,11 +4353,18 @@
       ],
       "transactions": [
         {
+          "id": 3738,
+          "date": "2026-11-23",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3736,
           "date": "2026-11-23",
           "cat": 40,
           "desc": "between 2 buns",
-          "amount": 0
+          "amount": 45.04
         },
         {
           "id": 3734,
