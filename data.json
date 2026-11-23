@@ -4353,11 +4353,18 @@
       ],
       "transactions": [
         {
+          "id": 3740,
+          "date": "2026-11-23",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3738,
           "date": "2026-11-23",
           "cat": 60,
           "desc": "casa - limpador de coco",
-          "amount": 0
+          "amount": 17.91
         },
         {
           "id": 3736,
