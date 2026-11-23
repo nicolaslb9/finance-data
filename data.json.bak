@@ -4300,7 +4300,7 @@
           "id": 1010,
           "name": "Earlobe + Dental",
           "type": "savings",
-          "budget": 50
+          "budget": 0
         },
         {
           "id": 3066,
@@ -4348,7 +4348,7 @@
           "id": 3427,
           "name": "Presentes Rosana, Wando",
           "type": "needs",
-          "budget": 250
+          "budget": 300
         }
       ],
       "transactions": [
