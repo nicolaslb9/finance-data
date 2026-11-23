@@ -4353,11 +4353,18 @@
       ],
       "transactions": [
         {
+          "id": 3744,
+          "date": "2026-11-23",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3742,
           "date": "2026-11-23",
           "cat": 60,
           "desc": "carro - lavacao",
-          "amount": 0
+          "amount": 26.25
         },
         {
           "id": 3740,
