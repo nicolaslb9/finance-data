@@ -4318,7 +4318,7 @@
           "id": 40,
           "name": "Restaurante & Fun",
           "type": "wants",
-          "budget": 300
+          "budget": 350
         },
         {
           "id": 42,
@@ -4340,7 +4340,7 @@
         },
         {
           "id": 3426,
-          "name": "Ã°ÂÂ¥Â Novembro",
+          "name": "Novembro",
           "type": "debt",
           "budget": 650
         },
