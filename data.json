@@ -4353,11 +4353,18 @@
       ],
       "transactions": [
         {
+          "id": 3748,
+          "date": "2026-11-23",
+          "cat": 20,
+          "desc": "",
+          "amount": 0
+        },
+        {
           "id": 3746,
           "date": "2026-11-23",
           "cat": 50,
           "desc": "",
-          "amount": 0
+          "amount": 100
         },
         {
           "id": 3744,
@@ -4424,7 +4431,7 @@
         "id": 50,
         "linkId": 50,
         "name": "Emergency Savings",
-        "amount": 10770,
+        "amount": 10870,
         "startingBalance": 7470
       },
       {
