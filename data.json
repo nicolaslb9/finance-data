@@ -4399,13 +4399,13 @@
           "date": "2026-11-20",
           "cat": 3426,
           "desc": "excedente de novembro",
-          "amount": 0
+          "amount": 9
         },
         {
           "id": 3721,
           "date": "2026-11-20",
           "cat": 3426,
-          "desc": "",
+          "desc": "excedente de novembro",
           "amount": 597
         }
       ]
