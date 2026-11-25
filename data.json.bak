@@ -4306,7 +4306,7 @@
           "id": 3066,
           "name": "College",
           "type": "savings",
-          "budget": 100
+          "budget": 0
         },
         {
           "id": 60,
